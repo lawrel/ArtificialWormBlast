@@ -45,4 +45,5 @@ Core deliverable:
 	-game lobby page
 	-actual game place
 	-results page
+	-total score
 
