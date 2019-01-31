@@ -46,4 +46,5 @@ Core deliverable:
 	-actual game place
 	-results page
 	-total score
+	-Kasey 
 
