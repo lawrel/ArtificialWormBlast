@@ -5,12 +5,15 @@
     <meta charset="utf-8" />
     <title></title>
 </head>
-<body>
-    <h1>LOBBY</h1>
-    <p> WELCOME TO MONSTERS INK LOBBY</p>
+{% extends "theme.html" %}
+{% block content %}
+    <body>
+        <h1>LOBBY</h1>
+        <p> WELCOME TO MONSTERS INK LOBBY</p>
 
-</body>
-<form>
-    <input type="button" value="CLICK TO GO TO HOMESCREEN" onclick="window.location.href='/'" />
-</form>
+    </body>
+    <form>
+        <input type="button" value="CLICK TO GO TO HOMESCREEN" onclick="window.location.href='/'" />
+    </form>
+{% endblock %}
 </html>

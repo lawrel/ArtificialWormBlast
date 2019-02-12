@@ -5,6 +5,8 @@
     <meta charset="utf-8" />
     <title></title>
 </head>
+{% extends "theme.html" %}
+{% block content %}
 <body>
     <h1>HOMESCREEN</h1>
     <p> WELCOME TO MONSTERS INK</p>
@@ -25,5 +27,5 @@
 <form>
     <input type="button" value="DRAW MONSTER" onclick="window.location.href='monsterEditor'" />
 </form>
-
+{% endblock %}
 </html>
