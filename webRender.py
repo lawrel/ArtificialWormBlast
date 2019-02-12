@@ -20,6 +20,9 @@ def myAccount():
 def Instructions():
     return render_template('Instructions.html')
 
+@app.route('/monsterEditor/')
+def monsterEditor():
+    return render_template('drawMonster.html')
 
 if __name__ == '__main__':
     app.run(debug = True)
