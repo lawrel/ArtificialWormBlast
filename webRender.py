@@ -12,6 +12,14 @@ def home():
 def lobby():
     return render_template('lobby.html')
 
+@app.route('/myAccount/')
+def myAccount():
+    return render_template('Account.html')
+
+@app.route('/Instructions/')
+def Instructions():
+    return render_template('Instructions.html')
+
 
 if __name__ == '__main__':
     app.run(debug = True)
