@@ -1,35 +1,13 @@
 from flask import Flask, render_template, request, jsonify
 import mysql.connector
 from mysql.connector import errorcode
+
 app = Flask(__name__)
 db_context = None;
 
-
-
-#Functions defining the pages
-@app.route('/home/')
-def home():
-    return render_template('home.html')
-
-@app.route('/lobby/')
-def lobby():
-    return render_template('lobby.html')
-
-@app.route('/myAccount/')
-def myAccount():
-    return render_template('Account.html')
-
-@app.route('/Instructions/')
-def Instructions():
-    return render_template('Instructions.html')
-
-@app.route('/monsterEditor/')
-def monsterEditor():
-    return render_template('drawMonster.html')
-
 @app.route("/")
 def hello_name():
-    return render_template('welcome.html')
+    return "hello world"
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
@@ -52,7 +30,6 @@ def register_new_user():
     password = request.form["input-password"]
     if (password == None):
         return "Password is empty"
-
 
     # Check that query exists
     # Do we have a database context?
@@ -145,4 +122,3 @@ if __name__ == "__main__":
     if (db_context != None):
         print("closing");
         db_context.close()
-    
