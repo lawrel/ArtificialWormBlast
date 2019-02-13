@@ -17,7 +17,7 @@ insert into Users (Email, First, Password) values("bob@example.com", "Bob", sha2
 select * from Users;
 
 /*	Delete users  */
--- delete from Users where Email = "email";
+ -- delete from Users where ID > 0;
 
 /*	UserLogins tests:
 		All fields Unique

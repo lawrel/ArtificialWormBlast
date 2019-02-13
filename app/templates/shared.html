@@ -1,0 +1,56 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monsters Ink</title>
+
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js" ></script>
+
+    <style>
+        .card-deck{
+            margin-top:15px;
+            margin-bottom:15px;
+        }
+        @media only screen and (max-width: 768px) {
+            [class*="col-"] {
+                width: 100%;
+            }
+        }
+    </style>
+
+    {% block header %}{% endblock %}
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="https://emotions-classifier.mybluemix.net/">Movie Picker</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link active" href="https://emotions-classifier.mybluemix.net/classify">Classify<span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" href="https://emotions-classifier.mybluemix.net/train">Train</a>
+                <a class="nav-item nav-link" href="https://emotions-classifier.mybluemix.net/about">About</a>
+                <a class="nav-item nav-link" href="https://emotions-classifier.mybluemix.net/contact">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container col-12">
+        <div id="insert">
+            {% block content %}{% endblock %}
+        </div>
+        <hr />
+        <footer>
+            <p>&copy; Artificial Worm Blast - 2019</p>
+        </footer>
+    </div>
+</body>
+</html>

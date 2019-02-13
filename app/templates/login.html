@@ -1,10 +1,6 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.bundle.min.js"></script>
-<head>
-  <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
-  <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
-</head>
+{% extends 'shared.html' %}
 
+{% block header %}
 <style>
   :root {
   --input-padding-x: 1.5rem;
@@ -117,9 +113,9 @@ body {
   background-color: #3b5998;
 }
 </style>
+{% endblock %}
 
-
-
+{% block content %}
 <body>
   <div class="container">
     <div class="row">
@@ -153,3 +149,4 @@ body {
     </div>
   </div>
 </body>
+{% endblock %}
