@@ -140,7 +140,7 @@ if __name__ == "__main__":
         else:
             print(err)
 
-    app.run(debug=True, host="0.0.0.0", port=8000, ssl_context=('cert.pem', 'key.pem'))
+    app.run(debug=True)
 
     if (db_context != None):
         print("closing");
