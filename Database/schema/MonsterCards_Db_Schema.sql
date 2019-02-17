@@ -27,15 +27,19 @@ create table Users(
 -- modify First varchar(127);
 
 create table UserLogins(
+	AccountID int not null,
 	AuthToken varchar(255),
-    AccountID int not null,
     ExpirationDate datetime not null,
     
-    primary key (AuthToken),
-    unique (AccountID),
+    primary key (AccountID),
+    unique (AuthToken),
     
     FOREIGN KEY (AccountID)
         REFERENCES Users(ID)
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
+begin;
+SELECT ID, Email, Password FROM MonsterCards.Users
+WHERE Email = "" AND Password = sha2("",256);
+commit;
