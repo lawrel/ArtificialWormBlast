@@ -39,6 +39,7 @@ create table UserLogins(
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
+
 begin;
 SELECT ID, Email, Password FROM MonsterCards.Users
 WHERE Email = "" AND Password = sha2("",256);
