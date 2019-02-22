@@ -96,10 +96,8 @@ def login():
         if (password == None):
             return "Password is empty"
 
-<<<<<<< Updated upstream
-        cursor = db_context.cursor()
-
-        ID, Email, Password = get_user(email, password);
+        # We will try to get the user record from database
+        ID, Email, Password = get_user(email, password, db_context);
 =======
         # We will try to get the user record from database
         ID, Email, Password = get_user(email, password, db_context);
@@ -128,7 +126,7 @@ def signup():
     if request.method == "GET":
         return render_template("signup.html")
     if request.method == "POST":
-<<<<<<< Updated upstream
+
 =======
 
 >>>>>>> Stashed changes
@@ -148,12 +146,9 @@ def signup():
         # Is the email already in use
         if (get_userid(email, db_context) is not None):
             return "This email is already in use."
-<<<<<<< Updated upstream
-
 
         # We use the cursor object to execute queries, parse, store their results
         cursor = db_context.cursor()
-
 =======
 
         # We use the cursor object to execute queries, parse, store their results
@@ -163,13 +158,10 @@ def signup():
                     insert into MonsterCards.Users (Email, Password)
                     values (%s, sha2(%s, 256));
                     commit;""");
-<<<<<<< Updated upstream
-
-        #cursor.execute("begin")
         cursor.execute(query, (email, password))
-
         cursor.close()
 
+        # Did the user get added to db?
 =======
         cursor.execute(query, (email, password))
         cursor.close()
