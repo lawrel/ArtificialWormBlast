@@ -64,17 +64,21 @@ def validate_request_token(request, db_context=connect_db()):
     cursor.execute(query)
     rows = cursor.fetchmany(size=10)
 
-# This route is not really used
 @app.route("/api/users")
 def users_list():
     db_context = connect_db()
+
     if (db_context == None):
         return "Can't connect to database. See logs..."
 
     cursor = db_context.cursor(dictionary=True)
+
     query = ("select ID, First, MidInit, Last, Email from MonsterCards.Users;");
+
+    cursor.execute("begin")
     cursor.execute(query)
     rows = cursor.fetchmany(size=10)
+
     cursor.close()
 
     return jsonify(rows);
@@ -85,8 +89,10 @@ def login():
         return render_template("login.html")
     if request.method == "POST":
         db_context = connect_db()
+
         if (db_context == None):
             return "Can't connect to database. See logs..."
+
 
         # Form input fields
         email = request.form["input-email"]
@@ -96,17 +102,13 @@ def login():
         if (password == None):
             return "Password is empty"
 
-        # We will try to get the user record from database
-        ID, Email, Password = get_user(email, password, db_context);
-=======
-        # We will try to get the user record from database
-        ID, Email, Password = get_user(email, password, db_context);
->>>>>>> Stashed changes
+        cursor = db_context.cursor()
+
+        ID, Email, Password = get_user(email, password);
         token = str(uuid.uuid4())
         exp_date = datetime.now().date() + timedelta(seconds=1)
 
         # Add to UserLogins
-        cursor = db_context.cursor()
         update_UserLogins = ("""BEGIN;
                                 INSERT INTO MonsterCards.UserLogins (AccountID, AuthToken, ExpirationDate)
                                 VALUES (%s, %s, %s)
@@ -114,22 +116,18 @@ def login():
                                     AuthToken = %s,
                                     ExpirationDate = %s;
                                 COMMIT;""");
-        cursor.execute(update_UserLogins, (ID, token, exp_date, token, exp_date))
-        cursor.close()
 
-        # Return token, let the view handle redirect.
+        cursor.execute(update_UserLogins, (ID, token, exp_date, token, exp_date))
+
+        cursor.close()
         return token;
-        # return redirect(url_for('home'))
+        return redirect(url_for('home'))
 
 @app.route("/signup", methods=['GET', 'POST'])
 def signup():
     if request.method == "GET":
         return render_template("signup.html")
     if request.method == "POST":
-
-=======
-
->>>>>>> Stashed changes
         # Do we have a database context?
         db_context = connect_db()
         if (db_context == None):
@@ -147,27 +145,20 @@ def signup():
         if (get_userid(email, db_context) is not None):
             return "This email is already in use."
 
-        # We use the cursor object to execute queries, parse, store their results
-        cursor = db_context.cursor()
-=======
 
         # We use the cursor object to execute queries, parse, store their results
         cursor = db_context.cursor()
->>>>>>> Stashed changes
+
         query = ("""begin;
                     insert into MonsterCards.Users (Email, Password)
                     values (%s, sha2(%s, 256));
                     commit;""");
+
+        #cursor.execute("begin")
         cursor.execute(query, (email, password))
+
         cursor.close()
 
-        # Did the user get added to db?
-=======
-        cursor.execute(query, (email, password))
-        cursor.close()
-
-        # Did the user get added to db?
->>>>>>> Stashed changes
         if (get_user(email, password) is not None):
             return redirect(url_for('login'))
         else:
