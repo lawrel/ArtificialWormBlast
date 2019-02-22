@@ -27,14 +27,18 @@
         /* Left column */
         .leftcolumn {
             float: left;
-            width: 60%;
+            width: 70%;
+
         }
         /* Right column */
         .rightcolumn {
             float: left;
-            width: 40%;
+            width: 30%;
             background-color: #f1f1f1;
             padding-left: 20px;
+            height: 500px; 
+            overflow: auto;
+            border: 5px double black;
         }
         /* Clear floats after the columns */
         .row:after {
@@ -45,12 +49,13 @@
 
     </style>
 </head>
-{% extends "theme.html" %}
+{% extends "shared.html" %}
 {% block content %}
 <body>
 
     <div class="row">
         <div class="leftcolumn">
+            <p> THIS IS THE PLACE WHERE THE GAME WILL GO. RIGHT NOW THERE IS NO GAME, SO ENJOY THIS PICTURE OF A MONSTER. TEST PAGE BLOCKING.</p>
             <img src="/static/images/scaryMonster.gif" alt="CHAT ME ;)">
         </div>
         <div class="rightcolumn">
