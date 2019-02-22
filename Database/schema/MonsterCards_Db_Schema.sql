@@ -8,6 +8,8 @@
         
         Card(ID*, Name, DoodleData)
 */
+drop table Users;
+
 
 create database MonsterCards;
 use MonsterCards;
