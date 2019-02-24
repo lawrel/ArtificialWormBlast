@@ -34,7 +34,7 @@
         .rightcolumn {
             float: left;
             width: 30%;
-            background-color: #f1f1f1;
+            background-image: url("/static/images/monster.gif");
             padding-left: 20px;
             height: 500px; 
             overflow: auto;
@@ -57,6 +57,9 @@
         <div class="leftcolumn">
             <p> THIS IS THE PLACE WHERE THE GAME WILL GO. RIGHT NOW THERE IS NO GAME, SO ENJOY THIS PICTURE OF A MONSTER. TEST PAGE BLOCKING.</p>
             <img src="/static/images/scaryMonster.gif" alt="CHAT ME ;)">
+            <form>
+                <input type="button" value="CLICK TO GO BACK HOME" onclick="window.location.href='/home/'" />
+            </form>
         </div>
         <div class="rightcolumn">
             <div class="message_holder"></div>
