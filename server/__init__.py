@@ -18,7 +18,7 @@ def connect_db():
     config = {
         'user': 'MonsterCardsDev',
         'password': 'TSitMonsterCards',
-        'host': '127.0.0.1',
+        'host': '25.86.80.235',
         'database': 'MonsterCards'
     }
 

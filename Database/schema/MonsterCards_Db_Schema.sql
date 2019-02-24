@@ -8,6 +8,8 @@
         
         Card(ID*, Name, DoodleData)
 */
+drop table Users;
+
 
 create database MonsterCards;
 use MonsterCards;
@@ -39,6 +41,7 @@ create table UserLogins(
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
+
 begin;
 SELECT ID, Email, Password FROM MonsterCards.Users
 WHERE Email = "" AND Password = sha2("",256);
