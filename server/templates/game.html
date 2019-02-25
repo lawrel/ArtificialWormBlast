@@ -27,13 +27,13 @@
         /* Left column */
         .leftcolumn {
             float: left;
-            width: 70%;
+            width: 65%;
 
         }
         /* Right column */
         .rightcolumn {
             float: left;
-            width: 30%;
+            width: 35%;
             background-image: url("/static/images/monster.gif");
             padding-left: 20px;
             height: 500px; 
@@ -52,7 +52,15 @@
 {% extends "shared.html" %}
 {% block content %}
 <body>
-
+    <audio id="myAudio">
+        <source src="/static/sounds/song.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="myAudio2">
+        <source src="/static/sounds/ah.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="myAudio3">
+        <source src="/static/sounds/clinton.mp3" type="audio/mpeg">
+    </audio>
     <div class="row">
         <div class="leftcolumn">
             <p> THIS IS THE PLACE WHERE THE GAME WILL GO. RIGHT NOW THERE IS NO GAME, SO ENJOY THIS PICTURE OF A MONSTER. TEST PAGE BLOCKING.</p>
@@ -72,7 +80,10 @@
             <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
             
             <script type="text/javascript">
-                  var socket = io.connect('http://' + document.domain + ':' + location.port);
+                var socket = io.connect('http://' + document.domain + ':' + location.port);
+                var funkyMusic = document.getElementById("myAudio")
+                var scream = document.getElementById("myAudio2")
+                var clinton = document.getElementById("myAudio3")
                   socket.on( 'connect', function() {
                     socket.emit( 'my event', {
                       data: 'User Connected'
@@ -93,6 +104,19 @@
                     if( typeof msg.user_name !== 'undefined' ) {
                       $( 'h3' ).remove()
                       $( 'div.message_holder' ).append( '<div><b style="color: #000">'+msg.user_name+'</b> '+msg.message+'</div>' )
+                      if (msg.message == "PLAY THAT FUNKY MUSIC") {
+                          funkyMusic.play()
+                      }
+                      if (msg.message == "PLEASE STOP THE FUNKY MUSIC")
+                      {
+                          funkyMusic.pause()
+                      }
+                      if (msg.message == "Ahh") {
+                          scream.play()
+                      }
+                      if (msg.message == "Billy") {
+                          clinton.play()
+                      }
                     }
                   })
             </script>
