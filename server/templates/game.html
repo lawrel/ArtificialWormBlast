@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 
 <html>
 <head>
@@ -62,6 +62,9 @@
     <audio id="myAudio3">
         <source src="/static/sounds/clinton.mp3" type="audio/mpeg">
     </audio>
+    <audio id="myAudio4">
+        <source src="/static/sounds/mac420.mp3" type="audio/mpeg">
+    </audio>
     <div class="row">
         <div class="leftcolumn">
             <p> THIS IS THE PLACE WHERE THE GAME WILL GO. RIGHT NOW THERE IS NO GAME, SO ENJOY THIS PICTURE OF A MONSTER. TEST PAGE BLOCKING.</p>
@@ -85,6 +88,7 @@
                 var funkyMusic = document.getElementById("myAudio")
                 var scream = document.getElementById("myAudio2")
                 var clinton = document.getElementById("myAudio3")
+                var mac420 = document.getElementById("myAudio4")
                   socket.on( 'connect', function() {
                     socket.emit( 'my event', {
                       data: 'User Connected'
@@ -117,6 +121,9 @@
                       }
                       if (msg.message == "Billy") {
                           clinton.play()
+                      }
+                      if (msg.message.includes("420")) {
+                          mac420.play();
                       }
                     }
                   })
