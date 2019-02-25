@@ -36,7 +36,11 @@
             width: 30%;
             background-color: #f1f1f1;
             padding-left: 20px;
+<<<<<<< Updated upstream:server/templates/chat.html
             height: 500px; 
+=======
+            height: 600px;
+>>>>>>> Stashed changes:server/templates/game.html
             overflow: auto;
             border: 5px double black;
         }
@@ -52,7 +56,22 @@
 {% extends "shared.html" %}
 {% block content %}
 <body>
+<<<<<<< Updated upstream:server/templates/chat.html
 
+=======
+    <audio id="myAudio">
+        <source src="/static/sounds/song.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="myAudio2">
+        <source src="/static/sounds/ah.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="myAudio3">
+        <source src="/static/sounds/clinton.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="myAudio4">
+        <source src="/static/sounds/mac420.mp3" type="audio/mpeg">
+    </audio>
+>>>>>>> Stashed changes:server/templates/game.html
     <div class="row">
         <div class="leftcolumn">
             <p> THIS IS THE PLACE WHERE THE GAME WILL GO. RIGHT NOW THERE IS NO GAME, SO ENJOY THIS PICTURE OF A MONSTER. TEST PAGE BLOCKING.</p>
@@ -67,9 +86,17 @@
             </form>
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
-            
+
             <script type="text/javascript">
+<<<<<<< Updated upstream:server/templates/chat.html
                   var socket = io.connect('http://' + document.domain + ':' + location.port);
+=======
+                var socket = io.connect('http://' + document.domain + ':' + location.port);
+                var funkyMusic = document.getElementById("myAudio")
+                var scream = document.getElementById("myAudio2")
+                var clinton = document.getElementById("myAudio3")
+                var mac420 = document.getElementById("myAudio4")
+>>>>>>> Stashed changes:server/templates/game.html
                   socket.on( 'connect', function() {
                     socket.emit( 'my event', {
                       data: 'User Connected'
@@ -90,6 +117,25 @@
                     if( typeof msg.user_name !== 'undefined' ) {
                       $( 'h3' ).remove()
                       $( 'div.message_holder' ).append( '<div><b style="color: #000">'+msg.user_name+'</b> '+msg.message+'</div>' )
+<<<<<<< Updated upstream:server/templates/chat.html
+=======
+                      if (msg.message == "PLAY THAT FUNKY MUSIC") {
+                          funkyMusic.play()
+                      }
+                      if (msg.message == "PLEASE STOP THE FUNKY MUSIC")
+                      {
+                          funkyMusic.pause()
+                      }
+                      if (msg.message == "Ahh") {
+                          scream.play()
+                      }
+                      if (msg.message == "Billy") {
+                          clinton.play()
+                      }
+                      if (msg.message.includes('420')) {
+                          mac420.play()
+                      }
+>>>>>>> Stashed changes:server/templates/game.html
                     }
                   })
             </script>
