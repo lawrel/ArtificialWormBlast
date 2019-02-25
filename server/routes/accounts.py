@@ -104,7 +104,11 @@ def login():
 
         cursor = db_context.cursor()
 
-        ID, Email, Password = get_user(email, password);
+        row =  get_user(email, password);
+        if (row == None):
+            return "Bad credentials"
+
+        ID, Email, Password = row;
         token = str(uuid.uuid4())
         exp_date = datetime.now().date() + timedelta(seconds=1)
 
@@ -120,8 +124,7 @@ def login():
         cursor.execute(update_UserLogins, (ID, token, exp_date, token, exp_date))
 
         cursor.close()
-        return token;
-        return redirect(url_for('home'))
+        return redirect(url_for('home', login_token=token))
 
 @app.route("/signup", methods=['GET', 'POST'])
 def signup():
