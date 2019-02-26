@@ -4,8 +4,9 @@
  }
 body {
 	font-family: Arial;
-	padding: 10px;
-    background: #383f47;
+	margin: 0;
+    background: #181d23;
+    color: #E8fcff;
 }
 .nav {
 	background-color: #383f47;
@@ -16,6 +17,7 @@ body {
 	padding: 14px 16px;
 	color: #E8fcff;
 	text-align: center;
+	text-decoration: none;
 }
 .nav a:hover {
 	background-color: #01Acc0;
@@ -46,7 +48,6 @@ body {
 .header h1 {
    font-size: 50px;
 }
-
 /* Create two unequal columns that floats next to each other */
 /* Left column */
 .leftcolumn {
@@ -56,12 +57,14 @@ body {
 /* Right column */
 .rightcolumn {
     float: left;
+    color: #E8fcff;
     width: 35%;
     background-image: url("/static/images/monster.gif");
+    background-color: #273238;
     padding-left: 20px;
     height: 600px;
     overflow: auto;
-    border: 5px double black;
+    border: 5px double #E8fcff;
 }
 /* Clear floats after the columns */
 .row:after {
