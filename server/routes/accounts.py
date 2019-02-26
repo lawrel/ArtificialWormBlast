@@ -6,27 +6,32 @@ from datetime import date, datetime, timedelta
 
 from server import app, db_context, connect_db
 
-print("Something")
+# Input:    Email string
+# Changes:  nothing
+# Return:   integer number
 def get_userid(email, db_context=connect_db()):
+    # Did we get inputs (as strings)?
     if (db_context == None):
         return None
     if (email == None):
         return None
 
-    print(str(email))
-    cursor = db_context.cursor()
+    # Query database
     user_entry = ("""SELECT ID, Email FROM MonsterCards.Users
                         WHERE Email = %s;""");
-
+    cursor = db_context.cursor()
     cursor.execute(user_entry, (email,))
 
+    # Is the user in the db?
     user_row = cursor.fetchmany(size=1)
-    print(user_row)
     if (len(user_row) != 1):
         return None
 
     return user_row[0][0]
 
+# Input:    Email string, password string
+# Changes:  nothing
+# Return:   (ID, Email, Password) or None
 def get_user(email, pw, db_context=connect_db()):
     if (db_context == None):
         return None
@@ -35,10 +40,10 @@ def get_user(email, pw, db_context=connect_db()):
     if (pw == None):
         return None
 
-    cursor = db_context.cursor()
     user_entry = ("""SELECT ID, Email, Password FROM MonsterCards.Users
                         WHERE Email = %s AND Password = sha2(%s,256);
                      """);
+    cursor = db_context.cursor()
     cursor.execute(user_entry, (email, pw))
 
     user_row = cursor.fetchmany(size=1)
@@ -88,11 +93,10 @@ def login():
     if request.method == "GET":
         return render_template("login.html")
     if request.method == "POST":
+        # Do we have a database context?
         db_context = connect_db()
-
         if (db_context == None):
             return "Can't connect to database. See logs..."
-
 
         # Form input fields
         email = request.form["input-email"]
@@ -102,17 +106,17 @@ def login():
         if (password == None):
             return "Password is empty"
 
-        cursor = db_context.cursor()
+        # Retrieve userid from email
+        row =  get_user(email, password, db_context);
+        print(row)
+        if (row is None):
+            return redirect(url_for("login"))
+        ID,_,_ = row
 
-        row =  get_user(email, password);
-        if (row == None):
-            return "Bad credentials"
-
-        ID, Email, Password = row;
+        # Create our login credential and update the expiration date
         token = str(uuid.uuid4())
-        exp_date = datetime.now().date() + timedelta(seconds=1)
+        exp_date = datetime.now().date() + timedelta(seconds=1800)
 
-        # Add to UserLogins
         update_UserLogins = ("""BEGIN;
                                 INSERT INTO MonsterCards.UserLogins (AccountID, AuthToken, ExpirationDate)
                                 VALUES (%s, %s, %s)
@@ -134,11 +138,11 @@ def signup():
         # Do we have a database context?
         db_context = connect_db()
         if (db_context == None):
-            return "Can't connect to database. See logs..."
+            return "Can't connect to database."
 
-        # Did we get inputs
+        # Did we get inputs (as strings)?
         email = request.form["input-email"]
-        if (email == None):
+        if (email is None):
             return "Email is empty"
         password = request.form["input-password"]
         if (password == None):
@@ -148,20 +152,16 @@ def signup():
         if (get_userid(email, db_context) is not None):
             return "This email is already in use."
 
-
         # We use the cursor object to execute queries, parse, store their results
+        query = ("""BEGIN;
+                    INSERT INTO MonsterCards.Users (Email, Password)
+                    VALUES (%s, sha2(%s, 256));
+                    COMMIT;""");
         cursor = db_context.cursor()
-
-        query = ("""begin;
-                    insert into MonsterCards.Users (Email, Password)
-                    values (%s, sha2(%s, 256));
-                    commit;""");
-
-        #cursor.execute("begin")
         cursor.execute(query, (email, password))
-
         cursor.close()
 
+        # Did we successfully add the user?
         if (get_user(email, password) is not None):
             return redirect(url_for('login'))
         else:
