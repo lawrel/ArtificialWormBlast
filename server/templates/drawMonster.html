@@ -3,11 +3,17 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
     <title></title>
 </head>
-{% extends "theme.html" %}
-{% block content %}
+
 <body>
+	<div class="nav">
+    <img src="assets/logo1.png" alt = "Monster's Ink" style="float: left; width:60px; height:45px">
+    <a href="home.html">Home</a>
+    <a href="Instructions.html">How to Play</a>
+    <a href="login.html" style="float: right">Login/Signup</a>
+  </div>
     <h1>MonsterEditor</h1>
     <p> WELCOME TO MONSTERS INK Drawing Page. Draw your scariest monster</p>
 
@@ -15,5 +21,5 @@
 <form>
     <input type="button" value="CLICK TO GO TO HOMESCREEN" onclick="window.location.href='/home/'" />
 </form>
-{% endblock %}
+
 </html>

@@ -1,7 +1,16 @@
-{% extends 'shared.html' %}
+<!DOCTYPE html>
 
-{% block content %}
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+</head>
 <body>
+    <div class="nav">
+    <img src="assets/logo1.png" alt = "Monster's Ink" style="float: left; width:60px; height:45px">
+    <a href="home.html">Home</a>
+    <a href="Instructions.html">How to Play</a>
+    <a href="login.html" style="float: right">Login/Signup</a>
+    </div>
     <div class="container">
         <div class="row">
             <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
@@ -25,7 +34,6 @@
         </div>
     </div>
 </body>
-{% endblock %}
 
 <script>
     function validateForm() {
@@ -33,3 +41,4 @@
         var input_password = $("#input-password").val();
     }
 </script>
+</html>

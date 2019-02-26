@@ -1,4 +1,4 @@
-/*colorset: #181d23, #273238, #383f47, #E8fcff, #01Acc0, #255760 */
+/*colorset: #181d23, #273238, #383f47, #E8fcff, #01Acc0, #255760, #777e8e */
 * {
     box-sizing: border-box;
  }
@@ -27,18 +27,7 @@ body {
 	background-color: #E8fcff;
 	color: #181d23;
 }
-.nav b {
-	float: right;
-	padding: 14px 16px
-}
-.nav b:hover {
-	background-color: #01Acc0;
-	color: #E8fcff;
-}
-.nav b:active {
-	background-color: #E8fcff;
-	color: #181d23;
-}
+
 .header {
         padding: 30px;
         text-align: center;
@@ -64,7 +53,8 @@ body {
     padding-left: 20px;
     height: 600px;
     overflow: auto;
-    border: 5px double #E8fcff;
+    border: 5px double #777e8e;
+    border-radius: 10px;
 }
 /* Clear floats after the columns */
 .row:after {
