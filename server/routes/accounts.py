@@ -53,21 +53,26 @@ def get_user(email, pw, db_context=connect_db()):
 
     return user_row[0]
 
-
-def validate_request_token(request, db_context=connect_db()):
-    # return true if the token is a valid login request_token_valid
-    # query the database
+def is_valid_token(token, db_context=connect_db()):
     if (db_context == None):
-        return "Can't connect to database. See logs..."
+        return False;
 
+    print("Token: ", token)
+
+    curr_date = datetime.now().date()
+
+    query = ("""select AuthToken, AccountID, ExpirationDate from MonsterCards.UserLogins
+                    WHERE AuthToken = %s;""");
     # cursor handles execution sql transactions
-    cursor = db_context.cursor(dictionary=True)
+    cursor = db_context.cursor()
+    cursor.execute(query, (token,))
+    rows = cursor.fetchmany(size=1)
+    cursor.close()
 
-    query = ("select AuthToken from MonsterCards.Users;");
-
-    cursor.execute("begin")
-    cursor.execute(query)
-    rows = cursor.fetchmany(size=10)
+    # Is the user logged in?
+    if (len(rows) != 1):
+        return False
+    return True
 
 @app.route("/api/users")
 def users_list():
