@@ -8,6 +8,7 @@ verify_ssl = true
 [packages]
 flask = "*"
 mysql-connector-python = "*"
+flask_socketio = "*"
 
 [requires]
 python_version = "3.7"
