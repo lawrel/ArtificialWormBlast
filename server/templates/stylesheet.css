@@ -1,0 +1,72 @@
+/*colorset: #181d23, #273238, #383f47, #E8fcff, #01Acc0, #255760 */
+* {
+    box-sizing: border-box;
+ }
+body {
+	font-family: Arial;
+	padding: 10px;
+    background: #383f47;
+}
+.nav {
+	position: fixed;
+	background-color: #383f47;
+	overflow: hidden;
+}
+.nav a {
+	float: left;
+	padding: 14px 16px;
+	color: #E8fcff;
+	text-align: center;
+}
+.nav a:hover {
+	background-color: #01Acc0;
+	color: #E8fcff;
+}
+.nav a:active {
+	background-color: #E8fcff;
+	color: #181d23;
+}
+.nav b {
+	float: right;
+	padding: 14px 16px
+}
+.nav b:hover {
+	background-color: #01Acc0;
+	color: #E8fcff;
+}
+.nav b:active {
+	background-color: #E8fcff;
+	color: #181d23;
+}
+.header {
+        padding: 30px;
+        text-align: center;
+        background: white;
+}
+
+.header h1 {
+   font-size: 50px;
+}
+
+/* Create two unequal columns that floats next to each other */
+/* Left column */
+.leftcolumn {
+    float: left;
+    width: 65%;
+}
+/* Right column */
+.rightcolumn {
+    float: left;
+    width: 35%;
+    background-image: url("/static/images/monster.gif");
+    padding-left: 20px;
+    height: 600px;
+    overflow: auto;
+    border: 5px double black;
+}
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
