@@ -133,11 +133,7 @@ def login():
         cursor.execute(update_UserLogins, (ID, token, exp_date, token, exp_date))
         cursor.close()
 
-        redir_url = request.args.get("redir_url")
-        if (redir_url is not None):
-            return redirect(redir_url + "?login_token=" + token)
-        else:
-            return redirect(url_for('home', login_token=token))
+        return jsonify({"login_token" : token})
 
 @app.route("/signup", methods=['GET', 'POST'])
 def signup():
