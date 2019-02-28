@@ -16,10 +16,192 @@
   </div>
     <h1>MonsterEditor</h1>
     <p> WELCOME TO MONSTERS INK Drawing Page. Draw your scariest monster</p>
+    <label>Drawing tool<select id="toolselect">
+        <option value="line">Line</option>
+        <option value="rect">Rectangle</option>
+        <option value="circle">Circle</option>
+    </select></label>
 
 </body>
 <form>
     <input type="button" value="CLICK TO GO TO HOMESCREEN" onclick="window.location.href='/home/'" />
 </form>
+<table id="table" >
+   <tr>
+    <td><button onclick="fillColor('red')" style="background-color: red; height: 20px; width: 20px;"></button></td>
+    <td><button onclick="fillColor('green')" style="background-color: green; height: 20px; width: 20px;"></button></td>
+    <td><button onclick="fillColor('blue')" style="background-color: blue; height: 20px; width: 20px;"></button></td>
+    <td><button onclick="fillColor('yellow')" style="background-color: yellow; height: 20px; width: 20px;"></button></td>
+    <td><button onclick="fillColor('pink')" style="background-color: pink; height: 20px; width: 20px;"></button></td>
+    <td><button onclick="fillColor('purple')" style="background-color: purple; height: 20px; width: 20px;"></button></td>
+    <td><button onclick="fillColor('brown')" style="background-color: brown; height: 20px; width: 20px;"></button></td>
+    <td><button onclick="fillColor('violet')" style="background-color: violet; height: 20px; width: 20px;"></button></td>
+    </tr>
+  </table>
+  
+<canvas id="canvas1" width="600" height="450" style="border:1px solid #000000;position: absolute;top: 100px;left: 400px; "></canvas>
+<canvas id="canvas" width="600" height="450" style="border:1px solid #000000;position: absolute;top: 100px;left: 400px; "></canvas>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+
+<script>   
+var canvas = document.getElementById('canvas');
+var context = canvas.getContext('2d');
+var canvas1 = document.getElementById('canvas1');
+var context1 = canvas1.getContext('2d');
+var beginX;
+var beginY;
+var radius;
+var endX;
+var endY;
+var sideX;
+var sideY;
+var select;
+var currentColor; 
+var data = {"line":[], "rect":[], "circle":[]}
+init();
+function init() {     
+    var dataString = "{{ saved }}";
+    if (dataString) {
+        data = JSON.parse(dataString.replace(/&#34;/g,'"'));
+        drawAll();
+    }    
+    return;
+}
+canvas.addEventListener('mousedown', function(evt) {
+        var mousePos = getMousePos(canvas, evt);
+        select = 1;
+        beginX = mousePos.x;
+        beginY = mousePos.y;
+}, false);
+canvas.addEventListener('mousemove', function(evt) {
+        var mousePos = getMousePos(canvas, evt);
+        if (select && toolselect.value == 'rect' ) {
+            sideX = mousePos.x-beginX;
+            sideY = mousePos.y-beginY;
+            drawRect(beginX, beginY, sideX, sideY);
+        }
+        if (select && toolselect.value == 'line' ) {
+            endX = mousePos.x;
+            endY = mousePos.y; 
+            drawLine(beginX, beginY, endX, endY);
+        } 
+        if (select && toolselect.value == 'circle' ) {
+            radius = mousePos.x-beginX;
+            drawCircle(beginX, beginY, radius);
+        }     
+}, false);
+      
+canvas.addEventListener('mouseup', function(evt) {
+        var mousePos = getMousePos(canvas, evt);
+        select = 0;
+        context1.drawImage(canvas,0,0);
+         
+        if (toolselect.value == 'line') {
+            data.line.push({"beginx":beginX, "beginy":beginY, "endx":endX, "endy":endY, "color":currentColor}); 
+        } 
+        if (toolselect.value == 'rect') {              
+            data.rect.push({"beginx":beginX, "beginy":beginY, "sidex":sideX, "sidey":sideY, "color":currentColor});   
+        } 
+        if (toolselect.value == 'circle') {
+            data.circle.push({"beginx":beginX, "beginy":beginY, "radius":radius, "color":currentColor});  
+        }
+        
+}, false);
+      
+function saveImage() {
+    if(imagename.value=="")
+		alert("Image name cannot be empty") ; 
+	else {
+        $.post("/"+imagename.value,{imagename:imagename.value, string:JSON.stringify(data)});
+		alert("saved");
+	}
+}
+function loadImage() {
+    if(imagename.value=="")
+		alert("Image name cannot be empty");
+	else {
+		document.location.href="/"+imagename.value;	
+	}
+}
+function clearCanvas() {
+    document.location.href="/";
+    //location.reload();
+}
+function fillColor(color) {
+    context.fillStyle = color;
+    context.strokeStyle = color;
+    currentColor = color;
+}
+function getMousePos(canvas, evt) {
+    if (evt.pageX != undefined && evt.pageY != undefined) {
+        var x = evt.pageX;
+		var y = evt.pageY;
+	}
+	else {
+	    x = evt.clientX + document.body.scrollLeft +
+				document.documentElement.scrollLeft;
+		y = evt.clientY + document.body.scrollTop +
+				document.documentElement.scrollTop;
+    }
+	x -= canvas.offsetLeft;
+	y -= canvas.offsetTop;
+    return {
+        x: x,
+        y: y
+    };
+}
+function drawLine(x1, y1, x2, y2) {
+    context.beginPath();
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.moveTo(x1, y1);
+    context.lineTo(x2, y2);
+    context.closePath();
+    context.stroke();
+} 
+function drawRect(x1, y1, x2, y2) {
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    if(currentColor)
+        context.fillRect(x1, y1, x2, y2);
+    else
+        context.strokeRect(x1, y1, x2, y2);    
+}
+function drawCircle(x1, y1, r) {
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.beginPath();
+    context.arc(x1, y1, r, 0, Math.PI*2, false);
+    context.closePath();
+    if (currentColor) {
+        context.fill();
+    }
+    else 
+        context.stroke();
+}
+function drawAll() {
+    if (data.line.length) {
+        for (var i =0; i < data.line.length; i++) {
+            fillColor(data.line[i].color);
+            drawLine(data.line[i].beginx, data.line[i].beginy, data.line[i].endx, data.line[i].endy);
+            context1.drawImage(canvas,0,0);
+        }
+    }
+    if (data.rect.length) {
+        for (var i =0; i < data.rect.length; i++) {
+            fillColor(data.rect[i].color);
+            drawRect(data.rect[i].beginx, data.rect[i].beginy, data.rect[i].sidex, data.rect[i].sidey);
+            context1.drawImage(canvas,0,0);
+        }
+    }
+    if (data.circle.length) {    
+        for (var i =0; i < data.circle.length; i++) {
+            fillColor(data.circle[i].color);
+            drawCircle(data.circle[i].beginx, data.circle[i].beginy, data.circle[i].radius);
+            context1.drawImage(canvas,0,0);
+        }
+    }
+}
+</script>
+
+{% endblock %}
 
 </html>
