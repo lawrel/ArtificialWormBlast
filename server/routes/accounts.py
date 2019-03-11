@@ -32,9 +32,11 @@ def get_userid(email, db_context=connect_db()):
 # Input:    Email string, password string
 # Changes:  nothing
 # Return:   (ID, Email, Password) or None
-def get_user(email, pw, db_context=connect_db()):
+def get_user(email=None, pw=None, ID=None, db_context=connect_db()):
     if (db_context == None):
         return None
+
+    if (ID == None):
     if (email == None):
         return None
     if (pw == None):
@@ -42,7 +44,7 @@ def get_user(email, pw, db_context=connect_db()):
 
     user_entry = ("""SELECT ID, Email, Password FROM MonsterCards.Users
                         WHERE Email = %s AND Password = sha2(%s,256);
-                     """);
+                        """)
     cursor = db_context.cursor()
     cursor.execute(user_entry, (email, pw))
 
@@ -52,6 +54,20 @@ def get_user(email, pw, db_context=connect_db()):
         return None
 
     return user_row[0]
+    else:
+
+        user_entry = ("""SELECT ID, Email, Password FROM MonsterCards.Users
+                            WHERE ID = %s;
+                        """);
+        cursor = db_context.cursor()
+        cursor.execute(user_entry, (ID,))
+
+        user_row = cursor.fetchmany(size=1)
+        print(user_row)
+        if (len(user_row) != 1):
+            return None
+
+        return user_row[0]
 
 def is_valid_token(token, db_context=connect_db()):
     if (db_context == None):
