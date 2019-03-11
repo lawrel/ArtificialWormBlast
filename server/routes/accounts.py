@@ -70,10 +70,32 @@ def get_user(email=None, pw=None, ID=None, db_context=connect_db()):
         return user_row[0]
 
 def is_valid_token(token, db_context=connect_db()):
+    db_context=connect_db()
     if (db_context == None):
-        return False;
+        return False
 
     print("Token: ", token)
+
+    curr_date = datetime.now().date()
+
+    query = ("""select AuthToken, AccountID, ExpirationDate from MonsterCards.UserLogins
+                    WHERE AuthToken = %s;""")
+    # cursor handles execution sql transactions
+    cursor = db_context.cursor()
+    cursor.execute(query, (token,))
+    rows = cursor.fetchall()
+    cursor.close()
+    
+    print(len(rows))
+    # Is the user logged in?
+    if (len(rows) != 1):
+        return False
+    return True
+
+def get_session_data(token, db_context=connect_db()):
+    db_context = connect_db()
+    if (db_context == None):
+        return {}
 
     curr_date = datetime.now().date()
 
@@ -87,8 +109,27 @@ def is_valid_token(token, db_context=connect_db()):
 
     # Is the user logged in?
     if (len(rows) != 1):
-        return False
-    return True
+        return {}
+
+    _,ID,_ = rows[0]
+    _, email, _ = get_user(ID=ID, db_context=db_context)
+
+    return {"email":email, "user-id" : ID}
+
+def logout_user(token, db_context=connect_db()):
+    if (db_context == None):
+        return {}
+
+    curr_date = datetime.now().date()
+
+    query = ("""BEGIN;
+                DELETE FROM MonsterCards.UserLogins
+                    WHERE AuthToken = %s;
+                COMMIT;""")
+    # cursor handles execution sql transactions
+    cursor = db_context.cursor()
+    cursor.execute(query, (token,))
+    cursor.close()
 
 @app.route("/api/users")
 def users_list():
@@ -109,6 +150,25 @@ def users_list():
 
     return jsonify(rows);
 
+@app.route("/logout", methods=['POST'])
+def logout():
+    if request.method == "POST":
+        token = request.form["login-token"]
+        logout_user(token)
+        return jsonify({"msg":"user logout succesful."})
+
+@app.route("/login/token-valid", methods=['POST'])
+def login_valid_token():
+    if request.method == "POST":
+        token = request.form["login-token"]
+        return jsonify({"valid":is_valid_token(token)})
+
+@app.route("/login/session-data", methods=['POST'])
+def login_session_data():
+    if request.method == "POST":
+        token = request.form["login-token"]
+        return jsonify(get_session_data(token))
+
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     if request.method == "GET":
@@ -128,10 +188,10 @@ def login():
             return "Password is empty"
 
         # Retrieve userid from email
-        row =  get_user(email, password, db_context);
-        print(row)
+        row =  get_user(email=email, pw=password, db_context=db_context)
+        print(email, password)
         if (row is None):
-            return redirect(url_for("login"))
+            return jsonify({"error": "bad creds"})
         ID,_,_ = row
 
         # Create our login credential and update the expiration date
@@ -149,7 +209,7 @@ def login():
         cursor.execute(update_UserLogins, (ID, token, exp_date, token, exp_date))
         cursor.close()
 
-        return jsonify({"login_token" : token})
+        return jsonify({"login-token" : token})
 
 @app.route("/signup", methods=['GET', 'POST'])
 def signup():
