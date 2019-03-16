@@ -1,14 +1,10 @@
+{% extends "shared.html" %}
+{% block content %}
 <h1>Sup</h1>
-<button onclick="create_game()">Create game</button>
-<button onclick="join('room-01')">Join Room 1</button>
-<button onclick="join('room-02')">Join Room 2</button>
-
+<button onclick="create_game()">Create game</button></br>
+<input type="text" id="gameid" name="fname">
+<button onclick="joinGame()">Join Game</button>
 <div id="gameid"></div>
-
-
-
-
-
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
 <script type="text/javascript" charset="utf-8">
     var socket = io.connect('ws://' + document.domain + ':' + location.port);
@@ -26,8 +22,9 @@
         io.to("game-01").emit('my event', {data: 'Doing something!!!'});
     }
 
-    function join(room_id) {
-        socket.emit('join', {player: {username:'seanrice', email:'seane.rice@gmail.com', userid: '17'}, room: room_id});
+    function joinGame() {
+        var gameid = $('#gameid').val();
+        socket.emit('join-game', {player: {username:'seanrice', email:'seane.rice@gmail.com', userid: '17'}, gameid: gameid});
     }
 
     function create_game() {
@@ -41,3 +38,4 @@
 </script>
 
 
+{% endblock %}
