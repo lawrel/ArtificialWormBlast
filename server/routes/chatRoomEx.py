@@ -7,12 +7,12 @@ class Game:
     def __init__(self):
         self.gameid = str(uuid.uuid4())
         self.public = True
-        self.players = []
+        self.players = {}
         self.state = None
         self.round = 0
 
     def addPlayer(self, player):
-        self.players.append(player)
+        self.players[player.userid] = player
 
 class Player:
     def __init__(self, userid, username, email):
@@ -27,7 +27,7 @@ def chat_ex():
     return render_template("chatRoomEx.html")
 
 @socketio.on('create-game')
-def create_game(data):
+def createGame(data):
     username = data['player']['username']
     email = data['player']['email']
     userid = data['player']['userid']
@@ -53,7 +53,7 @@ def joinGame(data):
         send("Not a valid gameid: " + gameid, room=request.sid)
         return
     join_room(gameid)
-    send(username + ' has entered the room.', room=gameid)
+    send(username + ' has entered the game', room=gameid)
 
 #############################################################################
 
