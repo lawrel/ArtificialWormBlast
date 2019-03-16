@@ -8,18 +8,17 @@ class Game:
         self.gameid = str(uuid.uuid4())
         self.public = True
         self.players = []
-
         self.state = None
         self.round = 0
 
-    def join_game(self, userid):
+    def join_game(self, player):
         self.players.append(userid)
 
 class Player:
-    def __init__(self, userid):
+    def __init__(self, userid, username, email):
         self.userid = userid
-        self.username = None
-        self.email = None
+        self.username = username
+        self.email = email
 
 games = {}
 
@@ -50,11 +49,13 @@ def handle_message(message):
     print('received message: ' + message)
 
 @socketio.on('create-game')
-def create_game(message):
+def create_game(data):
     username = data['player']['username']
     email = data['player']['email']
     userid = data['player']['userid']
+    player = Player(userid, username, email)
 
     game = Game()
+    game.players.add(player)
     games[game.gameid] = game
-    send()
+    send(game.gameid, room=game.gameid)
