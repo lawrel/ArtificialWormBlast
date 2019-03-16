@@ -26,16 +26,29 @@ games = {}
 def chat_ex():
     return render_template("chatRoomEx.html")
 
-@socketio.on('join')
-def on_join(data):
-    print(data)
+@socketio.on('create-game')
+def create_game(data):
     username = data['player']['username']
     email = data['player']['email']
     userid = data['player']['userid']
+    player = Player(userid, username, email)
+    game = Game()
+    game.players.append(player)
+    games[game.gameid] = game
+    data['room'] = game.gameid
+    on_join(data)
+    send(game.gameid, room=game.gameid)
 
+@socketio.on('join-game')
+def joinGame(data):
+    username = data['player']['username']
+    email = data['player']['email']
+    userid = data['player']['userid']
     room = data['room']
     join_room(room)
     send(username + ' has entered the room.', room=room)
+
+#############################################################################
 
 @socketio.on('leave')
 def on_leave(data):
@@ -47,17 +60,3 @@ def on_leave(data):
 @socketio.on('message')
 def handle_message(message):
     print('received message: ' + message)
-
-@socketio.on('create-game')
-def create_game(data):
-    username = data['player']['username']
-    email = data['player']['email']
-    userid = data['player']['userid']
-    player = Player(userid, username, email)
-
-    game = Game()
-    game.players.append(player)
-    games[game.gameid] = game
-    data['room'] = game.gameid
-    on_join(data)
-    send(game.gameid, room=game.gameid)
