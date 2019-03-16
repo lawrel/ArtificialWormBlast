@@ -85,7 +85,7 @@ def is_valid_token(token, db_context=connect_db()):
     cursor.execute(query, (token,))
     rows = cursor.fetchall()
     cursor.close()
-    
+
     print(len(rows))
     # Is the user logged in?
     if (len(rows) != 1):
@@ -122,13 +122,15 @@ def logout_user(token, db_context=connect_db()):
 
     curr_date = datetime.now().date()
 
-    query = ("""BEGIN;
+    query = ("""
                 DELETE FROM MonsterCards.UserLogins
                     WHERE AuthToken = %s;
-                COMMIT;""")
+            """)
     # cursor handles execution sql transactions
     cursor = db_context.cursor()
+    cursor.execute("BEGIN;")
     cursor.execute(query, (token,))
+    cursor.execute("BEGIN;")
     cursor.close()
 
 @app.route("/api/users")
@@ -198,15 +200,17 @@ def login():
         token = str(uuid.uuid4())
         exp_date = datetime.now().date() + timedelta(seconds=1800)
 
-        update_UserLogins = ("""BEGIN;
+        update_UserLogins = ("""
                                 INSERT INTO MonsterCards.UserLogins (AccountID, AuthToken, ExpirationDate)
                                 VALUES (%s, %s, %s)
                                 ON DUPLICATE KEY UPDATE
                                     AuthToken = %s,
                                     ExpirationDate = %s;
-                                COMMIT;""");
+                                """);
         cursor = db_context.cursor()
+        cursor.execute("BEGIN;")
         cursor.execute(update_UserLogins, (ID, token, exp_date, token, exp_date))
+        cursor.execute("COMMIT;")
         cursor.close()
 
         return jsonify({"login-token" : token})
@@ -234,12 +238,14 @@ def signup():
             return "This email is already in use."
 
         # We use the cursor object to execute queries, parse, store their results
-        query = ("""BEGIN;
+        query = ("""
                     INSERT INTO MonsterCards.Users (Email, Password)
                     VALUES (%s, sha2(%s, 256));
-                    COMMIT;""");
+                    """);
         cursor = db_context.cursor()
+        cursor.execute("BEGIN;")
         cursor.execute(query, (email, password))
+        cursor.execute("COMMIT;")
         cursor.close()
 
         # Did we successfully add the user?
