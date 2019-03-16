@@ -11,7 +11,7 @@ def home():
 
     db_context = connect_db()
     if (accounts.is_valid_token(login_token, db_context) == False):
-        return redirect(url_for("login", redir_url=url_for("home")))
+        return render_template('home.html')
 
     return render_template('home.html')
 
