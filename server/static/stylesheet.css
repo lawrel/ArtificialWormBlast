@@ -62,3 +62,38 @@ body {
     display: table;
     clear: both;
 }
+.text_button {
+}
+.text_button a {
+    border-radius: 5px;
+    display: inline-block;
+    background: #181d23;
+    border: 1px dashed #01Acc0;
+    font-size: 12px;
+    font-family: Arial;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 3px;
+    margin: 4px;
+    text-align: center;
+    color: white;
+    text-shadow: 0 0 8px #01Acc0;
+    text-shadow: 0 -15px 2.5px transparent, 0 15px 2.5px transparent;
+    /*-webkit-transition: all .3s linear 0s;
+    -moz-transition: all .3s linear 0s;
+    -o-transition: all .3s linear 0s;
+    transition: all .3s linear 0s;
+    cursor: pointer;*/
+}
+
+.text_button a:hover {
+        background: #255760;
+        border: 1px solid #01Acc0;
+        color: white;
+    }
+
+.text_button a:active {
+        background: #01Acc0;
+        border: 1px solid #E8fcff;
+        color: white;
+    }

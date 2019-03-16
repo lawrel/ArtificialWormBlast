@@ -1,4 +1,4 @@
-﻿{% extends "shared.html" %}
+﻿{% extends "loggedinheader.html" %}
 <!DOCTYPE html>
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
@@ -10,10 +10,11 @@
 <body>
     <h1>LOGGED IN HOMESCREEN</h1>
     <p> WELCOME TO MONSTERS INK</p>
+    <div class="text_button">
+        <a href="{{url_for('lobby')}}">LOBBY</a>
+    </div>
 </body>
-<form>
-    <input type="button" value="CLICK TO GO TO LOBBY" onclick="window.location.href='{{url_for("lobby")}}'" />
-</form>
+
 
 <form>
     <input type="button" value="CLICK TO GO TO YOUR ACCOUNT" onclick="window.location.href='/myaccount/'" />
