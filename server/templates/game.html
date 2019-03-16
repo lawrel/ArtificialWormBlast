@@ -1,16 +1,6 @@
-<!DOCTYPE html>
-
-<html>
-<head>
-    <link rel="stylesheet" type="text/css" href="stylesheet.css">
-</head>
+{%extends 'shared.html'%}
+{% block content %}
 <body>
-  <div class="nav">
-    <img src="assets/logo1.png" alt = "Monster's Ink" style="float: left; width:60px; height:45px">
-    <a href="home.html">Home</a>
-    <a href="Instructions.html">How to Play</a>
-    <a href="login.html" style="float: right">Login/Signup</a>
-  </div>
   <div>
     <audio id="myAudio">
         <source src="/static/sounds/song.mp3" type="audio/mpeg">
@@ -92,4 +82,4 @@
     </div> </div>
 
 </body>
-</html>
+{%endblock%}
