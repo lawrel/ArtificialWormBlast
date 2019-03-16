@@ -11,8 +11,8 @@ class Game:
         self.state = None
         self.round = 0
 
-    def join_game(self, player):
-        self.players.append(userid)
+    def addPlayer(player):
+        self.players.append(player)
 
 class Player:
     def __init__(self, userid, username, email):
@@ -20,7 +20,7 @@ class Player:
         self.username = username
         self.email = email
 
-games = {}
+gameLst = {}
 
 @app.route("/chat-ex")
 def chat_ex():
@@ -32,11 +32,11 @@ def create_game(data):
     email = data['player']['email']
     userid = data['player']['userid']
     player = Player(userid, username, email)
+
     game = Game()
-    game.players.append(player)
-    games[game.gameid] = game
-    data['room'] = game.gameid
-    on_join(data)
+    gameLst[game.gameid] = game
+    data['gameid'] = game.gameid
+    joinGame(data)
     send(game.gameid, room=game.gameid)
 
 @socketio.on('join-game')
@@ -44,8 +44,10 @@ def joinGame(data):
     username = data['player']['username']
     email = data['player']['email']
     userid = data['player']['userid']
-    room = data['room']
-    join_room(room)
+    gameid = data['gameid']
+    player = Player(userid, username, email)
+    gameLst[gameid].addPlayer(player)
+    join_room(gameid)
     send(username + ' has entered the room.', room=room)
 
 #############################################################################
