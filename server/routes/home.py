@@ -7,16 +7,22 @@ from server.routes import accounts
 #Functions defining the pages
 @app.route('/home')
 def home():
-    login_token = request.args.get("login_token")
+    # login_token = request.args.get("login_token")
 
-    db_context = connect_db()
-    if (accounts.is_valid_token(login_token, db_context) == False):
-        return redirect(url_for("login", redir_url=url_for("home")))
+    # db_context = connect_db()
+    # if (accounts.is_valid_token(login_token, db_context) == False):
+    #     return redirect(url_for("login", redir_url=url_for("home")))
 
     return render_template('home.html')
 
-@app.route('/lobby/')
+@app.route('/lobby')
 def lobby():
+    # login_token = request.args.get("login_token")
+
+    # db_context = connect_db()
+    # if (accounts.is_valid_token(login_token, db_context) == False):
+    #     return redirect(url_for("login", redir_url=url_for("lobby")))
+
     return render_template('lobby.html')
 
 @app.route('/instructions/')
@@ -28,5 +34,5 @@ def monsterEditor():
     return render_template('drawMonster.html')
 
 @app.route("/")
-def hello_name():
-    return render_template('welcome.html')
+def index():
+    return render_template('index.html')

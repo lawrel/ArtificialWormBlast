@@ -248,6 +248,6 @@ def signup():
         else:
             return "Error occurred."
 
-@app.route('/myaccount/')
+@app.route('/myaccount')
 def myAccount():
     return render_template('Account.html')
