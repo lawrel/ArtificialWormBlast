@@ -1,0 +1,91 @@
+{% extends 'shared.html' %}
+
+{% block header %}
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+{% endblock %}
+
+{% block content %}
+<style>
+        .text-left {
+            text-align: left;
+        }
+        
+        .text-right {
+            text-align: right;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .bg-grad {
+            background-image: linear-gradient(-5deg, #a2d2bd 0%, #1fc8db 51%, #2cb5e8 75%);
+        }
+        
+        .bg-pattern-1 {
+            /* background-image: url("https://cdn12.picryl.com/photo/2016/12/31/background-abstracts-patterns-backgrounds-textures-2b7e45-1024.jpg"); */
+            background-color: #ffffff00;
+            border: 1px solid #ffffff;
+        }
+
+        .bg-pattern-2 {
+            /* background-image: url("https://cdn12.picryl.com/photo/2016/12/31/background-abstracts-patterns-backgrounds-textures-2b7e45-1024.jpg"); */
+            background-color: #ffffff00;
+            border: 1px solid #ffffff;
+        }
+        
+        /* @media only screen and (min-width: 576px) {
+             .col-crush {
+                display: inherit;
+             }
+        } */
+        
+        @media only screen and (max-width: 576px) {
+             .col-crush {
+                display: none;
+             }
+        
+             .col-fill {
+                 max-width: 100%;
+                 flex: 0 0 100%;
+             }
+        }
+        </style>
+<div class="row">
+    <div class="col-1 col-crush"></div>
+    <div class="col-10 col-fill">
+        <h1 class="text-center">Monsters Ink</h1>
+        <div class="card-deck">
+            <div class="card bg-pattern-1">
+                <div class="card-body">
+                    <p>Monsters Ink is a new-aged take on an old card game where players draw fierce monsters and pitch them against their opponents. </p>
+                </div>
+            </div>
+        </div>
+        <div class="card-deck">
+               
+                    <div class="card bg-pattern-1">
+                        <div class="card-body">
+                            <h1>Gameplay</h1>
+                            <ul>
+                                <li>Draw your own card</li>
+                                <li>Give it unique abilities</li>
+                                <li>Challenge your foes and let the lobby decide your fate.</li>
+                                <li>Discuss which opponent wins in text chat.</li>
+                                <li>Winner gets to add an ability to the card.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card bg-pattern-1">
+                        <div class="card-body">
+                            <h1>Monsters Ink</h1>
+                            Stuff.
+                        </div>
+                    </div>
+
+            </div>
+    </div>
+    <div class="col-1 col-crush"></div>
+</div>
+{% endblock %}

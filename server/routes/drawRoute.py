@@ -11,4 +11,4 @@ app = Flask(__name__)
 
 @app.route("/monstereditor")
 def sessions():
-return render_template('drawMonster.html')
+    return render_template('drawMonster.html')
