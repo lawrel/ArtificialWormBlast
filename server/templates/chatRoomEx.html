@@ -1,0 +1,41 @@
+{% extends "shared.html" %}
+{% block content %}
+<h1>Sup</h1>
+<button onclick="create_game()">Create game</button></br>
+<input type="text" id="gameid" name="fname">
+<button onclick="joinGame()">Join Game</button>
+<div id="gameid"></div>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+    var socket = io.connect('ws://' + document.domain + ':' + location.port);
+    socket.on('connect', function() {
+        socket.emit('my event', {data: 'I\'m connected!'});
+        console.log(socket);
+        //io.join("game-01");
+    });
+
+    socket.on('message', function (msg) {
+        console.log(msg);
+    });
+
+    function doSomething() {
+        io.to("game-01").emit('my event', {data: 'Doing something!!!'});
+    }
+
+    function joinGame() {
+        var gameid = $('#gameid').val();
+        socket.emit('join-game', {player: {username:'seanrice', email:'seane.rice@gmail.com', userid: '17'}, gameid: gameid});
+    }
+
+    function create_game() {
+        socket.emit('create-game', {player: {username:'seanrice', email:'seane.rice@gmail.com', userid: '17'}});
+    }
+
+    function game_created() {
+
+    }
+
+</script>
+
+
+{% endblock %}

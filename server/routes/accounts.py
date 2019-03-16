@@ -6,63 +6,130 @@ from datetime import date, datetime, timedelta
 
 from server import app, db_context, connect_db
 
-print("Something")
+# Input:    Email string
+# Changes:  nothing
+# Return:   integer number
 def get_userid(email, db_context=connect_db()):
+    # Did we get inputs (as strings)?
     if (db_context == None):
         return None
     if (email == None):
         return None
 
-    print(str(email))
-    cursor = db_context.cursor()
+    # Query database
     user_entry = ("""SELECT ID, Email FROM MonsterCards.Users
                         WHERE Email = %s;""");
-
+    cursor = db_context.cursor()
     cursor.execute(user_entry, (email,))
 
+    # Is the user in the db?
     user_row = cursor.fetchmany(size=1)
-    print(user_row)
     if (len(user_row) != 1):
         return None
 
     return user_row[0][0]
 
-def get_user(email, pw, db_context=connect_db()):
+# Input:    Email string, password string
+# Changes:  nothing
+# Return:   (ID, Email, Password) or None
+def get_user(email=None, pw=None, ID=None, db_context=connect_db()):
     if (db_context == None):
         return None
-    if (email == None):
-        return None
-    if (pw == None):
-        return None
 
-    cursor = db_context.cursor()
-    user_entry = ("""SELECT ID, Email, Password FROM MonsterCards.Users
-                        WHERE Email = %s AND Password = sha2(%s,256);
-                     """);
-    cursor.execute(user_entry, (email, pw))
+    if (ID == None):
+        if (email == None):
+            return None
+        if (pw == None):
+            return None
 
-    user_row = cursor.fetchmany(size=1)
-    print(user_row)
-    if (len(user_row) != 1):
-        return None
+        user_entry = ("""SELECT ID, Email, Password FROM MonsterCards.Users
+                            WHERE Email = %s AND Password = sha2(%s,256);
+                            """)
+        cursor = db_context.cursor()
+        cursor.execute(user_entry, (email, pw))
 
-    return user_row[0]
+        user_row = cursor.fetchmany(size=1)
+        print(user_row)
+        if (len(user_row) != 1):
+            return None
 
+        return user_row[0]
+    else:
 
-def validate_request_token(request, db_context=connect_db()):
-    # return true if the token is a valid login request_token_valid
-    # query the database
+        user_entry = ("""SELECT ID, Email, Password FROM MonsterCards.Users
+                            WHERE ID = %s;
+                        """);
+        cursor = db_context.cursor()
+        cursor.execute(user_entry, (ID,))
+
+        user_row = cursor.fetchmany(size=1)
+        print(user_row)
+        if (len(user_row) != 1):
+            return None
+
+        return user_row[0]
+
+def is_valid_token(token, db_context=connect_db()):
+    db_context=connect_db()
     if (db_context == None):
-        return "Can't connect to database. See logs..."
+        return False
 
+    print("Token: ", token)
+
+    curr_date = datetime.now().date()
+
+    query = ("""select AuthToken, AccountID, ExpirationDate from MonsterCards.UserLogins
+                    WHERE AuthToken = %s;""")
     # cursor handles execution sql transactions
-    cursor = db_context.cursor(dictionary=True)
+    cursor = db_context.cursor()
+    cursor.execute(query, (token,))
+    rows = cursor.fetchall()
+    cursor.close()
+    
+    print(len(rows))
+    # Is the user logged in?
+    if (len(rows) != 1):
+        return False
+    return True
 
-    query = ("select AuthToken from MonsterCards.Users;");
+def get_session_data(token, db_context=connect_db()):
+    db_context = connect_db()
+    if (db_context == None):
+        return {}
 
-    cursor.execute("begin")
-    cursor.execute(query)
-    rows = cursor.fetchmany(size=10)
+    curr_date = datetime.now().date()
+
+    query = ("""select AuthToken, AccountID, ExpirationDate from MonsterCards.UserLogins
+                    WHERE AuthToken = %s;""");
+    # cursor handles execution sql transactions
+    cursor = db_context.cursor()
+    cursor.execute(query, (token,))
+    rows = cursor.fetchmany(size=1)
+    cursor.close()
+
+    # Is the user logged in?
+    if (len(rows) != 1):
+        return {}
+
+    _,ID,_ = rows[0]
+    _, email, _ = get_user(ID=ID, db_context=db_context)
+
+    return {"email":email, "user-id" : ID}
+
+def logout_user(token, db_context=connect_db()):
+    if (db_context == None):
+        return {}
+
+    curr_date = datetime.now().date()
+
+    query = ("""BEGIN;
+                DELETE FROM MonsterCards.UserLogins
+                    WHERE AuthToken = %s;
+                COMMIT;""")
+    # cursor handles execution sql transactions
+    cursor = db_context.cursor()
+    cursor.execute(query, (token,))
+    cursor.close()
 
 @app.route("/api/users")
 def users_list():
@@ -83,16 +150,34 @@ def users_list():
 
     return jsonify(rows);
 
+@app.route("/logout", methods=['POST'])
+def logout():
+    if request.method == "POST":
+        token = request.form["login-token"]
+        logout_user(token)
+        return jsonify({"msg":"user logout succesful."})
+
+@app.route("/login/token-valid", methods=['POST'])
+def login_valid_token():
+    if request.method == "POST":
+        token = request.form["login-token"]
+        return jsonify({"valid":is_valid_token(token)})
+
+@app.route("/login/session-data", methods=['POST'])
+def login_session_data():
+    if request.method == "POST":
+        token = request.form["login-token"]
+        return jsonify(get_session_data(token))
+
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     if request.method == "GET":
         return render_template("login.html")
     if request.method == "POST":
+        # Do we have a database context?
         db_context = connect_db()
-
         if (db_context == None):
             return "Can't connect to database. See logs..."
-
 
         # Form input fields
         email = request.form["input-email"]
@@ -102,13 +187,17 @@ def login():
         if (password == None):
             return "Password is empty"
 
-        cursor = db_context.cursor()
+        # Retrieve userid from email
+        row =  get_user(email=email, pw=password, db_context=db_context)
+        print(email, password)
+        if (row is None):
+            return jsonify({"error": "bad creds"})
+        ID,_,_ = row
 
-        ID, Email, Password = get_user(email, password);
+        # Create our login credential and update the expiration date
         token = str(uuid.uuid4())
-        exp_date = datetime.now().date() + timedelta(seconds=1)
+        exp_date = datetime.now().date() + timedelta(seconds=1800)
 
-        # Add to UserLogins
         update_UserLogins = ("""BEGIN;
                                 INSERT INTO MonsterCards.UserLogins (AccountID, AuthToken, ExpirationDate)
                                 VALUES (%s, %s, %s)
@@ -116,12 +205,11 @@ def login():
                                     AuthToken = %s,
                                     ExpirationDate = %s;
                                 COMMIT;""");
-
+        cursor = db_context.cursor()
         cursor.execute(update_UserLogins, (ID, token, exp_date, token, exp_date))
-
         cursor.close()
-        return token;
-        return redirect(url_for('home'))
+
+        return jsonify({"login-token" : token})
 
 @app.route("/signup", methods=['GET', 'POST'])
 def signup():
@@ -131,11 +219,11 @@ def signup():
         # Do we have a database context?
         db_context = connect_db()
         if (db_context == None):
-            return "Can't connect to database. See logs..."
+            return "Can't connect to database."
 
-        # Did we get inputs
+        # Did we get inputs (as strings)?
         email = request.form["input-email"]
-        if (email == None):
+        if (email is None):
             return "Email is empty"
         password = request.form["input-password"]
         if (password == None):
@@ -145,20 +233,16 @@ def signup():
         if (get_userid(email, db_context) is not None):
             return "This email is already in use."
 
-
         # We use the cursor object to execute queries, parse, store their results
+        query = ("""BEGIN;
+                    INSERT INTO MonsterCards.Users (Email, Password)
+                    VALUES (%s, sha2(%s, 256));
+                    COMMIT;""");
         cursor = db_context.cursor()
-
-        query = ("""begin;
-                    insert into MonsterCards.Users (Email, Password)
-                    values (%s, sha2(%s, 256));
-                    commit;""");
-
-        #cursor.execute("begin")
         cursor.execute(query, (email, password))
-
         cursor.close()
 
+        # Did we successfully add the user?
         if (get_user(email, password) is not None):
             return redirect(url_for('login'))
         else:

@@ -7,7 +7,7 @@
                 <div class="card card-signin my-5">
                     <div class="card-body">
                         <h5 class="card-title text-center">Sign In</h5>
-                        <form method="POST" enctype="multipart/form-data" name="login-form" action="/login">
+                        <form id="login-form" method="POST" enctype="multipart/form-data" name="login-form">
                             <div class="form-group">
                                 <label for="input-email">Email address</label>
                                 <input type="email" class="form-control" id="input-email" name="input-email" aria-describedby="emailHelp" placeholder="Enter email">
@@ -16,7 +16,7 @@
                                 <label for="input-password">Password</label>
                                 <input type="password" class="form-control" id="input-password" name="input-password" placeholder="Password" pattern=".{8,16}" required title="8 to 16 characters">
                             </div>
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="button" class="btn btn-primary" onclick="submitLogin_ajax()">Submit</button>
                         </form>
                     </div>
                 </div>
@@ -30,5 +30,34 @@
         var input_email = $("#input-email").val();
         var input_password = $("#input-password").val();
     }
+    
+    function submitLogin_ajax() {
+        var fd = new FormData();
+        fd.append( 'input-email', $("#input-email").val());
+        fd.append( 'input-password', $("#input-password").val());
+
+        $.ajax({
+            url: '/login',
+            data: fd,
+            processData: false,
+            contentType: false,
+            type: 'POST',
+            success: function(data){
+                console.log(data);
+                if ("error" in data) {
+
+                }
+                else if ("login-token" in data) {
+                    saveLoginToken(data["login-token"]);
+                    window.location.href = "/home";
+                }
+            }
+        });
+    }
 </script>
+<<<<<<< HEAD
 {%endblock%}
+=======
+
+{% endblock %}
+>>>>>>> 1425f3e4e58bead49fe68e7eb5f094b1cfe17eac
