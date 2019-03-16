@@ -11,7 +11,7 @@ class Game:
         self.state = None
         self.round = 0
 
-    def addPlayer(player):
+    def addPlayer(self, player):
         self.players.append(player)
 
 class Player:
