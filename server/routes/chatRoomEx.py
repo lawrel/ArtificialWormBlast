@@ -48,7 +48,7 @@ def joinGame(data):
     player = Player(userid, username, email)
     gameLst[gameid].addPlayer(player)
     join_room(gameid)
-    send(username + ' has entered the room.', room=room)
+    send(username + ' has entered the room.', room=gameid)
 
 #############################################################################
 
