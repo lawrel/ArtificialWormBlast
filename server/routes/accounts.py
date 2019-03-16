@@ -37,23 +37,23 @@ def get_user(email=None, pw=None, ID=None, db_context=connect_db()):
         return None
 
     if (ID == None):
-    if (email == None):
-        return None
-    if (pw == None):
-        return None
+        if (email == None):
+            return None
+        if (pw == None):
+            return None
 
-    user_entry = ("""SELECT ID, Email, Password FROM MonsterCards.Users
-                        WHERE Email = %s AND Password = sha2(%s,256);
-                        """)
-    cursor = db_context.cursor()
-    cursor.execute(user_entry, (email, pw))
+        user_entry = ("""SELECT ID, Email, Password FROM MonsterCards.Users
+                            WHERE Email = %s AND Password = sha2(%s,256);
+                            """)
+        cursor = db_context.cursor()
+        cursor.execute(user_entry, (email, pw))
 
-    user_row = cursor.fetchmany(size=1)
-    print(user_row)
-    if (len(user_row) != 1):
-        return None
+        user_row = cursor.fetchmany(size=1)
+        print(user_row)
+        if (len(user_row) != 1):
+            return None
 
-    return user_row[0]
+        return user_row[0]
     else:
 
         user_entry = ("""SELECT ID, Email, Password FROM MonsterCards.Users
