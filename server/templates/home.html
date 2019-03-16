@@ -1,19 +1,18 @@
-﻿<!DOCTYPE html>
+﻿{% extends "theme.html" %}
+<!DOCTYPE html>
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
     <title></title>
 </head>
-{% extends "theme.html" %}
 {% block content %}
 <body>
     <h1>LOGGED IN HOMESCREEN</h1>
     <p> WELCOME TO MONSTERS INK</p>
-
 </body>
 <form>
-    <input type="button" value="CLICK TO GO TO LOBBY" onclick="window.location.href='/lobby/'" />
+    <input type="button" value="CLICK TO GO TO LOBBY" onclick="window.location.href='{{url_for("lobby")}}'" />
 </form>
 
 <form>
@@ -30,5 +29,12 @@
 <form>
     <input type="button" value="GO TO GAME" onclick="window.location.href='/game/'" />
 </form>
+<script>
+    var sessionData = {};
+    $( document ).ready(function() {
+        handleLogin();
+    });
+</script>
+
 {% endblock %}
 </html>
