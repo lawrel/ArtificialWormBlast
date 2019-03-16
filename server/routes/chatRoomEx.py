@@ -1,5 +1,5 @@
 import uuid
-from flask import render_template
+from flask import render_template, request
 from flask_socketio import join_room, leave_room, send, emit
 from server import app, socketio
 
@@ -46,7 +46,12 @@ def joinGame(data):
     userid = data['player']['userid']
     gameid = data['gameid']
     player = Player(userid, username, email)
-    gameLst[gameid].addPlayer(player)
+    if(gameid in gameLst):
+        gameLst[gameid].addPlayer(player)
+    else:
+        print("Not a valid gameid: " + gameid)
+        send("Not a valid gameid: " + gameid, room=request.sid)
+        return
     join_room(gameid)
     send(username + ' has entered the room.', room=gameid)
 
