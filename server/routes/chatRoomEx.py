@@ -56,6 +56,8 @@ def create_game(data):
     player = Player(userid, username, email)
 
     game = Game()
-    game.players.add(player)
+    game.players.append(player)
     games[game.gameid] = game
+    data['room'] = game.gameid
+    on_join(data)
     send(game.gameid, room=game.gameid)
