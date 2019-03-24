@@ -1,9 +1,10 @@
 var loginToken = null;
+var loggedInEvent = new Event("logged-in");
 
 function retrieveSessionData() {
     //  Retrieve session data
     if (typeof(Storage) !== "undefined") {
-        return localStorage.getItem("MonsterInk_session_data");
+        return JSON.parse(localStorage.getItem("MonsterInk_session_data"));
     } else {
         console.error("Cannot retrieve session data. No local storage defined.")
         return null;
@@ -12,7 +13,7 @@ function retrieveSessionData() {
 
 function saveSessionData(seshData) {
     if (typeof(Storage) !== "undefined") {
-        localStorage.setItem("MonsterInk_session_data", seshData);
+        localStorage.setItem("MonsterInk_session_data", JSON.stringify(seshData));
         console.log("saved session data");
     } else {
         console.error("Cannot save session data. No local storage defined.")
@@ -50,8 +51,9 @@ function getSessionData_ajax(loginToken) {
         contentType: false,
         type: 'POST',
         success: function(data){
-            console.log(data);
+            //console.log(data);
             saveSessionData(data);
+            document.dispatchEvent(loggedInEvent);
         }
     });
 }
@@ -67,7 +69,7 @@ function validateToken_ajax(loginToken) {
         contentType: false,
         type: 'POST',
         success: function(data){
-            console.log(data);
+            //console.log(data);
             if ("valid" in data && data["valid"] == true) {
                 getSessionData_ajax(loginToken);
                 console.log("getting session data");
@@ -79,6 +81,7 @@ function validateToken_ajax(loginToken) {
 }
 
 function handleLogin() {
+    loginStatus = 'logged-out';
     loginToken = retrieveLoginToken();
     console.log(loginToken);
     if (loginToken != null) {
@@ -88,11 +91,14 @@ function handleLogin() {
         window.location.href = "/login";
     }
 
-    var seshData = retrieveSessionData();
-    if (seshData != null) {
-    } else {
-        console.error();
-    }
+    document.addEventListener("logged-in", function() {
+        var seshData = retrieveSessionData();
+        if (seshData != null) {
+        } else {
+            console.error("There should be sesh data.");
+        }
+    });
+
 }
 
 function handleLogout() {

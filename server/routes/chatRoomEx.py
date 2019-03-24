@@ -48,16 +48,16 @@ def joinGame(data):
     player = Player(userid, username, email)
     if(gameid in gameLst):
         if(player.userid in gameLst[gameid].players):
-            send("You are already in the game", room=request.sid)
+            emit('join-game', {"status":"failure", "reason":"You are already in a game"}, room=request.sid)
             return
         else:
             gameLst[gameid].addPlayer(player)
     else:
         print("Not a valid gameid: " + gameid)
-        send("Not a valid gameid: " + gameid, room=request.sid)
+        emit('join-game', {"status":"failure", "reason":"Not a valid gameid"}, room=request.sid)
         return
     join_room(gameid)
-    send(username + ' has entered the game', room=gameid)
+    emit('join-game', {"status":"success"}, room=request.sid)
 
 #############################################################################
 
