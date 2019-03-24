@@ -15,15 +15,6 @@ def home():
 
     return render_template('home.html')
 
-@app.route('/lobby')
-def lobby():
-    # login_token = request.args.get("login_token")
-
-    # db_context = connect_db()
-    # if (accounts.is_valid_token(login_token, db_context) == False):
-    #     return redirect(url_for("login", redir_url=url_for("lobby")))
-
-    return render_template('lobby.html')
 
 @app.route('/instructions/')
 def Instructions():

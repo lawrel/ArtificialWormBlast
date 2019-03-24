@@ -18,9 +18,6 @@
         <div class="leftcolumn">
             <p> THIS IS THE PLACE WHERE THE GAME WILL GO. RIGHT NOW THERE IS NO GAME, SO ENJOY THIS PICTURE OF A MONSTER. TEST PAGE BLOCKING.</p>
             <img src="/static/images/scaryMonster.gif" alt="CHAT ME ;)">
-            <form>
-                <input type="button" value="CLICK TO GO BACK HOME" onclick="window.location.href='/home/'" />
-            </form>
         </div>
         <div class="rightcolumn">
             <div class="message_holder"></div>
@@ -33,11 +30,6 @@
             <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
 
             <script type="text/javascript">
-                var socket = io.connect('http://' + document.domain + ':' + location.port);
-                var funkyMusic = document.getElementById("myAudio")
-                var scream = document.getElementById("myAudio2")
-                var clinton = document.getElementById("myAudio3")
-                var mac420 = document.getElementById("myAudio4")
                   socket.on( 'connect', function() {
                     socket.emit( 'my event', {
                       data: 'User Connected'
@@ -58,23 +50,6 @@
                     if( typeof msg.user_name !== 'undefined' ) {
                       $( 'h3' ).remove()
                       $( 'div.message_holder' ).append( '<div><b style="color: #000">'+msg.user_name+'</b> '+msg.message+'</div>' )
-                      if (msg.message == "PLAY THAT FUNKY MUSIC") {
-                          funkyMusic.play()
-                      }
-                      if (msg.message == "PLEASE STOP THE FUNKY MUSIC")
-                      {
-                          funkyMusic.pause()
-                          mac420.pause()
-                      }
-                      if (msg.message == "Ahh") {
-                          scream.play()
-                      }
-                      if (msg.message == "Billy") {
-                          clinton.play()
-                      }
-                      if (msg.message.includes("420")) {
-                          mac420.play();
-                      }
                     }
                   })
             </script>
