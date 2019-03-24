@@ -34,6 +34,11 @@ body {
         background: white;
 }
 
+.no-bg-border {
+    background: none;
+    border: none;
+}
+
 .header h1 {
    font-size: 50px;
 }
@@ -42,6 +47,7 @@ body {
 .leftcolumn {
     float: left;
     width: 65%;
+    max-height: 100%;
 }
 /* Right column */
 .rightcolumn {
@@ -56,9 +62,69 @@ body {
     border: 5px double #777e8e;
     border-radius: 10px;
 }
+
+.row {
+    margin-right: 0px;
+    margin-left: 0px;
+}
+
 /* Clear floats after the columns */
 .row:after {
     content: "";
     display: table;
     clear: both;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.bg-grad {
+    background-image: linear-gradient(-5deg, #a2d2bd 0%, #1fc8db 51%, #2cb5e8 75%);
+}
+
+.bg-pattern-1 {
+    /* background-image: url("https://cdn12.picryl.com/photo/2016/12/31/background-abstracts-patterns-backgrounds-textures-2b7e45-1024.jpg"); */
+    background-color: #ffffff00;
+    border: 1px solid #ffffff;
+}
+
+.bg-pattern-2 {
+    /* background-image: url("https://cdn12.picryl.com/photo/2016/12/31/background-abstracts-patterns-backgrounds-textures-2b7e45-1024.jpg"); */
+    background-color: #ffffff00;
+    border: 1px solid #ffffff;
+}
+
+.card-deck {
+    margin-bottom: 15px;
+    margin-top: 15px;
+}
+
+.leftcolumn .card-deck {
+    margin: 15px;
+}
+
+/* @media only screen and (min-width: 576px) {
+     .col-crush {
+        display: inherit;
+     }
+} */
+
+@media only screen and (max-width: 576px) {
+     .col-crush {
+        display: none;
+     }
+
+     .col-fill {
+         max-width: 100%;
+         flex: 0 0 100%;
+     }
 }
