@@ -6,80 +6,36 @@
 </head>
 {% block content %}
     <h1 align="center"> [Username]'s Monsters</h1>
-    <div class="container">
-        <div class="polaroid">
-            <img src="/static/images/monsterExample1.JPG" alt="Monster 1" style="width:100%; height: 75%">
-            <div class="container">
-                <p>Paul the Cloud</p>
-            </div>
-        </div>
-        <div class="polaroid">
-            <img src="/static/images/monsterExample2.JPG" alt="Monster 2" style="width:100%; height: 75%" align="center">
-            <div class="container">
-                <p>Not Paul the Cloud</p>
-            </div>
-        </div>
-        <div class="polaroid">
-            <img src="/static/images/monsterExample3.JPG" alt="Monster 3" style="width:100%; height: 75%">
-            <div class="container">
-                <p>Ice Cream Dude</p>
-            </div>
-        </div>
-        <div class="polaroid">
-            <img src="/static/images/monsterExample4.JPG" alt="Monster 3" style="width:100%; height: 75%">
-            <div class="container">
-                <p>Jelly Dude</p>
-            </div>
-        </div>
-        <div class="polaroid">
-            <img src="/static/images/monsterExample5.JPG" alt="Monster 3" style="width:100%; height: 75%">
-            <div class="container">
-                <p>Galusha</p>
-            </div>
-        </div>
-        <div class="polaroid">
-            <img src="/static/images/monsterExample6.JPG" alt="Monster 3" style="width:100%; height: 75%">
-            <div class="container">
-                <p>Space Pampootee</p>
-            </div>
-        </div>
-        <div class="polaroid">
-            <img src="/static/images/monsterExample7.JPG" alt="Monster 3" style="width:100%; height: 75%">
-            <div class="container">
-                <p>Raccoon</p>
-            </div>
-        </div>
-        <div class="polaroid">
-            <img src="/static/images/monsterExample8.JPG" alt="Monster 3" style="width:100%; height: 75%">
-            <div class="container">
-                <p>Spider Moth</p>
-            </div>
-        </div>
-        <div class="polaroid">
-            <img src="/static/images/monsterExample9.JPG" alt="Monster 3" style="width:100%; height: 75%">
-            <div class="container">
-                <p>Fat Zombie Mario</p>
-            </div>
-        </div>
-        <div class="polaroid">
-            <img src="/static/images/monsterExample10.JPG" alt="Monster 3" style="width:100%; height: 75%">
-            <div class="container">
-                <p>Badderlocks</p>
-            </div>
-        </div>
-        <button class="button button2" onclick="window.location.href='/myaccount'">Manage Team</button>
+    <div class="container" id="kevin">
+        
+        <button class="button button2" display: inline-block; onclick="window.location.href='/myaccount'">Manage Team</button>
     </div>
     <body>
         <hr />
-        <form>
-            <input type="button" align ="center" value="Go to Game" onclick="window.location.href='/game/'" />
-        </form>
+        <div class="container">
+            <form>
+                <button  display inline-block; onclick="window.location.href='/game'">Play with Friends</button>
+                <button display inline-block; onclick="window.location.href='/game'">Play without Friends</button>
+            </form>
+        </div>
     </body>
     <script>
         var sessionData = {};
         $(document).ready(function () {
             handleLogin();
         });
+
+        var names = ["Paul the Cloud", "Not Paul the Cloud", "Ice Cream Dude", "Jelly Dude", "Galusha", "Space Pampootee", "Raccoon", "Spooder Dude", "Fat Zombie Mario", "Badderlocks"]
+        var locations = ["monsterExample1.JPG", "monsterExample2.JPG", "monsterExample3.JPG", "monsterExample4.JPG", "monsterExample5.JPG", "monsterExample6.JPG", "monsterExample7.JPG", "monsterExample8.JPG", "monsterExample9.JPG", "monsterExample10.JPG"]
+        for( var kasey=0; kasey<10; kasey++)
+        {
+            var monster_name = names[kasey];
+            var pictureName = locations[kasey];
+            var ref = `<div class="polaroid" id="one"> <img src="/static/images/${pictureName}" alt="Monster 1" style="width:100%; height: 75%"> <div class="container"> <p>${monster_name}</p> </div> </div>`
+            $("#kevin").prepend(ref)
+        }
+
     </script>
+    
     {% endblock %}
 </html>
