@@ -1,19 +1,63 @@
 ﻿{%extends 'shared.html'%}
 {% block content %}
+<head>
+    <link rel="stylesheet" type="text/css" href="/static/stylesheet.css">
+</head>
 <body>
-    <h1>INSTRUCTIONS</h1>
-    <p> How to Play:</p>
-</body>
-<ol>
-    <li>Draw Monster</li>
-    <li>Chat about Monster</li>
-    <li>Say something funny to girl on other line</li>
-    <li>Chat more</li>
-    <li>Fall in love</li>
-    <li>Meet in person</li>
-    <li>Get kidnapped</li>
-    <li>Regret decision to use Monsters Ink as a dating service.</li>
-</ol>
+    <h1>Beginner's Guide</h1>
+    <p> Welcome to Monster's Ink! This page will guide you through all the steps to get you battling your freinds and sharing your monster drawing abilities. </p>
+    <hr />
+
+    <hr />
+    <h1>Editing your Monster:</h1>  
+    <p>There are two ways that you can edit your monsters for gameplay. The first is by going to the "Draw Monster" page. The second, is by opting to draw your own monsters prior to starting a game. Here, there are 
+    different drawing ablilites you can use to draw with your mouse. 
+    You can also upload an image by entering your local image url and clicking "Upload Image." Once your monster masterpiece is complete. Give him a name and click "save" to add him to your deck. Once a monster is in
+    your deck, he will be available for use in challenging your freinds. Some examples of Monsters you can draw are shown below. <p>
+    <img src="/static/images/monsterExample1.JPG" alt="Monster Example 1" height="200">
+    <img src="/static/images/monsterExample2.JPG" alt="Monster Example 2" height="200">
+
+
+    <hr />
+    <h1>Player Draft</h1>
+    <p> To begin a game, click on the "Lobby" link from your home page. This will give you the option of starting your own game or joining a game with strangers. <p>
+    </p>If you opt to begin your own game to play with your 
+    friends, enter the name you want your game to be called. If the name is not already taken, you will be given a link to share with your friends so they can join your game. </p>
+    <p>
+        If you choose to join a random game, you will be taken to a game with a number of strangers, and will be ready to start playing.
+    </p>
+
+
+    <hr />
+    <h1>Monster Draft </h1>
+    <p> Before you bein a game, you must select the monsters you want to use to challenge your friends. Each player in the game begins with five monsters. Your monsters will be shown at the bottom of the page. Simply
+    click on your requested monsters to draft them onto your team. If you wish to let fate decide your monster team, click "Random" to get a random set of monsters drafted to your team. </p>
+    <p> When this is completed, confirm your team to begin battling your friends.</p>
+
+
+    <hr />
+    <h1>Battle Royale</h1>
+    <p>Each round, there are three roles: attacker, defender, and citizens.</p>
+    <ul>
+        <li><h2>Attacker:</h2> The attacker initiates the round. They choose their favorite monster to visciously attack their least favorite friend. Once the attacker has chosen the victim and their monster of choice,
+        the power lies in the hands of the defender. </li>
+        <li>
+        <h2>Defender:</h2> The defender has been attacked. He must quickly analyze the power of the attacking monster and choose his best monster to defend himself. Once the defender has chosen his monster to defen
+            his castle, the power lies in the hands of the voters.
+        </li>
+        <li>
+        <h2>Citizens:</h2> Seeing the battle raging on overhead, the citizens gather to watch the carnage. While watching, they analyze each monster for his warfighting prowice. Each citizen will cast a vote for which
+            monster they think would win in the battle. The monster with the least amount of citizen votes loses, and is encaptured by the other monster owner.
+        </li>
+    </ul>
+    <br />
+    <p> Once a monster has been captured, they go into the deck of the winning monster owner. The monster owner then has the power to edit them to fit in with their monster team. They will return to the Draw Monster page
+    and will be prompted to add features to the monster to make him a better warrior.</p>
+
+    <hr />
+    <h1>Crushing Defeat</h1>
+    <p>When any monster owner has lost all of his monsters due to capture, the game ends. At this time, the monster owner who has the largest monster team will be crowned the winner. </p> 
+
 <form>
     <input type="button" value="RETURN TO HOMESCREEN" onclick="window.location.href='/home/'" />
 </form>

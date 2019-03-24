@@ -37,6 +37,26 @@ body {
 .header h1 {
    font-size: 50px;
 }
+
+/*Create horizontal rules. (Used in instructions page)*/
+hr {
+    border: none;
+    border-top: 3px double #333;
+    color: #ff0000;
+    overflow: visible;
+    text-align: center;
+    height: 5px;
+}
+
+hr:after {
+    background: #fff;
+    content: '§';
+    padding: 0 4px;
+    position: relative;
+    top: -13px;
+}
+
+
 /* Create two unequal columns that floats next to each other */
 /* Left column */
 .leftcolumn {
@@ -62,3 +82,5 @@ body {
     display: table;
     clear: both;
 }
+
+
