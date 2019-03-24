@@ -1,11 +1,39 @@
-{%extends 'shared.html'%}
+
+{%extends 'loggedinheader.html'%}
 {% block content %}
 
 <body>
-  <form>
-    <input type="button" value="CLICK TO GO BACK HOME" onclick="window.location.href='/home'" />
-  </form>
-  <div id="game-window">
+    <!-- Button trigger modal -->
+    <button type="button" class="button" data-toggle="modal" data-target="#exampleModalLong">
+        DRAFT MY MONSTERS.
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalLong" tabindex="-1" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Welcome to the Monster Draft!</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p> Select five monsters that you want to draft onto your team before the battle begins.</p>
+
+                    <a target="_blank" href="/static/images/monsterExample1.jpg">
+                        <img src="/static/images/monsterExample1.jpg" alt="MonsterExample1" style="width:150px">
+                    </a>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   <div id="game-window">
     <div class="row">
       <div id="left-col" class="leftcolumn">
         <div class="card-deck">
@@ -90,5 +118,14 @@
         $( 'div.message_holder' ).append( '<div><b style="color: #000">'+msg.user_name+'</b> '+msg.message+'</div>' )
       }
     })
+
+
+    var locations = ["monsterExample1.JPG", "monsterExample2.JPG", "monsterExample3.JPG", "monsterExample4.JPG", "monsterExample5.JPG", "monsterExample6.JPG", "monsterExample7.JPG", "monsterExample8.JPG", "monsterExample9.JPG", "monsterExample10.JPG"]
+    for (var kasey = 0; kasey < 10; kasey++) {
+        var monster_name = names[kasey];
+        var pictureName = locations[kasey];
+        var ref = `<a target="_blank" href="/static/images/${pictureName}">  <img src="/static/images/monsterExample1.jpg" alt="MonsterExample1" style="width:100px"> </a>`
+        % $("#kev").append(ref)
+    }
 </script>
 {% endblock %}
