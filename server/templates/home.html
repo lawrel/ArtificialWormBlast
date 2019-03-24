@@ -3,24 +3,83 @@
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8" />
-    <title></title>
 </head>
 {% block content %}
-<body>
-    <h1>LOGGED IN HOMESCREEN</h1>
-    <p> WELCOME TO MONSTERS INK</p>
-</body>
-
-<form>
-    <input type="button" value="GO TO GAME" onclick="window.location.href='/game/'" />
-</form>
-<script>
-    var sessionData = {};
-    $( document ).ready(function() {
-        handleLogin();
-    });
-</script>
-
-{% endblock %}
+    <h1 align="center"> [Username]'s Monsters</h1>
+    <div class="container">
+        <div class="polaroid">
+            <img src="/static/images/monsterExample1.JPG" alt="Monster 1" style="width:100%; height: 75%">
+            <div class="container">
+                <p>Paul the Cloud</p>
+            </div>
+        </div>
+        <div class="polaroid">
+            <img src="/static/images/monsterExample2.JPG" alt="Monster 2" style="width:100%; height: 75%" align="center">
+            <div class="container">
+                <p>Not Paul the Cloud</p>
+            </div>
+        </div>
+        <div class="polaroid">
+            <img src="/static/images/monsterExample3.JPG" alt="Monster 3" style="width:100%; height: 75%">
+            <div class="container">
+                <p>Ice Cream Dude</p>
+            </div>
+        </div>
+        <div class="polaroid">
+            <img src="/static/images/monsterExample4.JPG" alt="Monster 3" style="width:100%; height: 75%">
+            <div class="container">
+                <p>Jelly Dude</p>
+            </div>
+        </div>
+        <div class="polaroid">
+            <img src="/static/images/monsterExample5.JPG" alt="Monster 3" style="width:100%; height: 75%">
+            <div class="container">
+                <p>Galusha</p>
+            </div>
+        </div>
+        <div class="polaroid">
+            <img src="/static/images/monsterExample6.JPG" alt="Monster 3" style="width:100%; height: 75%">
+            <div class="container">
+                <p>Space Pampootee</p>
+            </div>
+        </div>
+        <div class="polaroid">
+            <img src="/static/images/monsterExample7.JPG" alt="Monster 3" style="width:100%; height: 75%">
+            <div class="container">
+                <p>Raccoon</p>
+            </div>
+        </div>
+        <div class="polaroid">
+            <img src="/static/images/monsterExample8.JPG" alt="Monster 3" style="width:100%; height: 75%">
+            <div class="container">
+                <p>Spider Moth</p>
+            </div>
+        </div>
+        <div class="polaroid">
+            <img src="/static/images/monsterExample9.JPG" alt="Monster 3" style="width:100%; height: 75%">
+            <div class="container">
+                <p>Fat Zombie Mario</p>
+            </div>
+        </div>
+        <div class="polaroid">
+            <img src="/static/images/monsterExample10.JPG" alt="Monster 3" style="width:100%; height: 75%">
+            <div class="container">
+                <p>Badderlocks</p>
+            </div>
+        </div>
+        <button class="button button2" onclick="window.location.href='/myaccount'">Manage Team</button>
+    </div>
+    <body>
+        <hr />
+        <form>
+            <input type="button" align ="center" value="Go to Game" onclick="window.location.href='/game/'" />
+        </form>
+    </body>
+    <script>
+        var sessionData = {};
+        $(document).ready(function () {
+            handleLogin();
+        });
+    </script>
+    {% endblock %}
 </html>
