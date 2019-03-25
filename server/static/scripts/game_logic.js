@@ -3,6 +3,7 @@ var clientState = null;
 var gameState = null;
 var gameData = null;
 var attacker = null;
+var atkCard = null;
 var stateUpdateEvent = new Event('game-update');
 var playerDataEvent = new Event('player-data');
 
@@ -37,6 +38,7 @@ function connectGameSocket() {
     socket.on("game-data", gameData_res)
     socket.on('player-data', playerData_res);
     socket.on("attacker", attacker_res)
+    socket.on("atkCard", attackCard_res)
     // socket.on("state", )
     socket.on('connect', function() {
         socket.emit('my event', {data: 'I\'m connected!'});
@@ -115,8 +117,17 @@ function playerData_io() {
     socket.emit('player-data', {player: getPlayerData()});
 }
 
+
 function playerData_res(msg) {
     gameData = msg;
+    document.dispatchEvent(playerDataEvent);
+}
+
+function attackCard_io(gameid, card) {
+    socket.emit('atk-card-update', { gameid: gameid, card: card});
+}
+function attackCard_res(msg) {
+    atkCard = msg;
     document.dispatchEvent(playerDataEvent);
 }
 

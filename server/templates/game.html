@@ -284,16 +284,10 @@
         if ((gameData.state == "AttackState") && getPlayerData()["userid"] == gameData["attacker"])
         {
             attackingCard = nameString;
-            
+            attackCard_io(gameData["gameid"] ,attackingCard)
             index = names.indexOf(attackingCard)
             pictureName = locations[index]
             document.getElementById("lc1").innerHTML = `<button onclick="handleVote('${attackingCard}')"><img src="/static/images/${pictureName}"></button>`;
-        }
-        if (gameData.state == "DefendState") {
-            defendingCard = nameString;
-            index = names.indexOf(defendingCard)
-            pictureName = locations[index]
-            document.getElementById("lc2").innerHTML = `<button onclick="handleVote('${defendingCard}')"><img src="/static/images/${pictureName}"></button>`;
         }
     }
     function handleVote(nameString){
