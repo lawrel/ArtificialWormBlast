@@ -52,6 +52,14 @@ function connectGameSocket() {
     socket.on('message', function (msg) {
         console.log(msg);
     });
+
+    socket.on( 'my response', function( msg ) {
+        console.log( msg )
+        if( typeof msg.user_name !== 'undefined' ) {
+          $( 'h3' ).remove()
+          $( 'div.message_holder' ).append( '<div><b style="color: #000">'+msg.user_name+'</b> '+msg.message+'</div>' )
+        }
+      })
 }
 
 function handleJoinGame() {

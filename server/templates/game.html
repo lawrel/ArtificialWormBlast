@@ -86,10 +86,11 @@
       </div>
       <div class="rightcolumn">
         <div class="message_holder"></div>
-        <form action="" method="POST">
-          <input type="text" class="username" placeholder="User Name" />
+        <form action="javascript:void(0);" method="POST">
+          <!-- <input type="text" class="username" placeholder="User Name" /> -->
+
           <input type="text" class="message" placeholder="Messages" style="width: 300px;"/>
-          <input type="submit"/>
+          <button onclick="sendChat()" type="button">Submit</button>
         </form>
       </div>
     </div> 
@@ -131,14 +132,25 @@
     sendHand_io(monsterChoices, getPlayerData(), gameData["gameid"]);
   }
 
+  function sendChat() {
+    let user_name = $( 'input.username' ).val();
+    let user_input = $( 'input.message' ).val();
+    $( 'input.message' ).val("");
+    console.log(user_name);
+    socket.emit( 'my event', {
+      user_name : getPlayerData()["email"],
+      message : user_input
+    });
+  }
+
   $(document).ready(function () {
-      document.addEventListener('game-update', gameUpdate);
+    document.addEventListener('game-update', gameUpdate);
       
-      $("#voteMddal").modal({
-        backdrop: "static", //remove ability to close modal with click
-        keyboard: false, //remove option to close with keyboard
-        show: false //Display loader!
-      });
+    $("#voteMddal").modal({
+      backdrop: "static", //remove ability to close modal with click
+      keyboard: false, //remove option to close with keyboard
+      show: false //Display loader!
+    });
     $("#waitingModal").modal({
       backdrop: "static", //remove ability to close modal with click
       keyboard: false, //remove option to close with keyboard
@@ -149,7 +161,7 @@
       keyboard: false, //remove option to close with keyboard
       show: false //Display loader!
     });
-      createMonsters()
+    createMonsters()
   });
 
   function gameUpdate() {
@@ -300,13 +312,7 @@
         $( 'input.message' ).val( '' ).focus()
       } )
     } )
-    socket.on( 'my response', function( msg ) {
-      console.log( msg )
-      if( typeof msg.user_name !== 'undefined' ) {
-        $( 'h3' ).remove()
-        $( 'div.message_holder' ).append( '<div><b style="color: #000">'+msg.user_name+'</b> '+msg.message+'</div>' )
-      }
-    })
+    
 
     function printAttacker()
     {
