@@ -13,7 +13,8 @@ $( document ).ready(function() {
     handleLogin();
 
     document.addEventListener("logged-in", function() {
-        playerData_io();
+        //playerData_io();
+        handleJoinGame();
     });
 
     document.addEventListener("player-data", function () {
@@ -54,7 +55,6 @@ function handleJoinGame() {
     } else if ("gameid" in gameData) {
         joinGame_io(gameData["gameid"], getPlayerData());
     } else {
-        gameData_io();
         console.log("User didn't provide a game_id.");
     }
 }
@@ -93,7 +93,7 @@ function joinGame_res(msg) {
         if (status == "success") {
             console.log("Game successfully joined: " + msg["gameid"]);
             window.history.replaceState({}, document.title, "?game_id=" + msg["gameid"]);
-            gameData_io();
+            gameData_io(msg["gameid"]);
         } 
         else if (status == "failure") {
             console.log("Join game failed" + msg["reason"]);
@@ -118,8 +118,8 @@ function playerData_res(msg) {
     document.dispatchEvent(playerDataEvent);
 }
 
-function gameData_io() {
-    socket.emit('game-data', {player: getPlayerData()});
+function gameData_io(gameid) {
+    socket.emit('game-data', {gameid:gameid});
 }
 
 function gameData_res(msg) {

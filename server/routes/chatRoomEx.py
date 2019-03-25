@@ -53,7 +53,7 @@ class SelectHandState(GameState):
         self.context.set_state(AttackState(self.context))
 
     def __str__(self):
-        return "SelectHand"
+        return "SelectHandState"
 
 class AttackState(GameState):
     def __init__(self, context):
@@ -96,40 +96,42 @@ class VoteState(GameState):
             self.next_state()
 
     def next_state(self):
-        self.context.set_state(VoteState(self.context))
+        self.context.set_state(WinnerState(self.context))
 
     def __str__(self):
-        return "DefendState"
+        return "VoteState"
 
-# class VoteState(GameState):
-#     def __init__(self, context):
-#         print("")
-#         self.context = context
+class WinnerState(GameState):
+    def __init__(self, context):
+        print("Announce the winner, give winner card, remove loser card.")
+        self.context = context
     
-#     def handle(self):
-#         if (self.context.def_card is not None):
-#             self.next_state()
+    def handle(self):
+        if ():
+            self.next_state()
 
-#     def next_state(self):
-#         self.context.set_state(VoteState(self.context))
+    def next_state(self):
+        if (self.context.round == 3):
+            self.context.set_state(EndState(self.context))
+        else:
+            self.context.set_state(AttackState(self.context))
 
-#     def __str__(self):
-#         return "DefendState"
+    def __str__(self):
+        return "WinnerState"
 
-# class VoteState(GameState):
-#     def __init__(self, context):
-#         print("")
-#         self.context = context
-    
-#     def handle(self):
-#         if (self.context.def_card is not None):
-#             self.next_state()
+class EndState(GameState):
+    def __init__(self, context):
+        print("Finish the game.")
+        self.context = context
 
-#     def next_state(self):
-#         self.context.set_state(VoteState(self.context))
+    def handle(self):
+        pass
 
-#     def __str__(self):
-#         return "DefendState"   
+    def next_state(self):
+        pass
+
+    def __str__(self):
+        return "EndState"
 
 class Game:
     def __init__(self):
@@ -229,6 +231,7 @@ def createGame(data):
 
 @socketio.on('join-game')
 def joinGame(data):
+    print(request.sid, "Wants to join")
     username = data['player']['username']
     email = data['player']['email']
     userid = data['player']['userid']
@@ -263,9 +266,7 @@ def handle_message(message):
 
 @socketio.on('game-data')
 def give_data(msg):
-    player = msg["player"]
-    for gameid, game in gameLst.items():
-        if (player["userid"] in game.players):
-            print(request.sid)
-            emit('game-data', game.serialize(),room=request.sid)
-            break
+    gameid = msg["gameid"]
+    if (gameid in gameLst):
+        print(request.sid)
+        emit('game-data', gameLst[gameid].serialize(),room=request.sid)
