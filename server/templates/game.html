@@ -10,12 +10,12 @@
 
     <!-- Modal -->
     <div class="modal fade" id="selectHandModal" tabindex="-1" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" style="overflow-y: scroll;">
+        <div class="modal-dialog modal-dialog-centered modal-lg" style="overflow-y: initial; max-height: 80%">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle">Welcome to the Monster Draft!</h5>
                 </div>
-                <div class="modal-body" id="">
+                <div class="modal-body" id="" style="overflow-y:auto; max-height: 80%">
                     <div class="container" id="kev">
 
                     </div>
@@ -261,6 +261,8 @@
         }
         document.getElementById("jake").innerHTML = ref;
     }
+
+
     function listHand() {
         numCards = monsterChoices.length;
         printString = '<br>'
@@ -288,9 +290,6 @@
             pictureName = locations[index]
             document.getElementById("lc2").innerHTML = `<button onclick="handleVote('${defendingCard}')"><img src="/static/images/${pictureName}"></button>`;
         }
-        
-        
-        
     }
     function handleVote(nameString){
 
