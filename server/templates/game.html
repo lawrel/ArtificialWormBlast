@@ -10,7 +10,7 @@
 
     <!-- Modal -->
     <div class="modal fade" id="exampleModalLong" tabindex="-1" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle">Welcome to the Monster Draft!</h5>
@@ -20,14 +20,24 @@
                 </div>
                 <div class="modal-body">
                     <p> Select five monsters that you want to draft onto your team before the battle begins.</p>
+                    <div class="container" id="kev">
 
-                    <a target="_blank" href="/static/images/monsterExample1.jpg">
-                        <img src="/static/images/monsterExample1.jpg" alt="MonsterExample1" style="width:150px">
-                    </a>
+                    </div>
+                    <button onclick="handleMonsterClick('PAUL THE CLOUD')"><img src="/static/images/monsterExample1.jpg" width="125px" height="215px"></button>
+                    <button onclick="handleMonsterClick('NOT PAUL THE CLOUD')"><img src="/static/images/monsterExample2.jpg" width="125px" height="215px"></button>
+                    <button onclick="handleMonsterClick('Ice Cream Dude')"><img src="/static/images/monsterExample3.jpg" width="125px" height="215px"></button>
+                    <button onclick="handleMonsterClick('Jelly Dude')"><img src="/static/images/monsterExample4.jpg" width="125px" height="215px"></button>
+                    <button onclick="handleMonsterClick('Galusha')"><img src="/static/images/monsterExample5.jpg" width="125px" height="215px" ></button>
+                    <button onclick="handleMonsterClick('Space Pampootee')"><img src="/static/images/monsterExample6.jpg" width="125px" height="215px"></button>
+                    <button onclick="handleMonsterClick('Raccoon')"><img src="/static/images/monsterExample7.jpg" width="125px" height="215px"></button>
+                    <button onclick="handleMonsterClick('Spooder Dude')"><img src="/static/images/monsterExample8.jpg" width="125px" height="215px"></button>
+                    <button onclick="handleMonsterClick('Fat Zombie Mario')"><img src="/static/images/monsterExample9.jpg" width="125px" height="215px"></button>
+                    <button onclick="handleMonsterClick('Badderlocks')"><img src="/static/images/monsterExample10.jpg" width="125px" height="215px"></button>
+                    <button onclick="handleMonsterClick('Mike')"><img src="/static/images/monster.gif" width="125px" height="215px"></button>
+                    <button onclick="handleMonsterClick('Sulley')"><img src="/static/images/scaryMonster.gif" width="125px" height="215px"></button>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveButton" disabled>Save Team</button>
                 </div>
             </div>
         </div>
@@ -95,7 +105,9 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
 <script src="/static/scripts/game_logic.js"></script>   
-<script type="text/javascript">
+<script>
+    var monsterChoices = new Array();
+
     socket.on( 'connect', function() {
       socket.emit( 'my event', {
         data: 'User Connected'
@@ -119,13 +131,28 @@
       }
     })
 
-
-    var locations = ["monsterExample1.JPG", "monsterExample2.JPG", "monsterExample3.JPG", "monsterExample4.JPG", "monsterExample5.JPG", "monsterExample6.JPG", "monsterExample7.JPG", "monsterExample8.JPG", "monsterExample9.JPG", "monsterExample10.JPG"]
-    for (var kasey = 0; kasey < 10; kasey++) {
-        var monster_name = names[kasey];
-        var pictureName = locations[kasey];
-        var ref = `<a target="_blank" href="/static/images/${pictureName}">  <img src="/static/images/monsterExample1.jpg" alt="MonsterExample1" style="width:100px"> </a>`
-        % $("#kev").append(ref)
+    function handleMonsterClick(nameString) {
+        var index = monsterChoices.indexOf(nameString);
+        if (index > -1) {
+            monsterChoices.splice(index, 1);
+            document.getElementById("kev").innerHTML = "You have chosen: " + monsterChoices.toString() + "\n";
+            document.getElementById("saveButton").disabled = true;
+        }
+        else{
+            if (monsterChoices.length >= 5){
+                document.getElementById("kev").innerHTML = "You have chosen: " + monsterChoices.toString() + "<br> Your draft is complete, please press 'SUBMIT' to prepare your monsters for battle";
+            }
+            else {
+                monsterChoices.push(nameString);
+                if (monsterChoices.length >= 5) {
+                    document.getElementById("kev").innerHTML = "You have chosen: " + monsterChoices.toString() + "<br> Your draft is complete, please press 'SUBMIT' to prepare your monsters for battle";
+                    document.getElementById("saveButton").disabled = false;
+                }
+                else {
+                    document.getElementById("kev").innerHTML = "You have chosen: " + monsterChoices.toString() + "\n";
+                }
+            }
+        }
     }
 </script>
 {% endblock %}
