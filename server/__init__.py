@@ -11,7 +11,7 @@ __all__ = [ basename(f)[:-3] for f in modules if isfile(f) and not f.endswith('_
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'vnkdjnfjknfl1232#'
-socketio = SocketIO(app)
+socketio = SocketIO(app,async_mode='threading')
 
 # This is a really goofy way to make the db_context global in the package
 db_context = None
