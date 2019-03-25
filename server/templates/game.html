@@ -160,6 +160,7 @@
     $("#selectHandModal").modal('show');
   }
   function attackState() {
+      printAttacker();
       listHand();
   }
   function defendState() {
@@ -225,7 +226,10 @@
         $( 'div.message_holder' ).append( '<div><b style="color: #000">'+msg.user_name+'</b> '+msg.message+'</div>' )
       }
     })
-
+    function printAttacker()
+    {
+        document.getElementById("lc1").innerHTML = gameData.attacker;
+    }
     function handleMonsterClick(nameString) {
         var index = monsterChoices.indexOf(nameString);
         if (index > -1) {
