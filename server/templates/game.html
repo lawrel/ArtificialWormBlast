@@ -18,23 +18,14 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <p> Select five monsters that you want to draft onto your team before the battle begins.</p>
+                <div class="modal-body" id="">
                     <div class="container" id="kev">
 
                     </div>
-                    <button onclick="handleMonsterClick('PAUL THE CLOUD')"><img src="/static/images/monsterExample1.jpg" width="125px" height="215px"></button>
-                    <button onclick="handleMonsterClick('NOT PAUL THE CLOUD')"><img src="/static/images/monsterExample2.jpg" width="125px" height="215px"></button>
-                    <button onclick="handleMonsterClick('Ice Cream Dude')"><img src="/static/images/monsterExample3.jpg" width="125px" height="215px"></button>
-                    <button onclick="handleMonsterClick('Jelly Dude')"><img src="/static/images/monsterExample4.jpg" width="125px" height="215px"></button>
-                    <button onclick="handleMonsterClick('Galusha')"><img src="/static/images/monsterExample5.jpg" width="125px" height="215px" ></button>
-                    <button onclick="handleMonsterClick('Space Pampootee')"><img src="/static/images/monsterExample6.jpg" width="125px" height="215px"></button>
-                    <button onclick="handleMonsterClick('Raccoon')"><img src="/static/images/monsterExample7.jpg" width="125px" height="215px"></button>
-                    <button onclick="handleMonsterClick('Spooder Dude')"><img src="/static/images/monsterExample8.jpg" width="125px" height="215px"></button>
-                    <button onclick="handleMonsterClick('Fat Zombie Mario')"><img src="/static/images/monsterExample9.jpg" width="125px" height="215px"></button>
-                    <button onclick="handleMonsterClick('Badderlocks')"><img src="/static/images/monsterExample10.jpg" width="125px" height="215px"></button>
-                    <button onclick="handleMonsterClick('Mike')"><img src="/static/images/monster.gif" width="125px" height="215px"></button>
-                    <button onclick="handleMonsterClick('Sulley')"><img src="/static/images/scaryMonster.gif" width="125px" height="215px"></button>
+                    <div class=  "container" id="jake">
+                        <p> Select five monsters that you want to draft onto your team before the battle begins.</p>
+                        
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveButton" disabled>Save Team</button>
@@ -124,7 +115,8 @@
 
 <script>
   $(document).ready(function () {
-    document.addEventListener('game-update', gameUpdate);
+      document.addEventListener('game-update', gameUpdate);
+      
 
     $("#waitingModal").modal({
       backdrop: "static", //remove ability to close modal with click
@@ -136,6 +128,7 @@
       keyboard: false, //remove option to close with keyboard
       show: false //Display loader!
     });
+      createMonsters()
   });
 
   function gameUpdate() {
@@ -187,7 +180,7 @@
 <script src="/static/scripts/game_logic.js"></script>   
 <script>
     var monsterChoices = new Array();
-
+   
     socket.on( 'connect', function() {
       socket.emit( 'my event', {
         data: 'User Connected'
@@ -220,12 +213,12 @@
         }
         else{
             if (monsterChoices.length >= 5){
-                document.getElementById("kev").innerHTML = "You have chosen: " + monsterChoices.toString() + "<br> Your draft is complete, please press 'SUBMIT' to prepare your monsters for battle";
+                document.getElementById("kev").innerHTML = "You have chosen: " + monsterChoices.toString() + "<br> Your draft is complete, please press 'SAVE TEAM' to prepare your monsters for battle";
             }
             else {
                 monsterChoices.push(nameString);
                 if (monsterChoices.length >= 5) {
-                    document.getElementById("kev").innerHTML = "You have chosen: " + monsterChoices.toString() + "<br> Your draft is complete, please press 'SUBMIT' to prepare your monsters for battle";
+                    document.getElementById("kev").innerHTML = "You have chosen: " + monsterChoices.toString() + "<br> Your draft is complete, please press 'SAVE TEAM' to prepare your monsters for battle";
                     document.getElementById("saveButton").disabled = false;
                 }
                 else {
@@ -233,6 +226,20 @@
                 }
             }
         }
+    }
+    function createMonsters()
+    {
+        var names = ["Paul the Cloud", "Not Paul the Cloud", "Ice Cream Dude", "Jelly Dude", "Galusha", "Space Pampootee", "Raccoon", "Spooder Dude", "Fat Zombie Mario", "Badderlocks", "Mike", "Sulley", "Passport Dinosaur"];
+        var locations = ["monsterExample1.JPG", "monsterExample2.JPG", "monsterExample3.JPG", "monsterExample4.JPG", "monsterExample5.JPG", "monsterExample6.JPG", "monsterExample7.JPG", "monsterExample8.JPG", "monsterExample9.JPG", "monsterExample10.JPG", "monster.gif", "scaryMonster.gif", 'kasey.jpg'];
+        numCards = names.length;
+        if (numCards >= 50) { numCards = 50; }
+        var ref = "";
+        for (var kasey = 0; kasey < numCards; kasey++) {
+            var monster_name = names[kasey];
+            var pictureName = locations[kasey];
+            ref = ref + `<button onclick="handleMonsterClick('${monster_name}')"><img src="/static/images/${pictureName}" width="125px" height="215px"></button>`
+        }
+        document.getElementById("jake").innerHTML = ref;
     }
 </script>
 {% endblock %}
