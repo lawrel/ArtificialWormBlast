@@ -121,10 +121,10 @@
     var state = gameData.state;
     console.log(state);
     switch (state) {
-      case "Wait":
+      case "WaitState":
         waitState();
         break;
-      case "SelectHand":
+      case "SelectHandState":
         selectHandState();
         break;
       case "AttackState":
@@ -191,6 +191,8 @@
 <script src="/static/scripts/game_logic.js"></script>   
 <script>
     var monsterChoices = new Array();
+    var attackingCard = null;
+    var defendingCard = null;
     var names = ["Paul the Cloud", "Not Paul the Cloud", "Ice Cream Dude", "Jelly Dude", "Galusha", "Space Pampootee", "Raccoon", "Spooder Dude", "Fat Zombie Mario", "Badderlocks", "Mike", "Sulley"];
     var locations = ["monsterExample1.JPG", "monsterExample2.JPG", "monsterExample3.JPG", "monsterExample4.JPG", "monsterExample5.JPG", "monsterExample6.JPG", "monsterExample7.JPG", "monsterExample8.JPG", "monsterExample9.JPG", "monsterExample10.JPG", "monster.gif", "scaryMonster.gif"];
    
@@ -261,12 +263,16 @@
             index = names.indexOf(monster_name)
             pictureName = locations[index]
             
-            printString = printString + `<div class="card" style="display: inline-block; max-width:200px; color:#255760";> <img class="card-img-top" src="/static/images/${pictureName}"> <div class="card-body"> <p class="text-center">${monster_name}</p> </div> </div>`;
+            printString = printString + `<div class="card" style="display: inline-block; max-width:200px; color:#255760";> <img class="card-img-top" src="/static/images/${pictureName}"> <div class="card-body"> <button onclick="handleHandClick('${monster_name}')">${monster_name}</button> </div> </div>`;
         }
         document.getElementById("monsterHand").innerHTML = printString ;
     }
     function handleHandClick(nameString) {
-        document.getElementById("monsterHand").innerHTML = nameString;
+        if (gameData.state == "AttackState") {
+            attackingCard = nameString;
+            document.getElementById("lc1").innerHTML = nameString;
+        }
+        if (gameData.state == "DefendState") { defendingCard = nameString; }
     }
 </script>
 {% endblock %}
