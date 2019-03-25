@@ -114,7 +114,7 @@ def get_session_data(token, db_context=connect_db()):
     _,ID,_ = rows[0]
     _, email, _ = get_user(ID=ID, db_context=db_context)
 
-    return {"email":email, "user-id" : ID}
+    return {"email":email, "userid" : ID, "username" : ""}
 
 def logout_user(token, db_context=connect_db()):
     if (db_context == None):

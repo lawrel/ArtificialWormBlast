@@ -34,21 +34,29 @@ body {
         background: white;
 }
 
+.no-bg-border {
+    background: none;
+    border: none;
+}
+
 .header h1 {
    font-size: 50px;
 }
+
+
+
 /* Create two unequal columns that floats next to each other */
 /* Left column */
 .leftcolumn {
     float: left;
     width: 65%;
+    max-height: 100%;
 }
 /* Right column */
 .rightcolumn {
     float: left;
     color: #E8fcff;
     width: 35%;
-    background-image: url("/static/images/monster.gif");
     background-color: #273238;
     padding-left: 20px;
     height: 600px;
@@ -56,44 +64,73 @@ body {
     border: 5px double #777e8e;
     border-radius: 10px;
 }
+
+.row {
+    margin-right: 0px;
+    margin-left: 0px;
+}
+
 /* Clear floats after the columns */
 .row:after {
     content: "";
     display: table;
     clear: both;
 }
-.text_button {
+
+.text-left {
+    text-align: left;
 }
-.text_button a {
-    border-radius: 5px;
-    display: inline-block;
-    background: #181d23;
-    border: 1px dashed #01Acc0;
-    font-size: 12px;
-    font-family: Arial;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    padding: 3px;
-    margin: 4px;
+
+.text-right {
+    text-align: right;
+}
+
+.text-center {
     text-align: center;
-    color: white;
-    text-shadow: 0 0 8px #01Acc0;
-    text-shadow: 0 -15px 2.5px transparent, 0 15px 2.5px transparent;
-    /*-webkit-transition: all .3s linear 0s;
-    -moz-transition: all .3s linear 0s;
-    -o-transition: all .3s linear 0s;
-    transition: all .3s linear 0s;
-    cursor: pointer;*/
 }
 
-.text_button a:hover {
-        background: #255760;
-        border: 1px solid #01Acc0;
-        color: white;
-    }
+.bg-grad {
+    background-image: linear-gradient(-5deg, #a2d2bd 0%, #1fc8db 51%, #2cb5e8 75%);
+}
 
-.text_button a:active {
-        background: #01Acc0;
-        border: 1px solid #E8fcff;
-        color: white;
-    }
+.bg-pattern-1 {
+    /* background-image: url("https://cdn12.picryl.com/photo/2016/12/31/background-abstracts-patterns-backgrounds-textures-2b7e45-1024.jpg"); */
+    background-color: #ffffff00;
+    border: 1px solid #ffffff;
+}
+
+.bg-pattern-2 {
+    /* background-image: url("https://cdn12.picryl.com/photo/2016/12/31/background-abstracts-patterns-backgrounds-textures-2b7e45-1024.jpg"); */
+    background-color: #ffffff00;
+    border: 1px solid #ffffff;
+}
+
+.card-deck {
+    margin-bottom: 15px;
+    margin-top: 15px;
+}
+
+.leftcolumn .card-deck {
+    margin: 15px;
+}
+
+.modal-text {
+    color: black;
+}
+
+/* @media only screen and (min-width: 576px) {
+     .col-crush {
+        display: inherit;
+     }
+} */
+
+@media only screen and (max-width: 576px) {
+     .col-crush {
+        display: none;
+     }
+
+     .col-fill {
+         max-width: 100%;
+         flex: 0 0 100%;
+     }
+}

@@ -1,85 +1,359 @@
-{%extends 'shared.html'%}
+
+{%extends 'loggedinheader.html'%}
 {% block content %}
+
 <body>
-  <div>
-    <audio id="myAudio">
-        <source src="/static/sounds/song.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="myAudio2">
-        <source src="/static/sounds/ah.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="myAudio3">
-        <source src="/static/sounds/clinton.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="myAudio4">
-        <source src="/static/sounds/mac420.mp3" type="audio/mpeg">
-    </audio>
+    <!-- Button trigger modal -->
+    <button type="button" class="button" data-toggle="modal" data-target="#selectHandModal">
+        DRAFT MY MONSTERS.
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="selectHandModal" tabindex="-1" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" style="overflow-y: initial; max-height: 80%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Welcome to the Monster Draft!</h5>
+                </div>
+                <div class="modal-body" id="" style="overflow-y:auto; max-height: 80%">
+                    <div class="container" id="kev">
+
+                    </div>
+                    <div class=  "container" id="jake">
+                        <p> Select five monsters that you want to draft onto your team before the battle begins.</p>
+                        
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button onclick="sendHand()" type="button" class="btn btn-primary" data-dismiss="modal" id="saveButton" disabled>Save Team</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   <div id="game-window">
+  <form>
+    <input type="button" value="New Game" onclick="createGame_io()" />
+    <input type="button" value="Wait" onclick="waitState()" />
+  </form>
+  <div id="game-window">
     <div class="row">
-        <div class="leftcolumn">
-            <p> THIS IS THE PLACE WHERE THE GAME WILL GO. RIGHT NOW THERE IS NO GAME, SO ENJOY THIS PICTURE OF A MONSTER. TEST PAGE BLOCKING.</p>
-            <img src="/static/images/scaryMonster.gif" alt="CHAT ME ;)">
-            <form>
-                <input type="button" value="CLICK TO GO BACK HOME" onclick="window.location.href='/home/'" />
-            </form>
+      <div id="left-col" class="leftcolumn">
+        <div class="card-deck">
+            <div class="card no-bg-border">
+                <div class="card-body">
+                    <h2 class="text-center">Attacker</h2>
+                    <div id="lc1" >
+                      
+                    </div>
+                </div>
+            </div>
+            <div class="card no-bg-border">
+                <div class="card-body">
+                    <h2 class="text-center">Defender</h2>
+                    <div id="lc2" >
+                      
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="rightcolumn">
-            <div class="message_holder"></div>
-            <form action="" method="POST">
-                <input type="text" class="username" placeholder="User Name" />
-                <input type="text" class="message" placeholder="Messages" style="width: 300px;"/>
-                <input type="submit" />
-            </form>
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
 
-            <script type="text/javascript">
-                var socket = io.connect('http://' + document.domain + ':' + location.port);
-                var funkyMusic = document.getElementById("myAudio")
-                var scream = document.getElementById("myAudio2")
-                var clinton = document.getElementById("myAudio3")
-                var mac420 = document.getElementById("myAudio4")
-                  socket.on( 'connect', function() {
-                    socket.emit( 'my event', {
-                      data: 'User Connected'
-                    } )
-                    var form = $( 'form' ).on( 'submit', function( e ) {
-                      e.preventDefault()
-                      let user_name = $( 'input.username' ).val()
-                      let user_input = $( 'input.message' ).val()
-                      socket.emit( 'my event', {
-                        user_name : user_name,
-                        message : user_input
-                      } )
-                      $( 'input.message' ).val( '' ).focus()
-                    } )
-                  } )
-                  socket.on( 'my response', function( msg ) {
-                    console.log( msg )
-                    if( typeof msg.user_name !== 'undefined' ) {
-                      $( 'h3' ).remove()
-                      $( 'div.message_holder' ).append( '<div><b style="color: #000">'+msg.user_name+'</b> '+msg.message+'</div>' )
-                      if (msg.message == "PLAY THAT FUNKY MUSIC") {
-                          funkyMusic.play()
-                      }
-                      if (msg.message == "PLEASE STOP THE FUNKY MUSIC")
-                      {
-                          funkyMusic.pause()
-                          mac420.pause()
-                      }
-                      if (msg.message == "Ahh") {
-                          scream.play()
-                      }
-                      if (msg.message == "Billy") {
-                          clinton.play()
-                      }
-                      if (msg.message.includes("420")) {
-                          mac420.play();
-                      }
-                    }
-                  })
-            </script>
+        <div class="card-deck" style="color: black">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="text-center">Players:</h2>
+                </div>
+                <div class="card-body">
+                    <div class="card-deck" id="opponents">
+
+                    </div>
+                </div>
+            </div>
         </div>
-    </div> </div>
 
+        <div class="card-deck" style="color: black">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="text-center">Your Hand:</h2>
+                </div>
+                <div class="card-body">
+                    <div class="card-deck" id="monsterHand">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+      <div class="rightcolumn">
+        <div class="message_holder"></div>
+        <form action="" method="POST">
+          <input type="text" class="username" placeholder="User Name" />
+          <input type="text" class="message" placeholder="Messages" style="width: 300px;"/>
+          <input type="submit"/>
+        </form>
+      </div>
+    </div> 
+  </div>
 </body>
-{%endblock%}
+
+<!-- Waiting for players modal -->
+<div class="modal fade" id="waitingModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-body text-center modal-text">
+        <div class="fa-3x"><i class="fas fa-circle-notch fa-spin"></i></div>
+        <div id="waitingTag">
+            <p>Waiting for players to join...<br> Currently, the following players are connected:</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function sendHand() {
+    sendHand_io(monsterChoices, getPlayerData(), gameData["gameid"]);
+  }
+
+  $(document).ready(function () {
+      document.addEventListener('game-update', gameUpdate);
+      
+
+    $("#waitingModal").modal({
+      backdrop: "static", //remove ability to close modal with click
+      keyboard: false, //remove option to close with keyboard
+      show: false //Display loader!
+    });
+    $("#selectHandModal").modal({
+      backdrop: "static", //remove ability to close modal with click
+      keyboard: false, //remove option to close with keyboard
+      show: false //Display loader!
+    });
+      createMonsters()
+  });
+
+  function gameUpdate() {
+    var state = gameData.state;
+    console.log(state);
+    updateWaitModal();
+    switch (state) {
+      case "WaitState":
+        waitState();
+        break;
+      case "SelectHandState":
+        selectHandState();
+        break;
+      case "AttackState":
+        attackState();
+        updateAtkCard();
+        break;
+      case "DefendState":
+        defendState();
+        break;
+      case "VoteState":
+        voteState();
+        break;
+      case "EndState":
+        endState();
+        break;
+      default:
+        defaultState();
+    }
+  }
+
+  function updateAtkCard() {
+    index = names.indexOf(gameData["atk_card"])
+    pictureName = locations[index]
+    document.getElementById("lc1").innerHTML = `<button onclick="handleVote('${gameData["atk_card"]}')"><img src="/static/images/${pictureName}"></button>` + "<br> Attacking Player: " + gameData.attacker;
+  }
+
+  function defaultState() {
+    // Reset "waitForPlayers" state
+    $("#waitingModal").modal('hide');
+    $("#selectHandModal").modal('hide');
+  }
+
+  function waitState() {
+    $("#selectHandModal").modal('hide');
+    $("#waitingModal").modal('show');
+  }
+
+  function selectHandState() {
+    $("#waitingModal").modal('hide');
+    $("#selectHandModal").modal('show');
+    listPlayers();
+  }
+  function attackState() {
+      printAttacker();
+      listHand();
+  }
+  function defendState() {
+      listHand();
+  }
+  function voteState() {
+      listHand();
+  }
+  function endState() {
+  }
+
+  function updateWaitModal() {
+      waitString = "<p>Waiting for players to join...<br> Currently, the following players are connected:</p>";
+      players = gameData.players;
+      for (var i = 0; i < players.length; i++) {
+          waitString = waitString + players[i].email + "<br>";
+      }
+      document.getElementById("waitingTag").innerHTML = waitString;
+  }
+</script>
+
+<audio id="myAudio">
+  <source src="/static/sounds/song.mp3" type="audio/mpeg">
+</audio>
+<audio id="myAudio2">
+  <source src="/static/sounds/ah.mp3" type="audio/mpeg">
+</audio>
+<audio id="myAudio3">
+  <source src="/static/sounds/clinton.mp3" type="audio/mpeg">
+</audio>
+<audio id="myAudio4">
+  <source src="/static/sounds/mac420.mp3" type="audio/mpeg">
+</audio>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+<script src="/static/scripts/game_logic.js"></script>   
+<script>
+    var monsterChoices = new Array();
+    var attackingCard = null;
+    var defendingCard = null;
+    var names = ["Paul the Cloud", "Not Paul the Cloud", "Ice Cream Dude", "Jelly Dude", "Galusha", "Space Pampootee", "Raccoon", "Spooder Dude", "Fat Zombie Mario", "Badderlocks", "Mike", "Sulley"];
+    var locations = ["monsterExample1.JPG", "monsterExample2.JPG", "monsterExample3.JPG", "monsterExample4.JPG", "monsterExample5.JPG", "monsterExample6.JPG", "monsterExample7.JPG", "monsterExample8.JPG", "monsterExample9.JPG", "monsterExample10.JPG", "monster.gif", "scaryMonster.gif"];
+   
+    socket.on( 'connect', function() {
+      socket.emit( 'my event', {
+        data: 'User Connected'
+      } )
+      var form = $( 'form' ).on( 'submit', function( e ) {
+        e.preventDefault()
+        let user_name = $( 'input.username' ).val()
+        let user_input = $( 'input.message' ).val()
+        socket.emit( 'my event', {
+          user_name : user_name,
+          message : user_input
+        } )
+        $( 'input.message' ).val( '' ).focus()
+      } )
+    } )
+    socket.on( 'my response', function( msg ) {
+      console.log( msg )
+      if( typeof msg.user_name !== 'undefined' ) {
+        $( 'h3' ).remove()
+        $( 'div.message_holder' ).append( '<div><b style="color: #000">'+msg.user_name+'</b> '+msg.message+'</div>' )
+      }
+    })
+    function printAttacker()
+    {
+        /*allPlayers = gameData["players"];
+        for (var key in allPlayers)
+        {
+            if (allPlayers[key]["user_id"] == gameData.attacker) {
+              attacker = allPlayers[key]["email"]
+            }
+        }  */
+      document.getElementById("lc1").innerHTML = gameData.attacker;
+    }
+    function handleMonsterClick(nameString) {
+        var index = monsterChoices.indexOf(nameString);
+        if (index > -1) {
+            monsterChoices.splice(index, 1);
+            document.getElementById("kev").innerHTML = "You have chosen: " + monsterChoices.toString() + "\n";
+            document.getElementById("saveButton").disabled = true;
+        }
+        else{
+            if (monsterChoices.length >= 5){
+                document.getElementById("kev").innerHTML = "You have chosen: " + monsterChoices.toString() + "<br> Your draft is complete, please press 'SAVE TEAM' to prepare your monsters for battle";
+            }
+            else {
+                monsterChoices.push(nameString);
+                if (monsterChoices.length >= 5) {
+                    document.getElementById("kev").innerHTML = "You have chosen: " + monsterChoices.toString() + "<br> Your draft is complete, please press 'SAVE TEAM' to prepare your monsters for battle";
+                    document.getElementById("saveButton").disabled = false;
+                }
+                else {
+                    document.getElementById("kev").innerHTML = "You have chosen: " + monsterChoices.toString() + "\n";
+                }
+            }
+        }
+    }
+    function createMonsters()
+    {
+        numCards = names.length;
+        if (numCards >= 50) { numCards = 50; }
+        var ref = "<p> Select five monsters that you want to draft onto your team before the battle begins.</p>";
+        for (var kasey = 0; kasey < numCards; kasey++) {
+            var monster_name = names[kasey];
+            var pictureName = locations[kasey];
+            ref = ref + `<button onclick="handleMonsterClick('${monster_name}')"><img src="/static/images/${pictureName}" width="125px" height="215px"></button>`
+        }
+        document.getElementById("jake").innerHTML = ref;
+    }
+
+
+    function listHand() {
+        numCards = monsterChoices.length;
+        printString = '<br>'
+        for (var i = 0; i < numCards; i++)
+        {
+            monster_name = monsterChoices[i]
+            index = names.indexOf(monster_name)
+            pictureName = locations[index]
+            
+            printString = printString + `<div class="card" style="display: inline-block; max-width:200px; color:#255760";> <img class="card-img-top" src="/static/images/${pictureName}"> <div class="card-body"> <button onclick="handleHandClick('${monster_name}')">${monster_name}</button> </div> </div>`;
+        }
+        document.getElementById("monsterHand").innerHTML = printString ;
+    }
+
+function listPlayers() {
+        allPlayers = gameData["players"];
+        playerString = '<br>'
+        for (var key in allPlayers)
+        {
+            player_name = allPlayers[key]["email"];
+            var uid = allPlayers[key]["userid"]
+            
+            playerString = playerString + 
+         `<div class="card" style="display: inline-block; max-width:200px; color:#255760";> 
+      <div class="card-body"> 
+      <button onclick="handlePlayerClick('${uid}')">${player_name}</button> </div> </div>`;
+        }
+        document.getElementById("opponents").innerHTML = playerString ;
+    }
+
+    function handlePlayerClick(nameString) {
+        if ((gameData.state == "AttackState") && getPlayerData()["userid"] == gameData["attacker"])
+        {
+            // defender = nameString;
+            // gameData["defender"]= nameString;
+            selectDefender_io(nameString, gameData["gameid"])
+
+        }
+    }
+
+
+    function handleHandClick(nameString) {
+        if ((gameData.state == "AttackState") && getPlayerData()["userid"] == gameData["attacker"])
+        {
+            console.log("selected")
+            attackingCard = nameString;
+            attackCard_io(gameData["gameid"] ,attackingCard)
+            index = names.indexOf(attackingCard)
+            pictureName = locations[index]
+            document.getElementById("lc1").innerHTML = `<button onclick="handleVote('${attackingCard}')"><img src="/static/images/${pictureName}"></button>`;
+        }
+    }
+    function handleVote(nameString){
+
+    }
+</script>
+{% endblock %}
+

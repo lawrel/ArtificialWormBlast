@@ -3,12 +3,52 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="/static/stylesheet.css">
     <title>Monster's Ink</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script src="/static/scripts/login_auth.js"></script>
+    <style>
+        div.container {
+            text-align: center;
+            color: #255760;
+            padding: 10px 20px;
+            align-content: center;
+        }
+
+        .button {
+            background-color: #255760; /* Blue */
+            color: white;
+            padding: 15px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 20px;
+            margin: 4px 2px;
+            cursor: pointer;
+            -webkit-transition-duration: 0.4s; /* Safari */
+            transition-duration: 0.4s;
+            width: 40%;
+        }
+        .button2:hover {
+            box-shadow: 0 10px 10px 0 white,0 10px 10px 0 white;
+        }
+
+        img {
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          padding: 5px;
+          width: 150px;
+        }
+
+        img:hover {
+          box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+        }
+    </style>
 </head>
 
 <body>
@@ -20,5 +60,8 @@
         <a href="{{url_for('login')}}" style="float: right">Login</a>
     </div>
   {% block content %}{% endblock %}
+    <div class="footer">
+        <p align="center"> &copy; Artificial Worm Blast - 2019 </p>
+    </div>
  </body>
  </html>
