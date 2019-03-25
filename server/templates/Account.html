@@ -1,5 +1,4 @@
 ﻿<!DOCTYPE html>
-<!DOCTYPE html>
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -8,18 +7,31 @@
 </head>
 {% extends "loggedinheader.html" %}
 {% block content %}
-<body>
-    <div class=" = "container">
-        <h1>Welcome to your Account, [Name]</h1>
+<body onload="init()">
+    <div class="container">
+        <h1 id="welcome">Welcome to your Account, [Name]</h1>
         <hr />
-        <p> (IMPLEMENTATION OF THIS PAGE ONGOING)</p>
-        <p> Your Name: [name]</p>
+        <p id="name"> Your Name: [name]</p>
         <hr />
-        <p> Your Email: [email]</p>
+        <p id="email"> Your Email: [email]</p>
         <hr />
-        <p> Your Friends: You have no friends</p>
+        <p id="friends"> Your Friends: You have no friends</p>
         <hr />
     </div>
 </body>
-{% endblock %}
 </html>
+
+<script>
+    var retrieveInfo = {};
+    function init () {
+        handleLogin();
+        document.addEventListener("logged-in", function () {
+            retrieveInfo = retrieveSessionData();
+            $("#welcome").html("Welcome to your Account, " + retrieveInfo["email"]);
+            $("#name").html("Your Name (ID): " + retrieveInfo["userid"]); //username once not null
+            $("#email").html("Your Email: " + retrieveInfo["email"]);
+        });
+    } 
+</script>
+
+{% endblock %}
