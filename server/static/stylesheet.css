@@ -132,6 +132,10 @@ hr:after {
     margin: 15px;
 }
 
+.modal-text {
+    color: black;
+}
+
 /* @media only screen and (min-width: 576px) {
      .col-crush {
         display: inherit;

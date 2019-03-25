@@ -1,6 +1,8 @@
 var socket;
 var clientState = null;
 var gameState = null;
+var gameData = null;
+var stateUpdateEvent = new Event('game-update');
 
 $( document ).ready(function() {
     // Connect to game server over socketio
@@ -10,7 +12,7 @@ $( document ).ready(function() {
     handleLogin();
 
     document.addEventListener("logged-in", function() {
-        //createGame_io();
+        // createGame_io();
         // Check if the game route is valid
         handleJoinGame();
     });
@@ -23,7 +25,8 @@ function connectGameSocket() {
 
     // Event handlers with callback functions
     socket.on("join-game", joinGame_res);
-    socket.on("state", )
+    socket.on("game-data", gameData_res)
+    // socket.on("state", )
     socket.on('connect', function() {
         socket.emit('my event', {data: 'I\'m connected!'});
         console.log(socket);
@@ -69,14 +72,6 @@ function getParams() {
     return data;
 }
 
-function syncGameState() {
-
-}
-
-function doSomething() {
-    io.to("game-01").emit('my event', {data: 'Doing something!!!'});
-}
-
 // SOCKET-IO Handlers ============================================================
 function joinGame_io(gameid, playerData) {
     socket.emit('join-game', {player: playerData, gameid: gameid});
@@ -89,16 +84,24 @@ function joinGame_res(msg) {
             console.log("Game successfully joined");
         } 
         else if (status == "failure") {
-            console.log("Join game failed");
+            console.log("Join game failed" + msg["reason"]);
         }
     }
 }
 
-
 function createGame_io() {
-    socket.emit('create-game', {player: {username:'seanrice', email:'seane.rice@gmail.com', userid: '17'}});
+    socket.emit('create-game', {player: getPlayerData()});
 }
 
 function createGame_res() {
    
+}
+
+function gameData_io() {
+    socket.emit('game-data', {player: getPlayerData()});
+}
+
+function gameData_res(msg) {
+    gameData = msg;
+    document.dispatchEvent(stateUpdateEvent);
 }

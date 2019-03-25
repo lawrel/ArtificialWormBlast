@@ -3,7 +3,8 @@
 
 <body>
   <form>
-    <input type="button" value="CLICK TO GO BACK HOME" onclick="window.location.href='/home'" />
+    <input type="button" value="New Game" onclick="createGame_io()" />
+    <input type="button" value="Wait" onclick="waitState()" />
   </form>
   <div id="game-window">
     <div class="row">
@@ -11,7 +12,7 @@
         <div class="card-deck">
             <div class="card no-bg-border">
                 <div class="card-body">
-                    <h2>Attacker</h2>
+                    <h2 class="text-center">Attacker</h2>
                     <div id="lc1" >
                       
                     </div>
@@ -19,7 +20,7 @@
             </div>
             <div class="card no-bg-border">
                 <div class="card-body">
-                    <h2>Defender</h2>
+                    <h2 class="text-center">Defender</h2>
                     <div id="lc2" >
                       
                     </div>
@@ -28,6 +29,9 @@
         </div>
         <div class="card-deck">
             <div class="card">
+                <div class="card-header">
+                  <h4 class="text-center">Hand</h3>
+                </div>
                 <div class="">
                     <div class="card-deck">
                       <div class="card">
@@ -62,6 +66,68 @@
   </div>
 </body>
 
+<!-- Waiting for players modal -->
+<div class="modal fade" id="waitingModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-body text-center modal-text">
+        <div class="fa-3x"><i class="fas fa-circle-notch fa-spin"></i></div>
+        <div>
+          <p>Waiting for players to join...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function () {
+    document.addEventListener('game-update', gameUpdate);
+
+    $("#waitingModal").modal({
+      backdrop: "static", //remove ability to close modal with click
+      keyboard: false, //remove option to close with keyboard
+      show: false //Display loader!
+    });
+    $("#selectHandModal").modal({
+      backdrop: "static", //remove ability to close modal with click
+      keyboard: false, //remove option to close with keyboard
+      show: false //Display loader!
+    });
+  });
+
+  function gameUpdate() {
+    var state = gameData.state;
+    console.log(state);
+    switch (state) {
+      case "Wait":
+        waitState();
+        break;
+      case "SelectHand":
+        selectHandState();
+        break;
+      default:
+        defaultState();
+    }
+  }
+
+  function defaultState() {
+    // Reset "waitForPlayers" state
+    $("#waitingModal").modal('hide');
+    $("#selectHandModal").modal('hide');
+  }
+
+  function waitState() {
+    $("#selectHandModal").modal('hide');
+    $("#waitingModal").modal('show');
+  }
+
+  function selectHandState() {
+    $("#waitingModal").modal('hide');
+    $("#selectHandModal").modal('show');
+  }
+</script>
+
 <audio id="myAudio">
   <source src="/static/sounds/song.mp3" type="audio/mpeg">
 </audio>
@@ -75,7 +141,6 @@
   <source src="/static/sounds/mac420.mp3" type="audio/mpeg">
 </audio>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
 <script src="/static/scripts/game_logic.js"></script>   
 <script type="text/javascript">
