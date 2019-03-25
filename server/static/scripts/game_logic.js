@@ -4,6 +4,7 @@ var gameState = null;
 var gameData = null;
 var attacker = null;
 var atkCard = null;
+var defender = null;
 var stateUpdateEvent = new Event('game-update');
 var playerDataEvent = new Event('player-data');
 
