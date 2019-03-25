@@ -1,4 +1,5 @@
 from threading import Timer
+import random
 import uuid
 from flask import render_template, request, jsonify
 from flask_socketio import join_room, leave_room, send, emit
@@ -36,7 +37,7 @@ class WaitState(GameState):
         self.context.set_state(SelectHandState(self.context))
 
     def __str__(self):
-        return "Wait"
+        return "WaitState"
 
 class SelectHandState(GameState):
     def __init__(self, context):
@@ -49,10 +50,86 @@ class SelectHandState(GameState):
             self.next_state()
 
     def next_state(self):
-        pass
+        self.context.set_state(AttackState(self.context))
 
     def __str__(self):
         return "SelectHand"
+
+class AttackState(GameState):
+    def __init__(self, context):
+        print("Attacker select an opponent and a card.")
+        self.context = context
+        self.context.attacker = random.choice(context.players)
+    
+    def handle(self):
+        if (self.context.defender is not None and self.context.atk_card is not None):
+            self.next_state()
+
+    def next_state(self):
+        self.context.set_state(DefendState(self.context))
+
+    def __str__(self):
+        return "AttackState"
+
+class DefendState(GameState):
+    def __init__(self, context):
+        print("Defender select a card.")
+        self.context = context
+    
+    def handle(self):
+        if (self.context.def_card is not None):
+            self.next_state()
+
+    def next_state(self):
+        self.context.set_state(VoteState(self.context))
+
+    def __str__(self):
+        return "DefendState" 
+
+class VoteState(GameState):
+    def __init__(self, context):
+        print("Vote on the winner.")
+        self.context = context
+    
+    def handle(self):
+        if ():
+            self.next_state()
+
+    def next_state(self):
+        self.context.set_state(VoteState(self.context))
+
+    def __str__(self):
+        return "DefendState"
+
+# class VoteState(GameState):
+#     def __init__(self, context):
+#         print("")
+#         self.context = context
+    
+#     def handle(self):
+#         if (self.context.def_card is not None):
+#             self.next_state()
+
+#     def next_state(self):
+#         self.context.set_state(VoteState(self.context))
+
+#     def __str__(self):
+#         return "DefendState"
+
+# class VoteState(GameState):
+#     def __init__(self, context):
+#         print("")
+#         self.context = context
+    
+#     def handle(self):
+#         if (self.context.def_card is not None):
+#             self.next_state()
+
+#     def next_state(self):
+#         self.context.set_state(VoteState(self.context))
+
+#     def __str__(self):
+#         return "DefendState"   
 
 class Game:
     def __init__(self):
@@ -61,12 +138,20 @@ class Game:
         self.players = {}
         self.state = None
         self.round = 0
-
+        self.attacker = None
+        self.defender = None
+        self.atk_card = None
+        self.def_card = None
         self.set_state(WaitState(self))
 
     def addPlayer(self, player):
         self.players[player.userid] = player
         self.update()
+
+    def set_player_hand(self, playerid, hand):
+        if (playerid in self.players):
+            self.players[playerid].hand = hand
+            self.update()
 
     def update(self):
         self.state.handle()
@@ -111,6 +196,24 @@ gameLst = {}
 def chat_ex():
     return render_template("chatRoomEx.html")
 
+@socketio.on('player-data')
+def player_data(msg):
+    if ("player" in msg):
+        if ("userid" in msg["player"]):
+            for gameid, game in gameLst.items():
+                if (msg["player"]["userid"] in game.players):
+                    print(request.sid)
+                    emit('player-data', game.serialize(),room=request.sid)
+                    break
+
+@socketio.on('player-hand')
+def player_hand(msg):
+    gameid = msg['gameid']
+    userid = msg['userid']
+    hand = msg['hand']
+
+    gameLst[gameid]
+
 @socketio.on('create-game')
 def createGame(data):
     username = data['player']['username']
@@ -133,12 +236,13 @@ def joinGame(data):
     player = Player(userid, username, email)
     if(gameid in gameLst):
         if(player.userid in gameLst[gameid].players):
-            emit('join-game', {"status":"failure", "reason":"You are already in this game"}, room=request.sid)
+            emit('join-game', {"status":"success", "reason":"You are already in this game", "gameid": gameid}, room=request.sid)
+            join_room(gameid)
             return
         else:
             join_room(gameid)
             gameLst[gameid].addPlayer(player)
-            emit('join-game', {"status":"success"}, room=request.sid)
+            emit('join-game', {"status":"success", "gameid": gameid}, room=request.sid)
     else:
         print("Not a valid gameid: " + gameid)
         emit('join-game', {"status":"failure", "reason":"Not a valid gameid"}, room=request.sid)

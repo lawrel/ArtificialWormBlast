@@ -3,6 +3,7 @@ var clientState = null;
 var gameState = null;
 var gameData = null;
 var stateUpdateEvent = new Event('game-update');
+var playerDataEvent = new Event('player-data');
 
 $( document ).ready(function() {
     // Connect to game server over socketio
@@ -12,10 +13,16 @@ $( document ).ready(function() {
     handleLogin();
 
     document.addEventListener("logged-in", function() {
-        // createGame_io();
-        // Check if the game route is valid
+        playerData_io();
+    });
+
+    document.addEventListener("player-data", function () {
         handleJoinGame();
     });
+
+    // document.addEventListener("game-update", function () {
+    //     joinGame_io(gameData["gameid"], getPlayerData())
+    // })
     
 });
 
@@ -26,6 +33,7 @@ function connectGameSocket() {
     // Event handlers with callback functions
     socket.on("join-game", joinGame_res);
     socket.on("game-data", gameData_res)
+    socket.on('player-data', playerData_res);
     // socket.on("state", )
     socket.on('connect', function() {
         socket.emit('my event', {data: 'I\'m connected!'});
@@ -43,8 +51,10 @@ function handleJoinGame() {
         var gameid = params["game_id"];
         var playerData = getPlayerData();
         joinGame_io(gameid, playerData);
-
+    } else if ("gameid" in gameData) {
+        joinGame_io(gameData["gameid"], getPlayerData());
     } else {
+        gameData_io();
         console.log("User didn't provide a game_id.");
     }
 }
@@ -81,7 +91,9 @@ function joinGame_res(msg) {
     if ("status" in msg) {
         var status = msg["status"];
         if (status == "success") {
-            console.log("Game successfully joined");
+            console.log("Game successfully joined: " + msg["gameid"]);
+            window.history.replaceState({}, document.title, "?game_id=" + msg["gameid"]);
+            gameData_io();
         } 
         else if (status == "failure") {
             console.log("Join game failed" + msg["reason"]);
@@ -95,6 +107,15 @@ function createGame_io() {
 
 function createGame_res() {
    
+}
+
+function playerData_io() {
+    socket.emit('player-data', {player: getPlayerData()});
+}
+
+function playerData_res(msg) {
+    gameData = msg;
+    document.dispatchEvent(playerDataEvent);
 }
 
 function gameData_io() {
