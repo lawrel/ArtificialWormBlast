@@ -148,12 +148,14 @@
         attackState();
         updateAtkCard();
         break;
-      case "DefendState":
+        case "DefendState":
+        updateAtkCard();
         defendState();
         console.log("HERE")
         updateDfsCard();
         break;
-      case "VoteState":
+        case "VoteState":
+        updateDfsCard();
         voteState();
         break;
       case "WinnerState":
