@@ -57,6 +57,20 @@
                 </div>
             </div>
         </div>
+
+        <div class="card-deck" style="color: black">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="text-center">Players:</h2>
+                </div>
+                <div class="card-body">
+                    <div class="card-deck" id="opponents">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="card-deck" style="color: black">
             <div class="card">
                 <div class="card-header">
@@ -162,6 +176,7 @@
   function selectHandState() {
     $("#waitingModal").modal('hide');
     $("#selectHandModal").modal('show');
+    listPlayers();
   }
   function attackState() {
       printAttacker();
@@ -284,6 +299,31 @@
         }
         document.getElementById("monsterHand").innerHTML = printString ;
     }
+
+function listPlayers() {
+        allPlayers = gameData["players"];
+        printString = '<br>'
+        for (var key in allPlayers)
+        {
+            player_name = allPlayers[key]["email"];
+            
+            printString = printString + 
+         `<div class="card" style="display: inline-block; max-width:200px; color:#255760";> 
+      <div class="card-body"> 
+      <button onclick="handleHandClick('${player_name}')">${player_name}</button> </div> </div>`;
+        }
+        document.getElementById("opponents").innerHTML = printString ;
+    }
+
+    function handlePlayerClick(nameString) {
+        if ((gameData.state == "AttackState") && getPlayerData()["userid"] == gameData["attacker"])
+        {
+            defender = nameString;
+            gameData["defender"] = getPlayerData()["userid"];
+        }
+    }
+
+
     function handleHandClick(nameString) {
         if ((gameData.state == "AttackState") && getPlayerData()["userid"] == gameData["attacker"])
         {
@@ -292,6 +332,12 @@
             index = names.indexOf(attackingCard)
             pictureName = locations[index]
             document.getElementById("lc1").innerHTML = `<button onclick="handleVote('${attackingCard}')"><img src="/static/images/${pictureName}"></button>`;
+        }
+        if (gameData.state == "DefendState" && getPlayerData()["userid"] == gameData["defender"]) {
+            defendingCard = nameString;
+            index = names.indexOf(defendingCard)
+            pictureName = locations[index]
+            document.getElementById("lc2").innerHTML = `<button onclick="handleVote('${defendingCard}')"><img src="/static/images/${pictureName}"></button>`;
         }
     }
     function handleVote(nameString){
