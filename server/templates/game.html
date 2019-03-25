@@ -25,7 +25,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveButton" disabled>Save Team</button>
+                    <button onclick="sendHand()" type="button" class="btn btn-primary" data-dismiss="modal" id="saveButton" disabled>Save Team</button>
                 </div>
             </div>
         </div>
@@ -98,6 +98,10 @@
 </div>
 
 <script>
+  function sendHand() {
+    sendHand_io(monsterChoices, getPlayerData(), gameData["gameid"]);
+  }
+
   $(document).ready(function () {
       document.addEventListener('game-update', gameUpdate);
       

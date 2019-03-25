@@ -214,7 +214,7 @@ def player_hand(msg):
     userid = msg['userid']
     hand = msg['hand']
 
-    gameLst[gameid]
+    gameLst[gameid].set_player_hand(userid, hand)
 
 @socketio.on('create-game')
 def createGame(data):
