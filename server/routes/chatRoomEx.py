@@ -110,7 +110,8 @@ class WinnerState(GameState):
     
     def handle(self):
         self.context.round = self.context.round+1
-        if (self.context.newRound is not None):
+        print(self.context.newRound)
+        if (self.context.newRound is not None or self.context.round == 3):
             self.next_state()
 
     def next_state(self):
@@ -323,5 +324,14 @@ def set_winner(msg):
     gameid = msg["gameid"]
     userid = msg["userid"]
     gameLst[gameid].winner = int(userid)
+    gameLst[gameid].update()
+    print(gameLst[gameid].serialize())
+
+@socketio.on("new_Round")
+def set_winner(msg):
+    print("HERRO2")
+    print(msg)
+    gameid = msg["gameid"]
+    newRound = "here"
     gameLst[gameid].update()
     print(gameLst[gameid].serialize())

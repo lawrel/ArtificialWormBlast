@@ -156,6 +156,9 @@
       case "VoteState":
         voteState();
         break;
+      case "WinnerState":
+        winState();
+        break;
       case "EndState":
         endState();
         break;
@@ -212,7 +215,9 @@
       listHand();
   }
   function winState() {
+    console.log("PLEASE??????????????")
       changeHand(); //for now just change the hand of the card
+      console.log("THANKS??????????????")
       newRound();
   }
   function endState() {
@@ -381,17 +386,22 @@ function listPlayers() {
                   if (allPlayers2[key2]["userid"] == gameData.defender) {
                     console.log("defender lost")
                     // take card from loser
-                    allPlayers2[key2]["hand"].pop(dfs_card); //wrong syntax??
+                    allPlayers2[key2]["hand"].pop(gameData.dfs_card); //wrong syntax??
                     //add it to winner
-                    allPlayers[key].push(dfs_card); //wrong syntax??
+                    allPlayers[key]["hand"].push(gameData.dfs_card); //wrong syntax??
                   }
                 }
               } else {
                 //looking for defender as winner
-                //winner needs card of loser
-               for (key2 in allPlayers2) {
-                
-              }
+                for (key2 in allPlayers2) {
+                  if (allPlayers2[key2]["userid"] == gameData.defender) {
+                    console.log("attacker lost")
+                    // take card from loser
+                    allPlayers2[key2]["hand"].pop(gameData.atk_card); //wrong syntax??
+                    //add it to winner
+                    allPlayers[key]["hand"].push(gameData.atk_card); //wrong syntax??
+                  }
+                }
               }
                
             }
@@ -399,6 +409,17 @@ function listPlayers() {
             
         }
       
+    }
+
+    function newRound() {
+      //for now new attacker will be random
+      gameData.attacker = null;
+      gameData.defender = null;
+      gameData.winner = null;
+      gameData.atk_card = null;
+      gameData.dfs_card = null;
+
+      newRound_io(gameData["gameid"])
     }
 
     function showResults() {

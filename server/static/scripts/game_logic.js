@@ -177,3 +177,11 @@ function winner_res(msg) {
     winner = msg;
     document.dispatchEvent(playerDataEvent);
 }
+
+function newRound_io(gameid) {
+    socket.emit('new_Round', { gameid: gameid});
+}
+function nR_res(msg) {
+    round = msg;
+    document.dispatchEvent(playerDataEvent);
+}
