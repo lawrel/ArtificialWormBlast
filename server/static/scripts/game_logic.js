@@ -2,6 +2,7 @@ var socket;
 var clientState = null;
 var gameState = null;
 var gameData = null;
+var attacker = null;
 var stateUpdateEvent = new Event('game-update');
 var playerDataEvent = new Event('player-data');
 
@@ -35,6 +36,7 @@ function connectGameSocket() {
     socket.on("join-game", joinGame_res);
     socket.on("game-data", gameData_res)
     socket.on('player-data', playerData_res);
+    socket.on("attacker", attacker_res)
     // socket.on("state", )
     socket.on('connect', function() {
         socket.emit('my event', {data: 'I\'m connected!'});
@@ -134,4 +136,9 @@ function sendHand_io(hand, playerData, gameid) {
         gameid:gameid
     };
     socket.emit('player-hand', data)
+}
+
+function attacker_res(msg) {
+    attacker = msg;
+    document.dispatchEvent(stateUpdateEvent);
 }

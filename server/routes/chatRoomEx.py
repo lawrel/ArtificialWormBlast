@@ -59,7 +59,9 @@ class AttackState(GameState):
     def __init__(self, context):
         print("Attacker select an opponent and a card.")
         self.context = context
-        self.context.attacker = random.choice(context.players)
+        ps = list(context.players)
+        self.context.attacker = random.choice(ps)
+        #self.context.update_clients()
     
     def handle(self):
         if (self.context.defender is not None and self.context.atk_card is not None):
@@ -153,7 +155,7 @@ class Game:
     def set_player_hand(self, playerid, hand):
         if (playerid in self.players):
             self.players[playerid].hand = hand
-            self.update()
+            self.state.handle();
 
     def update(self):
         self.state.handle()
@@ -173,7 +175,11 @@ class Game:
                 "public" : self.public,
                 "players" : playersData,
                 "state" : self.state.__str__(),
-                "round" : self.round
+                "round" : self.round,
+                "attacker": self.attacker,
+                "atk_card": self.atk_card,
+                "defender":self.defender,
+                "def_card":self.def_card
             }
         return gameData
 
@@ -270,3 +276,11 @@ def give_data(msg):
     if (gameid in gameLst):
         print(request.sid)
         emit('game-data', gameLst[gameid].serialize(),room=request.sid)
+
+@socketio.on('atk-card-update')
+def atk_card(msg):
+    gameid = msg["gameid"]
+    card = msg["card"]
+    gameLst[gameid].atk_card = card
+    gameLst[gameid].update_clients()
+    # emit('atk-card-update', {"card":card}, room=gameid)
