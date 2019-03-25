@@ -281,9 +281,10 @@
         document.getElementById("monsterHand").innerHTML = printString ;
     }
     function handleHandClick(nameString) {
-        if (gameData.state == "AttackState")
+        if ((gameData.state == "AttackState") && getPlayerData()["userid"] == gameData["attacker"])
         {
             attackingCard = nameString;
+            
             index = names.indexOf(attackingCard)
             pictureName = locations[index]
             document.getElementById("lc1").innerHTML = `<button onclick="handleVote('${attackingCard}')"><img src="/static/images/${pictureName}"></button>`;
