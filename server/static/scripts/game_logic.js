@@ -141,6 +141,15 @@ function gameData_res(msg) {
     document.dispatchEvent(stateUpdateEvent);
 }
 
+function sendHand_io(hand, playerData, gameid) {
+    var data = {
+        hand:hand,
+        userid:playerData["userid"],
+        gameid:gameid
+    };
+    socket.emit('player-hand', data)
+}
+
 function attacker_res(msg) {
     attacker = msg;
     document.dispatchEvent(stateUpdateEvent);
