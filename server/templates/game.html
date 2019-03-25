@@ -111,6 +111,21 @@
   </div>
 </div>
 
+<!-- Waiting for players modal -->
+<div class="modal fade" id="voteModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-body text-center modal-text">
+          <div class="fa-3x"><i class="fas fa-circle-notch fa-spin"></i></div>
+          <div id="waitingTag">
+              <p>Vote for a winner</p>
+  
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 <script>
   function sendHand() {
     sendHand_io(monsterChoices, getPlayerData(), gameData["gameid"]);
@@ -119,7 +134,11 @@
   $(document).ready(function () {
       document.addEventListener('game-update', gameUpdate);
       
-
+      $("#voteMddal").modal({
+        backdrop: "static", //remove ability to close modal with click
+        keyboard: false, //remove option to close with keyboard
+        show: false //Display loader!
+      });
     $("#waitingModal").modal({
       backdrop: "static", //remove ability to close modal with click
       keyboard: false, //remove option to close with keyboard
@@ -145,6 +164,7 @@
         selectHandState();
         break;
       case "AttackState":
+        disableDefCard();
         attackState();
         updateAtkCard();
         break;
@@ -157,6 +177,8 @@
         case "VoteState":
         updateDfsCard();
         voteState();
+        // $('#voteModal').modal('show');
+        // setTimeout(function(){$('#voteModal').modal('hide'); }, 3000);
         break;
       case "WinnerState":
         winState();
@@ -175,6 +197,10 @@
     index = names.indexOf(gameData["atk_card"])
     pictureName = locations[index]
     document.getElementById("lc1").innerHTML = `<button onclick="handleVote('${gameData["atk_card"]}')"><img src="/static/images/${pictureName}"></button>` + "<br> Attacking Player: " + gameData.attacker;
+  }
+
+  function disableDefCard() {
+    document.getElementById("lc2").innerHTML = "";
   }
 
   function updateDfsCard() {
@@ -207,6 +233,7 @@
   function attackState() {
       printAttacker();
       listHand();
+      listPlayers();
   }
   function defendState() {
       console.log("WHY?")
@@ -329,11 +356,18 @@
 
 
     function listHand() {
-        numCards = monsterChoices.length;
+        var userid = getPlayerData()["userid"]
+        var uind = 0;
+        for (var i = 0; i < gameData['players'].length; i++) {
+          if (gameData['players'][i]["userid"] == userid) {
+            uind = i
+          }
+        }
+        numCards = gameData['players'][uind]["hand"].length;
         printString = '<br>'
         for (var i = 0; i < numCards; i++)
         {
-            monster_name = monsterChoices[i]
+            monster_name = gameData['players'][uind]["hand"][i]
             index = names.indexOf(monster_name)
             pictureName = locations[index]
             
@@ -451,49 +485,49 @@ function listPlayers() {
         }
     }
     function handleVote(nameString){
+      submitVote_io(gameData["gameid"], getPlayerData()["userid"], nameString)
+      // allPlayers = gameData["players"];
+      // player = null;
+      // attacker = null;
+      // defender = null;
+      // totalPlayers = 0;
+      // for (var key in allPlayers)
+      //   {
+      //       if (allPlayers[key]["email"] == getPlayerData()["email"]) {
+      //         player = allPlayers[key];
+      //         console.log(allPlayers[key]["vote"])
+      //         totalPlayers += 1;
+      //       }
+      //       if (allPlayers[key]["userid"] == gameData.attacker) {
+      //         attacker = allPlayers[key];
+      //       }
+      //       if (allPlayers[key]["userid"] == gameData.defender) {
+      //         defender = allPlayers[key];
+      //       }
+      //   }
+      // if (!player["vote"]) {
+      //   if (nameString == gameData["atk_card"]) {
+      //     //add name to votes
+      //     console.log("Voted for" + gameData["atk_card"])
+      //     attacker["numVotes"] += 1;
 
-      allPlayers = gameData["players"];
-      player = null;
-      attacker = null;
-      defender = null;
-      totalPlayers = 0;
-      for (var key in allPlayers)
-        {
-            if (allPlayers[key]["email"] == getPlayerData()["email"]) {
-              player = allPlayers[key];
-              console.log(allPlayers[key]["vote"])
-              totalPlayers += 1;
-            }
-            if (allPlayers[key]["userid"] == gameData.attacker) {
-              attacker = allPlayers[key];
-            }
-            if (allPlayers[key]["userid"] == gameData.defender) {
-              defender = allPlayers[key];
-            }
-        }
-      if (!player["vote"]) {
-        if (nameString == gameData["atk_card"]) {
-          //add name to votes
-          console.log("Voted for" + gameData["atk_card"])
-          attacker["numVotes"] += 1;
+      //     if(attacker["numVotes"]*2 >= totalPlayers) {
+      //       console.log("WINNER ATTACK")
+      //       winner_io(gameData["gameid"] ,attacker["userid"])
+      //     }
+      //   }
+      //   else {
+      //     // add name to votes
+      //     console.log("Voted for" + gameData["dts_card"])
+      //     defender["numVotes"] += 1;
 
-          if(attacker["numVotes"]*2 >= totalPlayers) {
-            console.log("WINNER ATTACK")
-            winner_io(gameData["gameid"] ,attacker["userid"])
-          }
-        }
-        else {
-          // add name to votes
-          console.log("Voted for" + gameData["dts_card"])
-          defender["numVotes"] += 1;
-
-          if(defender["numVotes"]*2 >= totalPlayers) {
-            console.log("WINNER DEFENSE")
-            winner_io(gameData["gameid"] ,defender["userid"])
-          }
-        }
-        player["vote"] = true;
-      }
+      //     if(defender["numVotes"]*2 >= totalPlayers) {
+      //       console.log("WINNER DEFENSE")
+      //       winner_io(gameData["gameid"] ,defender["userid"])
+      //     }
+      //   }
+      //   player["vote"] = true;
+      // }
       
 
 

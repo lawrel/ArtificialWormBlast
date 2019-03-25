@@ -22,7 +22,7 @@ class WaitState(GameState):
         self.timer = Timer(5, self.next_state)
 
     def handle(self):
-        if (len(self.context.players) == 5):
+        if (len(self.context.players) == 6):
             print("All players connected.")
             self.next_state()
         elif (len(self.context.players) >= 2 and not self.timer.is_alive()):
@@ -50,10 +50,22 @@ class SelectHandState(GameState):
             self.next_state()
 
     def next_state(self):
-        self.context.set_state(AttackState(self.context))
+        self.context.set_state(NewRoundState(self.context))
 
     def __str__(self):
         return "SelectHandState"
+
+class NewRoundState(GameState):
+    def __init__(self, context):
+        print("Starting new round")
+        self.context = context
+
+    def handle(self):
+        self.context.new_round()
+        self.next_state()
+
+    def next_state(self):
+        self.context.set_state(AttackState(self.context))
 
 class AttackState(GameState):
     def __init__(self, context):
@@ -68,6 +80,7 @@ class AttackState(GameState):
             self.next_state()
 
     def next_state(self):
+        self.context.update_clients()
         self.context.set_state(DefendState(self.context))
 
     def __str__(self):
@@ -94,7 +107,8 @@ class VoteState(GameState):
         self.context = context
     
     def handle(self):
-        if (self.context.winner is not None):
+        playerVoted = [player.vote for playerid, player in self.context.players.items()]
+        if (False not in playerVoted):
             self.next_state()
 
     def next_state(self):
@@ -109,16 +123,40 @@ class WinnerState(GameState):
         self.context = context
     
     def handle(self):
-        self.context.round = self.context.round+1
-        print(self.context.newRound)
-        if (self.context.newRound is not None or self.context.round == 3):
-            self.next_state()
+        votelist = [player.vote for playerid, player in self.context.players.items()]
+        atk_cnt = 0
+        dfs_cnt = 0
+        for v in votelist:
+            if (v == self.context.atk_card):
+                atk_cnt += 1
+            if (v == self.context.dfs_card):
+                dfs_cnt += 1
+
+        if (dfs_cnt >= atk_cnt):
+            self.context.winner = self.context.defender
+        else:
+            self.context.winner = self.context.attacker
+
+        winner = None
+        loser = None
+        card = None
+        if (self.context.winner == self.context.defender):
+            card = self.context.atk_card
+            winner = self.context.defender
+            loser = self.context.attacker
+        else:
+            card = self.context.dfs_card
+            winner = self.context.attacker
+            loser = self.context.defender
+
+        self.context.swap_card(card, loser, winner)
+        self.next_state()
 
     def next_state(self):
         if (self.context.round == 3):
             self.context.set_state(EndState(self.context))
         else:
-            self.context.set_state(AttackState(self.context))
+            self.context.set_state(NewRoundState(self.context))
 
     def __str__(self):
         return "WinnerState"
@@ -152,6 +190,25 @@ class Game:
         self.newRound = None
         self.set_state(WaitState(self))
 
+    def new_round(self):
+        self.attacker = None
+        self.defender = None
+        self.atk_card = None
+        self.dfs_card = None
+        self.winner = None
+        self.round += 1
+        for playerid, player in self.players.items():
+            player.vote = False
+            player.vote_card = None
+
+    def swap_card(self, card, loserid, winnerid):
+        loser = self.players[loserid]
+        winner = self.players[winnerid]
+        print(loser.hand)
+        loser.hand.remove(card)
+        winner.hand.append(card)
+        self.update_clients()
+
     def addPlayer(self, player):
         self.players[player.userid] = player
         self.update()
@@ -159,7 +216,7 @@ class Game:
     def set_player_hand(self, playerid, hand):
         if (playerid in self.players):
             self.players[playerid].hand = hand
-            self.state.handle();
+            self.state.handle()
 
     def update(self):
         self.state.handle()
@@ -167,6 +224,11 @@ class Game:
 
     def set_state(self, state):
         self.state = state
+        self.update()
+
+    def vote(self, userid, card):
+        self.players[userid].vote_card = card
+        self.players[userid].vote = True
         self.update()
 
     def update_clients(self):
@@ -195,6 +257,7 @@ class Player:
         self.username = username
         self.email = email
         self.vote = False
+        self.vote_card = None
         self.numVotes = 0
         self.hand = []
 
@@ -208,9 +271,6 @@ class Player:
             "vote" : self.vote,
             "numVotes" : self.numVotes
         }
-
-    def getVote():
-        return self.vote
 
 gameLst = {}
 
@@ -317,21 +377,29 @@ def set_defender(msg):
     gameLst[gameid].update()
     print(gameLst[gameid].serialize())
 
-@socketio.on("round-winner")
-def set_winner(msg):
-    print("HERRO")
-    print(msg)
-    gameid = msg["gameid"]
-    userid = msg["userid"]
-    gameLst[gameid].winner = int(userid)
-    gameLst[gameid].update()
-    print(gameLst[gameid].serialize())
+# @socketio.on("round-winner")
+# def set_winner(msg):
+#     print("HERRO")
+#     print(msg)
+#     gameid = msg["gameid"]
+#     userid = msg["userid"]
+#     gameLst[gameid].winner = int(userid)
+#     gameLst[gameid].update()
+#     print(gameLst[gameid].serialize())
 
-@socketio.on("new_Round")
-def set_winner(msg):
-    print("HERRO2")
-    print(msg)
+# @socketio.on("new_Round")
+# def set_winner(msg):
+#     print("HERRO2")
+#     print(msg)
+#     gameid = msg["gameid"]
+#     newRound = "here"
+#     gameLst[gameid].update()
+#     print(gameLst[gameid].serialize())
+
+@socketio.on('submit-vote')
+def reg_vote(msg):
+    userid = msg["userid"]
+    card = msg["card"]
     gameid = msg["gameid"]
-    newRound = "here"
-    gameLst[gameid].update()
-    print(gameLst[gameid].serialize())
+
+    gameLst[gameid].vote(userid, card)

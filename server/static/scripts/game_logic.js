@@ -185,3 +185,7 @@ function nR_res(msg) {
     round = msg;
     document.dispatchEvent(playerDataEvent);
 }
+
+function submitVote_io(gameid, userid, cardid){
+    socket.emit('submit-vote', {gameid:gameid, userid:userid, card:cardid});
+}
