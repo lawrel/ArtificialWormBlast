@@ -150,6 +150,8 @@
         break;
       case "DefendState":
         defendState();
+        console.log("HERE")
+        updateDfsCard();
         break;
       case "VoteState":
         voteState();
@@ -163,9 +165,22 @@
   }
 
   function updateAtkCard() {
+    console.log("NOOOOOOOOOOOOOOOOOOOOO")
+    console.log(gameData)
     index = names.indexOf(gameData["atk_card"])
     pictureName = locations[index]
     document.getElementById("lc1").innerHTML = `<button onclick="handleVote('${gameData["atk_card"]}')"><img src="/static/images/${pictureName}"></button>` + "<br> Attacking Player: " + gameData.attacker;
+  }
+
+  function updateDfsCard() {
+    console.log("FUCKKKKKKKKKKKK")
+    console.log(gameData)
+    console.log(gameData["dfs_card"])
+    index = names.indexOf(gameData["dfs_card"])
+    console.log(index)
+    pictureName = locations[index]
+    console.log(pictureName)
+    document.getElementById("lc2").innerHTML = `<button onclick="handleVote('${gameData["dfs_card"]}')"><img src="/static/images/${pictureName}"></button>` + "<br> Defending Player: " + gameData.defender;
   }
 
   function defaultState() {
@@ -189,12 +204,19 @@
       listHand();
   }
   function defendState() {
+      console.log("WHY?")
+      printDefender();
       listHand();
   }
   function voteState() {
       listHand();
   }
+  function winState() {
+      changeHand(); //for now just change the hand of the card
+      newRound();
+  }
   function endState() {
+      showResults(); //no implemented for this release
   }
 
   function updateWaitModal() {
@@ -251,17 +273,17 @@
         $( 'div.message_holder' ).append( '<div><b style="color: #000">'+msg.user_name+'</b> '+msg.message+'</div>' )
       }
     })
+
     function printAttacker()
     {
-        /*allPlayers = gameData["players"];
-        for (var key in allPlayers)
-        {
-            if (allPlayers[key]["user_id"] == gameData.attacker) {
-              attacker = allPlayers[key]["email"]
-            }
-        }  */
       document.getElementById("lc1").innerHTML = gameData.attacker;
     }
+
+    function printDefender()
+    {
+      document.getElementById("lc2").innerHTML = gameData.defender;
+    }
+
     function handleMonsterClick(nameString) {
         var index = monsterChoices.indexOf(nameString);
         if (index > -1) {
@@ -339,6 +361,50 @@ function listPlayers() {
         }
     }
 
+    function changeHand() {
+      //take card from loser
+      //give card to winner
+      console.log("CHANGE HAND")
+      allPlayers = gameData["players"];
+      allPlayers2 = gameData["players"]
+      winner = null;
+      attacker = null;
+      defender = null;
+      for (var key in allPlayers)
+        {
+            if (allPlayers[key]["userid"] == gameData.winner) {
+              console.log("FOUND WINNER")
+              if (allPlayers[key]["userid"] == gameData.attacker ) {
+                console.log("Attacker won")
+                // looking for defender as loser
+               for (key2 in allPlayers2) {
+                  if (allPlayers2[key2]["userid"] == gameData.defender) {
+                    console.log("defender lost")
+                    // take card from loser
+                    allPlayers2[key2]["hand"].pop(dfs_card); //wrong syntax??
+                    //add it to winner
+                    allPlayers[key].push(dfs_card); //wrong syntax??
+                  }
+                }
+              } else {
+                //looking for defender as winner
+                //winner needs card of loser
+               for (key2 in allPlayers2) {
+                
+              }
+              }
+               
+            }
+            
+            
+        }
+      
+    }
+
+    function showResults() {
+
+    }
+
 
     function handleHandClick(nameString) {
         if ((gameData.state == "AttackState") && getPlayerData()["userid"] == gameData["attacker"])
@@ -350,10 +416,66 @@ function listPlayers() {
             pictureName = locations[index]
             document.getElementById("lc1").innerHTML = `<button onclick="handleVote('${attackingCard}')"><img src="/static/images/${pictureName}"></button>`;
         }
+
+        else if ((gameData.state == "DefendState") && getPlayerData()["userid"] == gameData["defender"])
+        {
+            console.log("DEFENSE")
+            defendingCard = nameString;
+            defendCard_io(gameData["gameid"] ,defendingCard)
+            index = names.indexOf(defendingCard)
+            pictureName = locations[index]
+            document.getElementById("lc2").innerHTML = `<button onclick="handleVote('${defendingCard}')"><img src="/static/images/${pictureName}"></button>`;
+        }
     }
     function handleVote(nameString){
 
+      allPlayers = gameData["players"];
+      player = null;
+      attacker = null;
+      defender = null;
+      totalPlayers = 0;
+      for (var key in allPlayers)
+        {
+            if (allPlayers[key]["email"] == getPlayerData()["email"]) {
+              player = allPlayers[key];
+              console.log(allPlayers[key]["vote"])
+              totalPlayers += 1;
+            }
+            if (allPlayers[key]["userid"] == gameData.attacker) {
+              attacker = allPlayers[key];
+            }
+            if (allPlayers[key]["userid"] == gameData.defender) {
+              defender = allPlayers[key];
+            }
+        }
+      if (!player["vote"]) {
+        if (nameString == gameData["atk_card"]) {
+          //add name to votes
+          console.log("Voted for" + gameData["atk_card"])
+          attacker["numVotes"] += 1;
+
+          if(attacker["numVotes"]*2 >= totalPlayers) {
+            console.log("WINNER ATTACK")
+            winner_io(gameData["gameid"] ,attacker["userid"])
+          }
+        }
+        else {
+          // add name to votes
+          console.log("Voted for" + gameData["dts_card"])
+          defender["numVotes"] += 1;
+
+          if(defender["numVotes"]*2 >= totalPlayers) {
+            console.log("WINNER DEFENSE")
+            winner_io(gameData["gameid"] ,defender["userid"])
+          }
+        }
+        player["vote"] = true;
+      }
+      
+
+
     }
+
 </script>
 {% endblock %}
 

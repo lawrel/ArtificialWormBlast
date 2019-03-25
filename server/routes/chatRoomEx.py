@@ -79,7 +79,7 @@ class DefendState(GameState):
         self.context = context
     
     def handle(self):
-        if (self.context.def_card is not None):
+        if (self.context.dfs_card is not None):
             self.next_state()
 
     def next_state(self):
@@ -94,7 +94,7 @@ class VoteState(GameState):
         self.context = context
     
     def handle(self):
-        if ():
+        if (self.context.winner is not None):
             self.next_state()
 
     def next_state(self):
@@ -109,7 +109,8 @@ class WinnerState(GameState):
         self.context = context
     
     def handle(self):
-        if ():
+        self.context.round = self.context.round+1
+        if (self.context.newRound is not None):
             self.next_state()
 
     def next_state(self):
@@ -145,7 +146,9 @@ class Game:
         self.attacker = None
         self.defender = None
         self.atk_card = None
-        self.def_card = None
+        self.dfs_card = None
+        self.winner = None
+        self.newRound = None
         self.set_state(WaitState(self))
 
     def addPlayer(self, player):
@@ -179,7 +182,9 @@ class Game:
                 "attacker": self.attacker,
                 "atk_card": self.atk_card,
                 "defender":self.defender,
-                "def_card":self.def_card
+                "dfs_card":self.dfs_card,
+                "winner":self.winner,
+                "newRound":self.newRound
             }
         return gameData
 
@@ -188,15 +193,23 @@ class Player:
         self.userid = userid
         self.username = username
         self.email = email
+        self.vote = False
+        self.numVotes = 0
         self.hand = []
+
 
     def serialize(self):
         return {
             "userid" : self.userid,
             "username" : self.username,
             "email" : self.email,
-            "hand" : self.hand
+            "hand" : self.hand,
+            "vote" : self.vote,
+            "numVotes" : self.numVotes
         }
+
+    def getVote():
+        return self.vote
 
 gameLst = {}
 
@@ -286,11 +299,29 @@ def atk_card(msg):
     print(gameLst[gameid].serialize())
     # emit('atk-card-update', {"card":card}, room=gameid)
 
+@socketio.on('dfs-card-update')
+def dfs_card(msg):
+    gameid = msg["gameid"]
+    card = msg["card"]
+    gameLst[gameid].dfs_card = card
+    gameLst[gameid].update()
+    print(gameLst[gameid].serialize())
+    # emit('dfs-card-update', {"card":card}, room=gameid)
+
 @socketio.on("set-defender")
 def set_defender(msg):
     gameid = msg["gameid"]
     userid = msg["userid"]
-    gameLst[gameid].defender = userid
+    gameLst[gameid].defender = int(userid)
     gameLst[gameid].update()
+    print(gameLst[gameid].serialize())
 
+@socketio.on("round-winner")
+def set_winner(msg):
+    print("HERRO")
+    print(msg)
+    gameid = msg["gameid"]
+    userid = msg["userid"]
+    gameLst[gameid].winner = int(userid)
+    gameLst[gameid].update()
     print(gameLst[gameid].serialize())

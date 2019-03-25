@@ -4,7 +4,10 @@ var gameState = null;
 var gameData = null;
 var attacker = null;
 var atkCard = null;
+var dfsCard = null;
 var defender = null;
+var attackVotes = 0;
+var defendVotes= 0;
 var stateUpdateEvent = new Event('game-update');
 var playerDataEvent = new Event('player-data');
 
@@ -40,6 +43,7 @@ function connectGameSocket() {
     socket.on('player-data', playerData_res);
     socket.on("attacker", attacker_res)
     socket.on("atkCard", attackCard_res)
+    socket.on("dfsCard", defendCard_res)
     // socket.on("state", )
     socket.on('connect', function() {
         socket.emit('my event', {data: 'I\'m connected!'});
@@ -135,6 +139,14 @@ function attackCard_res(msg) {
     document.dispatchEvent(playerDataEvent);
 }
 
+function defendCard_io(gameid, card) {
+    socket.emit('dfs-card-update', { gameid: gameid, card: card});
+}
+function defendCard_res(msg) {
+    dfsCard = msg;
+    document.dispatchEvent(playerDataEvent);
+}
+
 function gameData_io(gameid) {
     socket.emit('game-data', {gameid:gameid});
 }
@@ -156,4 +168,12 @@ function sendHand_io(hand, playerData, gameid) {
 function attacker_res(msg) {
     attacker = msg;
     document.dispatchEvent(stateUpdateEvent);
+}
+
+function winner_io(gameid, userid) {
+    socket.emit('round-winner', { gameid: gameid, userid: userid});
+}
+function winner_res(msg) {
+    winner = msg;
+    document.dispatchEvent(playerDataEvent);
 }
