@@ -4,7 +4,7 @@
 
 <body>
     <!-- Button trigger modal -->
-    <button type="button" class="button" data-toggle="modal" data-target="#exampleModalLong">
+    <button type="button" class="button" data-toggle="modal" data-target="#selectHandModal">
         DRAFT MY MONSTERS.
     </button>
 
@@ -88,8 +88,9 @@
     <div class="modal-content">
       <div class="modal-body text-center modal-text">
         <div class="fa-3x"><i class="fas fa-circle-notch fa-spin"></i></div>
-        <div>
-          <p>Waiting for players to join...</p>
+        <div id="waitingTag">
+            <p>Waiting for players to join...<br> Currently, the following players are connected:</p>
+
         </div>
       </div>
     </div>
@@ -117,6 +118,7 @@
   function gameUpdate() {
     var state = gameData.state;
     console.log(state);
+    updateWaitModal();
     switch (state) {
       case "WaitState":
         waitState();
@@ -141,6 +143,7 @@
     }
   }
 
+
   function defaultState() {
     // Reset "waitForPlayers" state
     $("#waitingModal").modal('hide');
@@ -150,13 +153,11 @@
   function waitState() {
     $("#selectHandModal").modal('hide');
     $("#waitingModal").modal('show');
-    document.getElementById("monsterHand").innerHTML = printString;
   }
 
   function selectHandState() {
     $("#waitingModal").modal('hide');
     $("#selectHandModal").modal('show');
-    document.getElementById("monsterHand").innerHTML = printString;
   }
   function attackState() {
       listHand();
@@ -168,6 +169,15 @@
       listHand();
   }
   function endState() {
+  }
+
+  function updateWaitModal() {
+      waitString = "<p>Waiting for players to join...<br> Currently, the following players are connected:</p>";
+      players = gameData.players;
+      for (var i = 0; i < players.length; i++) {
+          waitString = waitString + players[i].email + "<br>";
+      }
+      document.getElementById("waitingTag").innerHTML = waitString;
   }
 </script>
 
@@ -265,11 +275,25 @@
         document.getElementById("monsterHand").innerHTML = printString ;
     }
     function handleHandClick(nameString) {
-        if (gameData.state == "AttackState") {
+        if (gameData.state == "AttackState")
+        {
             attackingCard = nameString;
-            document.getElementById("lc1").innerHTML = nameString;
+            index = names.indexOf(attackingCard)
+            pictureName = locations[index]
+            document.getElementById("lc1").innerHTML = `<button onclick="handleVote('${attackingCard}')"><img src="/static/images/${pictureName}"></button>`;
         }
-        if (gameData.state == "DefendState") { defendingCard = nameString; }
+        if (gameData.state == "DefendState") {
+            defendingCard = nameString;
+            index = names.indexOf(defendingCard)
+            pictureName = locations[index]
+            document.getElementById("lc2").innerHTML = `<button onclick="handleVote('${defendingCard}')"><img src="/static/images/${pictureName}"></button>`;
+        }
+        
+        
+        
+    }
+    function handleVote(nameString){
+
     }
 </script>
 {% endblock %}
