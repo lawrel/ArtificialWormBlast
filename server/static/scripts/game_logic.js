@@ -117,10 +117,13 @@ function playerData_io() {
     socket.emit('player-data', {player: getPlayerData()});
 }
 
-
 function playerData_res(msg) {
     gameData = msg;
     document.dispatchEvent(playerDataEvent);
+}
+
+function selectDefender_io(userid, gameid) {
+    socket.emit('set-defender', {userid:userid, gameid:gameid});
 }
 
 function attackCard_io(gameid, card) {

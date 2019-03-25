@@ -25,7 +25,7 @@ class WaitState(GameState):
         if (len(self.context.players) == 5):
             print("All players connected.")
             self.next_state()
-        elif (len(self.context.players) >= 3 and not self.timer.is_alive()):
+        elif (len(self.context.players) >= 2 and not self.timer.is_alive()):
             print("Game begins in 60 seconds.")
             self.timer.start()
         elif(len(self.context.players) < 3 and self.timer.is_alive()):
@@ -282,5 +282,15 @@ def atk_card(msg):
     gameid = msg["gameid"]
     card = msg["card"]
     gameLst[gameid].atk_card = card
-    gameLst[gameid].update_clients()
+    gameLst[gameid].update()
+    print(gameLst[gameid].serialize())
     # emit('atk-card-update', {"card":card}, room=gameid)
+
+@socketio.on("set-defender")
+def set_defender(msg):
+    gameid = msg["gameid"]
+    userid = msg["userid"]
+    gameLst[gameid].defender = userid
+    gameLst[gameid].update()
+
+    print(gameLst[gameid].serialize())
