@@ -42,6 +42,30 @@ body {
 .header h1 {
    font-size: 50px;
 }
+#reset {
+    border-radius: 5px;
+    border: 1px dashed #01ACC1;
+    background: #181d23;
+    color: #01ACC1;
+    text-shadow: 0 -15px 2.5px transparent, 0 15px 2.5px transparent;
+    -webkit-transition: all .3s linear 0s;
+    -moz-transition: all .3s linear 0s;
+    -ms-transition: all .3s linear 0s;
+    -o-transition: all .3s linear 0s;
+    transition: all .3s linear 0s;
+}
+
+    #reset:hover {
+        background: #255760;
+        border: 1px solid #01Acc0;
+        color: white;
+    }
+
+    #reset:active {
+        background: #01Acc0;
+        border: 1px solid #E8fcff;
+        color: white;
+    }
 
 
 
