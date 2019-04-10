@@ -204,7 +204,7 @@
   }
 
   function updateAtkCard() {
-    console.log("NOOOOOOOOOOOOOOOOOOOOO")
+    console.log("Attack State")
     console.log(gameData)
     index = names.indexOf(gameData["atk_card"])
     pictureName = locations[index]
@@ -216,7 +216,7 @@
   }
 
   function updateDfsCard() {
-    console.log("FUCKKKKKKKKKKKK")
+    console.log("Defense state")
     console.log(gameData)
     console.log(gameData["dfs_card"])
     index = names.indexOf(gameData["dfs_card"])
@@ -256,9 +256,9 @@
       listHand();
   }
   function winState() {
-    console.log("PLEASE??????????????")
+    console.log("Enter Win State")
       changeHand(); //for now just change the hand of the card
-      console.log("THANKS??????????????")
+      console.log("Init Next Round")
       newRound();
   }
   function endState() {
