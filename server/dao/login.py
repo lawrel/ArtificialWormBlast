@@ -4,15 +4,23 @@ from mysql.connector import MySQLConnection
 from mysql.connector.pooling import PooledMySQLConnection
 from datetime import date, datetime, timedelta
 
+_min_pwd_len = 7
 
-# define Python user-defined exceptions
 class Error(Exception):
    """Base class for other exceptions"""
    pass
 
 class BadEmailError(Error):
-   """Raised when email incorrect"""
+   """Raised when email is malformed"""
    pass
+
+class ShortPasswordError(Error):
+    """Raised when password is too short"""
+    pass
+
+class EmailInUseError(Error):
+    """Raised when email is already in use"""
+    pass
 
 class BadLoginError(Error):
    """Raised when login credentials are bad"""
@@ -24,6 +32,24 @@ class BadTokenError(Error):
 
 
 def execute(query_stmt, params):
+    """General purpose sql statement executor. Basically a wrapper around
+    a MySQL connector. Grabs a connection from a connection pool,
+    executes the statement, and returns all rows from the statement 
+    (if there are any).
+
+    Note: 
+        This does not autocommit. You must add a 'COMMIT;' line to your
+        statement.
+
+    Args:
+        query_stmt (str): SQL Statement to execute.
+        params (tuple): Parameters to put into the statement using string
+            formatting.
+    
+    Returns:
+        :obj:`list` of :obj:`tuple`: Rows retrieved from statement (if there are any).
+    """
+
     conn = cnxpool.get_connection()
     rows = []
     try:
@@ -39,54 +65,20 @@ def execute(query_stmt, params):
         return rows
 
 
-query = ("""SELECT ID FROM MonsterCards.Users
-                 WHERE Email = %s;""")
+def signup(email, password):
+    query = """
+            INSERT INTO MonsterCards.Users (Email, Password)
+            VALUES (%s, sha2(%s, 256));
+            COMMIT;
+            """
 
-# Input:    Email string, password string
-# Changes:  nothing
-# Return:   (ID, Email, Password) or None
-def get_user(email=None, pw=None, ID=None):
-    if (ID == None):
-        if (email == None):
-            return None
-        if (pw == None):
-            return None
-
-        user_entry = ("""SELECT ID, Email, Password FROM MonsterCards.Users
-                            WHERE Email = %s AND Password = sha2(%s,256);
-                            """)
-        cursor = db_context.cursor()
-        cursor.execute(user_entry, (email, pw))
-
-        user_row = cursor.fetchmany(size=1)
-        print(user_row)
-        if (len(user_row) != 1):
-            return None
-
-        return user_row[0]
+    if (len(str(password)) < _min_pwd_len):
+        raise ShortPasswordError
+    elif (email_taken(email)):
+        raise EmailInUseError
     else:
+        execute(query, (email, password))
 
-        user_entry = ("""SELECT ID, Email, Password FROM MonsterCards.Users
-                            WHERE ID = %s;
-                        """);
-        cursor = db_context.cursor()
-        cursor.execute(user_entry, (ID,))
-
-        user_row = cursor.fetchmany(size=1)
-        print(user_row)
-        if (len(user_row) != 1):
-            return None
-
-        return user_row[0]
-
-def is_valid_token(token):
-    curr_date = datetime.now().date()
-
-    query = ("""select count(*) from MonsterCards.UserLogins
-                    WHERE AuthToken = %s;""")
-    count = execute(query, (token,))[0][0]
-    print(count)
-    return bool(count)
 
 def get_session_data(token):
     curr_date = datetime.now().date()
@@ -106,6 +98,7 @@ def get_session_data(token):
 
     return {"email":email, "userid" : userid, "username" : ""}
 
+
 def logout_user(token):
     curr_date = datetime.now().date()
 
@@ -119,6 +112,41 @@ def logout_user(token):
     cursor.execute(query, (token,))
     cursor.execute("BEGIN;")
     cursor.close()
+
+
+def login_user(email, password):
+    update_userlogins = """
+                        INSERT INTO MonsterCards.UserLogins
+                            (AccountID, AuthToken, ExpirationDate)
+                        VALUES (%s, %s, %s)
+                        ON DUPLICATE KEY 
+                            UPDATE AuthToken = %s, ExpirationDate = %s;
+                        COMMIT;
+                        """
+
+    if (valid_creds(email, password)):
+        userid = get_userid(email)
+        token = str(uuid.uuid4())
+        exp_date = datetime.now() + timedelta(seconds=1800)
+        execute(update_userlogins, (userid, token, exp_date, token, exp_date))
+        return token
+    else:
+        raise BadLoginError
+
+
+
+##############################################################################
+# Helper Funcs ###############################################################
+##############################################################################
+
+def is_valid_token(token):
+    curr_date = datetime.now().date()
+
+    query = ("""select count(*) from MonsterCards.UserLogins
+                    WHERE AuthToken = %s;""")
+    count = execute(query, (token,))[0][0]
+    print(count)
+    return bool(count)
 
 
 def email_taken(email):
@@ -146,23 +174,3 @@ def get_userid(email):
 
     userid = execute(query, (email,))[0][0]
     return userid
-
-
-def login_user(email, password):
-    update_userlogins = """
-                        INSERT INTO MonsterCards.UserLogins
-                            (AccountID, AuthToken, ExpirationDate)
-                        VALUES (%s, %s, %s)
-                        ON DUPLICATE KEY 
-                            UPDATE AuthToken = %s, ExpirationDate = %s;
-                        COMMIT;
-                        """
-
-    if (valid_creds(email, password)):
-        userid = get_userid(email)
-        token = str(uuid.uuid4())
-        exp_date = datetime.now() + timedelta(seconds=1800)
-        execute(update_userlogins, (userid, token, exp_date, token, exp_date))
-        return token
-    else:
-        raise BadLoginError
