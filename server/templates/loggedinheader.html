@@ -58,19 +58,31 @@
           box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
         }
     </style>
+    {% block head %}{% endblock %}
 </head>
 
 <body>
-    <div class="nav">
-        <img src="/static/assets/logo1.png" alt="Monster's Ink" style="float: left; width:60px; height:45px">
-        <a href="{{url_for('home')}}">Home</a>
-        <a href="{{url_for('Instructions')}}">How to Play</a>
-        <a href="{{url_for('monsterEditor')}}">Draw Monster</a>
-        <a href="{{url_for('myAccount')}}" style="float: right">My Account</a>
-    </div>
-    {% block content %}{% endblock %}
-    <div class="footer">
-        <p align ="center"> &copy; Artificial Worm Blast - 2019 </p>
+    <div id="body-content" style="display: none;">
+        <div class="nav">
+            <img src="/static/assets/logo1.png" alt="Monster's Ink" style="float: left; width:60px; height:45px">
+            <a href="{{url_for('home')}}">Home</a>
+            <a href="{{url_for('Instructions')}}">How to Play</a>
+            <a href="{{url_for('monsterEditor')}}">Draw Monster</a>
+            <a href="{{url_for('myAccount')}}" style="float: right">My Account</a>
+        </div>
+        {% block content %}{% endblock %}
+        <div class="footer">
+            <p align ="center"> &copy; Artificial Worm Blast - 2019 </p>
+        </div>
     </div>
 </body>
+
+<script>
+$(document).ready(function() {
+    document.addEventListener("logged-in", function() {
+        $("#body-content").show();
+    });
+    handleLogin();
+});
+</script>
 </html>
