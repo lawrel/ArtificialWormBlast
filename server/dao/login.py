@@ -1,19 +1,21 @@
 import uuid
-from server.dao import cnxpool
+from server.dao import cnxpool, execute, SQLExecutionError
 from mysql.connector import MySQLConnection
 from mysql.connector.pooling import PooledMySQLConnection
 from datetime import date, datetime, timedelta
-from validate_email import validate_email
 
 _min_pwd_len = 7
 
+
 class Error(Exception):
-   """Base class for other exceptions"""
-   pass
+    """Base class for other exceptions"""
+    pass
+
 
 class BadEmailError(Error):
-   """Raised when email is malformed"""
-   pass
+    """Raised when email is malformed"""
+    pass
+
 
 class ShortPasswordError(Error):
     """Raised when password is too short"""
@@ -27,47 +29,15 @@ class EmailInUseError(Error):
     """Raised when email is already in use"""
     pass
 
+
 class BadLoginError(Error):
-   """Raised when login credentials are bad"""
-   pass
+    """Raised when login credentials are bad"""
+    pass
+
 
 class BadTokenError(Error):
-   """Raised when a login token is bad"""
-   pass
-
-
-def execute(query_stmt, params):
-    """General purpose sql statement executor. Basically a wrapper around
-    a MySQL connector. Grabs a connection from a connection pool,
-    executes the statement, and returns all rows from the statement 
-    (if there are any).
-
-    Note: 
-        This does not autocommit. You must add a 'COMMIT;' line to your
-        statement.
-
-    Args:
-        query_stmt (str): SQL Statement to execute.
-        params (tuple): Parameters to put into the statement using string
-            formatting.
-    
-    Returns:
-        :obj:`list` of :obj:`tuple`: Rows retrieved from statement (if there are any).
-    """
-
-    conn = cnxpool.get_connection()
-    rows = []
-    try:
-        cursor = conn.cursor()
-        cursor.execute(query_stmt, params)
-        rows = cursor.fetchall()
-        conn.commit()
-    except Error:
-        print("Error with sql execution")
-    finally:
-        cursor.close()
-        conn.close()
-        return rows
+    """Raised when a login token is bad"""
+    pass
 
 
 def signup(username, email, password):
@@ -119,7 +89,8 @@ def change_email():
     elif (not validate_email(email)):
         raise BadEmailError
     else:
-        execute(query, (email, email)) # wrong
+        user_id = execute(query, (email, password), insert=True)
+        return user_id
 
 
 def change_username():
@@ -139,7 +110,7 @@ def get_session_data(token):
             from MonsterCards.UserLogins
             WHERE AuthToken = %s;"""
 
-    get_user =  """select Email
+    get_user = """select Email
             from MonsterCards.Users
             where ID = %s;"""
 
@@ -177,9 +148,8 @@ def login_user(email, password):
                         INSERT INTO MonsterCards.UserLogins
                             (AccountID, AuthToken, ExpirationDate)
                         VALUES (%s, %s, %s)
-                        ON DUPLICATE KEY 
+                        ON DUPLICATE KEY
                             UPDATE AuthToken = %s, ExpirationDate = %s;
-                        COMMIT;
                         """
 
     if (valid_creds(email, password)):
@@ -191,7 +161,6 @@ def login_user(email, password):
         return token
     else:
         raise BadLoginError
-
 
 
 ##############################################################################

@@ -1,5 +1,7 @@
 /* 	Monster Cards Db Schema
+
 	Authors: Sean Rice, Jake Kloman
+
     Proposed Schema:
 		Users(PK_ID, First, MidInit, Last, Email)
         UserLogins(PK_AuthToken, FK_AccountID, ExpirationDate)

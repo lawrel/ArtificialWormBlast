@@ -5,7 +5,7 @@
 <head >
 </head>
 {% block content %}
-<body onload="init()">
+<body>
     <h1 id="name" align="center"> [Username]'s Monsters</h1>
     <div class="container" id="kevin">
 
@@ -21,10 +21,6 @@
 <script>
     var sessionData = {};
     var retrieveInfo = {};
-        $(document).ready(function () {
-            handleLogin();
-        });
-
         var names = ["Paul the Cloud", "Not Paul the Cloud", "Ice Cream Dude", "Jelly Dude", "Galusha", "Space Pampootee", "Raccoon", "Spooder Dude", "Fat Zombie Mario", "Badderlocks"]
         var locations = ["monsterExample1.JPG", "monsterExample2.JPG", "monsterExample3.JPG", "monsterExample4.JPG", "monsterExample5.JPG", "monsterExample6.JPG", "monsterExample7.JPG", "monsterExample8.JPG", "monsterExample9.JPG", "monsterExample10.JPG"]
         for( var kasey=0; kasey<10; kasey++)
@@ -36,14 +32,12 @@
         }
 
     function init () {
-        handleLogin();
         document.addEventListener("logged-in", function () {
             retrieveInfo = retrieveSessionData();
             $("#name").html(retrieveInfo["username"] + "'s Monsters");
         });
     }
-
     </script>
     
-    {% endblock %}
+{% endblock %}
 </html>

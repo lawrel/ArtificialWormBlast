@@ -11,8 +11,10 @@ from server.routes.emailSending import email_reset
 
 from server import app
 from server.dao import login as l
-from server.dao.login import signup, login_user, logout_user, get_session_data, change_password, change_email, change_username, is_valid_token
-from server.dao.login import Error, BadEmailError, BadLoginError, BadTokenError, EmailInUseError, ShortPasswordError
+from server.dao.login import signup, login_user, logout_user, get_session_data
+from server.dao.login import (Error, BadEmailError, BadLoginError,
+                              BadTokenError, EmailInUseError,
+                              ShortPasswordError)
 
 # @app.route("/api/users")
 # def users_list():
@@ -33,26 +35,27 @@ from server.dao.login import Error, BadEmailError, BadLoginError, BadTokenError,
 
 #     return jsonify(rows);
 
+
 @app.route("/logout", methods=['POST'])
 def logout():
     if request.method == "POST":
         token = request.form["login-token"]
         logout_user(token)
-        return jsonify({"msg":"user logout succesful."})
+        return jsonify({"msg": "user logout succesful."})
 
 
 @app.route("/login/session-data", methods=['POST'])
 def session_data():
     if request.method == "POST":
         token = request.form["login-token"]
-        
+     
         try:
             sesh_data = get_session_data(token)
             return jsonify(sesh_data)
         except BadTokenError:
-            return jsonify({"error":"BadTokenError"})
+            return jsonify({"error": "BadTokenError"})
         except Error:
-            return jsonify({"error":"OtherError"})
+            return jsonify({"error": "OtherError"})
 
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -62,19 +65,19 @@ def login():
     if request.method == "POST":
         # Form input fields
         email = request.form["input-email"]
-        if (email == None):
+        if (email is None):
             return "Email is empty"
         password = request.form["input-password"]
-        if (password == None):
+        if (password is None):
             return "Password is empty"
 
         try:
             token = login_user(email, password)
-            return jsonify({"login-token" : token})
+            return jsonify({"login-token": token})
         except BadLoginError:
-            return jsonify({"error":"BadLoginError"})
+            return jsonify({"error": "BadLoginError"})
         except Error:
-            return jsonify({"error":"OtherError"})
+            return jsonify({"error": "OtherError"})
 
 
 @app.route("/signup", methods=['GET', 'POST'])
@@ -90,7 +93,7 @@ def signup():
         if (email is None):
             return "Email is empty"
         password = request.form["input-password"]
-        if (password == None):
+        if (password is None):
             return "Password is empty"
 
         try:
@@ -102,9 +105,9 @@ def signup():
         except UsernameInUseError:
             return jsonify({"error":"UsernameInUseError"})
         except EmailInUseError:
-            return jsonify({"error":"EmailInUseError"})
+            return jsonify({"error": "EmailInUseError"})
         except ShortPasswordError:
-            return jsonify({"error":"ShortPasswordError"})
+            return jsonify({"error": "ShortPasswordError"})
         except Error:
             return jsonify({"error":"OtherError"})
 

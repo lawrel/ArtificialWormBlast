@@ -1,4 +1,8 @@
-# # from server import db_context
+# from flask import Flask, render_template, request, jsonify
+# import mysql.connector
+# from mysql.connector import errorcode
+# from server import app
+# from server import db_context
 
 # @app.route("/api/query", methods=['POST'])
 # def api_query():

@@ -51,54 +51,27 @@ function getSessionData_ajax(loginToken) {
         contentType: false,
         type: 'POST',
         success: function(data){
-            //console.log(data);
-            saveSessionData(data);
-            document.dispatchEvent(loggedInEvent);
-        }
-    });
-}
-
-function validateToken_ajax(loginToken) {
-    var fd = new FormData();
-    fd.append( 'login-token', loginToken);
-
-    $.ajax({
-        url: '/login/token-valid',
-        data: fd,
-        processData: false,
-        contentType: false,
-        type: 'POST',
-        success: function(data){
-            //console.log(data);
-            if ("valid" in data && data["valid"] == true) {
-                getSessionData_ajax(loginToken);
-                console.log("getting session data");
+            if ("error" in data) {
+                console.log(data)
+                redirectLogin();
             } else {
-                window.location.href = "/login";
+                saveSessionData(data);
+                document.dispatchEvent(loggedInEvent);
             }
         }
     });
 }
 
 function handleLogin() {
+    $("#body-content").hide();
     loginStatus = 'logged-out';
     loginToken = retrieveLoginToken();
     console.log(loginToken);
     if (loginToken != null) {
-        validateToken_ajax(loginToken);
+        getSessionData_ajax(loginToken);
     } else {
-        // Redirect to login
-        window.location.href = "/login";
+        redirectLogin()
     }
-
-    document.addEventListener("logged-in", function() {
-        var seshData = retrieveSessionData();
-        if (seshData != null) {
-        } else {
-            console.error("There should be sesh data.");
-        }
-    });
-
 }
 
 function handleLogout() {
@@ -106,6 +79,17 @@ function handleLogout() {
     window.location.href = "/"
 }
 
+function redirectLogin() {
+    window.location.href = "/login"
+}
+
+function redirectHome() {
+    window.location.href = "/home"
+}
+
+$(document).ready(function () {
+    
+});
 // This piece of logic handles the session data retrieval and login redirects
 // var sessionData = {};
 // $( document ).ready(function() {
