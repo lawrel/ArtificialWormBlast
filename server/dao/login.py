@@ -3,6 +3,7 @@ from server.dao import cnxpool, execute, SQLExecutionError
 from mysql.connector import MySQLConnection
 from mysql.connector.pooling import PooledMySQLConnection
 from datetime import date, datetime, timedelta
+from validate_email import validate_email
 
 _min_pwd_len = 7
 
@@ -44,7 +45,6 @@ def signup(username, email, password):
     query = """
             INSERT INTO MonsterCards.Users (Email, Password, Username)
             VALUES (%s, sha2(%s, 256), %s);
-            COMMIT;
             """
 
     if (len(str(password)) < _min_pwd_len):
@@ -64,7 +64,6 @@ def change_password(username, email, password):
         UDPATE MonsterCards.Users
         SET Password = sha2(%s, 256);
         WHERE Username = %s and Email = %s;
-        COMMIT;
         """
 
     if (len(str(password)) < _min_pwd_len):
@@ -78,7 +77,6 @@ def change_email():
         UDPATE MonsterCards.Users
         SET Email = %s;
         WHERE Email = %s;
-        COMMIT;
         """
     if (email_taken(email)):
         raise EmailInUseError
@@ -94,7 +92,6 @@ def change_username():
         UDPATE MonsterCards.Users
         SET Email = %s;
         WHERE Email = %s;
-        COMMIT;
         """
     if (username_taken(email)):
         raise UsernameInUseError
