@@ -44,10 +44,10 @@ create table UserLogins(
 	AccountID int not null,
 	AuthToken varchar(255),
     ExpirationDate datetime not null,
-    
+
     primary key (AccountID),
     unique (AuthToken),
-    
+
     FOREIGN KEY (AccountID)
         REFERENCES Users(ID)
         ON DELETE CASCADE
