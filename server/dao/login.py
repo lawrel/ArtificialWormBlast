@@ -90,16 +90,21 @@ def signup(username, email, password):
 
 
 def change_password(username, email, password):
-    query = """
-        UDPATE MonsterCards.Users
-        SET Password = sha2(%s, 256);
-        WHERE Username = %s and Email = %s;
-        COMMIT;
+    
+    query = ("""select count(*) from MonsterCards.Users
+    WHERE Username = %s and Email = %s""")
+    count1 = execute(query, (username, email))[0][0]
+    print("PASSWORDS TO CHANGE: " + str(count1))
+
+    query = """ update MonsterCards.Users 
+        set Password = sha2(%s, 256) 
+        where UserName = %s and Email = %s;
         """
 
     if (len(str(password)) < _min_pwd_len):
         raise ShortPasswordError
     else:
+        print(password, username, email)
         execute(query, (password, username, email))
 
 
@@ -108,7 +113,6 @@ def change_email():
         UDPATE MonsterCards.Users
         SET Email = %s;
         WHERE Email = %s;
-        COMMIT;
         """
     if (email_taken(email)):
         raise EmailInUseError
@@ -123,7 +127,6 @@ def change_username():
         UDPATE MonsterCards.Users
         SET Email = %s;
         WHERE Email = %s;
-        COMMIT;
         """
     if (username_taken(email)):
         raise UsernameInUseError

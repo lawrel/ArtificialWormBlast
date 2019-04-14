@@ -121,31 +121,35 @@ def forgotpassword():
         return jsonify({"success":""})
 
 
-@app.route("/changepassword/<newlink>", methods=['GET', 'POST'])
+@app.route("/changepassword/<newlink>", methods=['GET'])
 def changepassword(newlink):
-    if request.method == "GET":
-        return render_template("changepassword.html")
-    if request.method == "POST":
-        username = request.form["input-username"]
-        if (username == None):
-            return "Username is empty"
-        email = request.form["input-email"]
-        if (email is None):
-            return "Email is empty"
-        password = request.form["input-password"]
-        if (password == None):
-            return "Password is empty"
+    return render_template("changepassword.html")
 
-        try:
-            l.change_password(username, email, password)
-            if (not l.email_taken(email)):
-                raise Error
-            else:
-                return jsonify({"success":""})
-        except ShortPasswordError:
-            return jsonify({"error":"ShortPasswordError"})
-        except Error:
-            return jsonify({"error":"OtherError"})
+
+
+@app.route("/changepass", methods=['POST'])
+def changepass():
+    username = request.form["input-username"]
+    if (username == None):
+        return "Username is empty"
+    email = request.form["input-email"]
+    if (email is None):
+        return "Email is empty"
+    password = request.form["input-password"]
+    if (password == None):
+        return "Password is empty"
+
+    try:
+        l.change_password(username, email, password)
+        if (not l.email_taken(email)):
+            raise Error
+        else:
+            return jsonify({"success":""})
+    except ShortPasswordError:
+        return jsonify({"error":"ShortPasswordError"})
+    except Error:
+        return jsonify({"error":"OtherError"})
+
 
     
 
