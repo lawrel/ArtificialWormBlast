@@ -139,13 +139,19 @@ def get_session_data(token):
     get_user =  """select Email
             from MonsterCards.Users
             where ID = %s;"""
+
+    get_name = """ select UserName
+            from MonsterCards.Users
+            where ID = %s;"""
+
     if (is_valid_token(token)):
         userid = execute(query, (token,))[0][0]
         email = execute(get_user, (userid,))[0][0]
+        username = execute(get_name, (userid,))[0][0]
     else:
         raise BadTokenError
 
-    return {"email":email, "userid" : userid, "username" : ""}
+    return {"email":email, "userid" : userid, "username" : username}
 
 
 def logout_user(token):
@@ -178,6 +184,7 @@ def login_user(email, password):
         token = str(uuid.uuid4())
         exp_date = datetime.now() + timedelta(seconds=1800)
         execute(update_userlogins, (userid, token, exp_date, token, exp_date))
+        print("Right after: " + token)
         return token
     else:
         raise BadLoginError
@@ -190,6 +197,12 @@ def login_user(email, password):
 
 def is_valid_token(token):
     curr_date = datetime.now().date()
+
+    print("is valid: " + token)
+
+    query = ("""select count(*) from MonsterCards.UserLogins""")
+    count1 = execute(query, ())[0][0]
+    print(count1)
 
     query = ("""select count(*) from MonsterCards.UserLogins
                     WHERE AuthToken = %s;""")

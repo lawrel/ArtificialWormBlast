@@ -16,7 +16,7 @@
                                 <label for="input-password">Password</label>
                                 <input type="password" class="form-control" id="input-password" name="input-password" placeholder="Password" pattern=".{8,16}" required title="8 to 16 characters">
                             </div>
-                            <button type="submit" class="btn btn-primary" onclick="submitLogin_ajax()">Submit</button>
+                            <button type="button" class="btn btn-primary" onclick="submitLogin_ajax()">Submit</button>
                             <button type="button" class="btn btn-primary" onclick="forgotPassword_popup()">Forgot Password</button>
                         </form>
                     </div>
@@ -85,6 +85,7 @@
                 }
                 else if ("login-token" in data) {
                     saveLoginToken(data["login-token"]);
+                    console.log(data["login-token"]);
                     window.location.href = "/home/";
                 }
             }

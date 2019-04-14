@@ -11,7 +11,7 @@ from server.routes.emailSending import email_reset
 
 from server import app
 from server.dao import login as l
-from server.dao.login import signup, login_user, logout_user, get_session_data, change_password, change_email, change_username
+from server.dao.login import signup, login_user, logout_user, get_session_data, change_password, change_email, change_username, is_valid_token
 from server.dao.login import Error, BadEmailError, BadLoginError, BadTokenError, EmailInUseError, ShortPasswordError
 
 # @app.route("/api/users")
@@ -57,7 +57,6 @@ def session_data():
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
-    print("HERE TO OPEN LOGIN")
     if request.method == "GET":
         return render_template("login.html")
     if request.method == "POST":
@@ -143,8 +142,6 @@ def changepassword(newlink):
                 raise Error
             else:
                 return jsonify({"success":""})
-        except EmailInUseError:
-            return jsonify({"error":"EmailInUseError"})
         except ShortPasswordError:
             return jsonify({"error":"ShortPasswordError"})
         except Error:
@@ -156,6 +153,15 @@ def changepassword(newlink):
 @app.route('/myaccount')
 def myAccount():
     return render_template('Account.html')
+
+
+    
+@app.route("/login/token-valid", methods=['POST'])
+def login_valid_token():
+    if request.method == "POST":
+        token = request.form["login-token"]
+        print("login/token-valid: " + token)
+        return jsonify({"valid":is_valid_token(token)})
     
 
 

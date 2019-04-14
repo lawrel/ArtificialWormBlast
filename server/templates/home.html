@@ -39,7 +39,7 @@
         handleLogin();
         document.addEventListener("logged-in", function () {
             retrieveInfo = retrieveSessionData();
-            $("#name").html(retrieveInfo["email"] + "'s Monsters"); //username once not null
+            $("#name").html(retrieveInfo["username"] + "'s Monsters");
         });
     }
 
