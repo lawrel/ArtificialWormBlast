@@ -14,7 +14,7 @@ from server.dao import login as l
 from server.dao.login import signup, login_user, logout_user, get_session_data
 from server.dao.login import (Error, BadEmailError, BadLoginError,
                               BadTokenError, EmailInUseError,
-                              ShortPasswordError)
+                              ShortPasswordError, UsernameInUseError)
 
 # @app.route("/api/users")
 # def users_list():

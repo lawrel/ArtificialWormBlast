@@ -3,6 +3,7 @@ from server.dao import cnxpool, execute, SQLExecutionError
 from mysql.connector import MySQLConnection
 from mysql.connector.pooling import PooledMySQLConnection
 from datetime import date, datetime, timedelta
+from validate_email import validate_email
 
 _min_pwd_len = 7
 
@@ -44,7 +45,6 @@ def signup(username, email, password):
     query = """
             INSERT INTO MonsterCards.Users (Email, Password, Username)
             VALUES (%s, sha2(%s, 256), %s);
-            COMMIT;
             """
 
     if (len(str(password)) < _min_pwd_len):
@@ -60,21 +60,15 @@ def signup(username, email, password):
 
 
 def change_password(username, email, password):
-    
-    query = ("""select count(*) from MonsterCards.Users
-    WHERE Username = %s and Email = %s""")
-    count1 = execute(query, (username, email))[0][0]
-    print("PASSWORDS TO CHANGE: " + str(count1))
-
-    query = """ update MonsterCards.Users 
-        set Password = sha2(%s, 256) 
-        where UserName = %s and Email = %s;
+    query = """
+        UDPATE MonsterCards.Users
+        SET Password = sha2(%s, 256);
+        WHERE Username = %s and Email = %s;
         """
 
     if (len(str(password)) < _min_pwd_len):
         raise ShortPasswordError
     else:
-        print(password, username, email)
         execute(query, (password, username, email))
 
 
