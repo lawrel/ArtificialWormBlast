@@ -154,6 +154,40 @@ def changepass():
         return jsonify({"error":"OtherError"})
 
 
+@app.route("/changesettings", methods=['POST'])
+def changesettings():
+    username = request.form["input-username"]
+    if (username == None):
+        return "Username is empty"
+    email = request.form["input-email"]
+    if (email is None):
+        return "Email is empty"
+    password = request.form["input-password"]
+    
+    old_u = request.form["curr-username"]
+    old_e = request.form["curr-email"]
+
+    try:
+
+        if (username != old_u):
+            l.change_username(username, old_e)
+        if (email != old_e):
+            l.change_email(username, email)
+        if (password != "You should know."):
+            l.change_password(username, email, password)
+
+
+        return jsonify({"success":""})
+    except UsernameInUseError:
+        return jsonify({"error":"UsernameInUseError"})
+    except EmailInUseError:
+        return jsonify({"error": "EmailInUseError"})
+    except ShortPasswordError:
+        return jsonify({"error":"ShortPasswordError"})
+    except Error:
+        return jsonify({"error":"OtherError"})
+
+
     
 
 
