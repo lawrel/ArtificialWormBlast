@@ -15,7 +15,7 @@ _used_cxns = []
 _config = {
     'user': 'MonsterCardsDev',
     'password': 'TSitMonsterCards',
-    'host': 'localhost',
+    'host': '25.86.80.235',
     'database': 'MonsterCards'
 }
 

@@ -3,6 +3,7 @@ from server.dao import cnxpool
 from mysql.connector import MySQLConnection
 from mysql.connector.pooling import PooledMySQLConnection
 from datetime import date, datetime, timedelta
+from validate_email import validate_email
 
 _min_pwd_len = 7
 
@@ -76,8 +77,38 @@ def signup(email, password):
         raise ShortPasswordError
     elif (email_taken(email)):
         raise EmailInUseError
+    elif (not validate_email(email)):
+        raise BadEmailError
     else:
         execute(query, (email, password))
+
+
+def change_password(token, password):
+    query = """
+        UDPATE MonsterCards.Users
+        SET Password = sha2(%s, 256);
+        WHERE Email = %s;
+        COMMIT;
+        """
+
+    if (len(str(password)) < _min_pwd_len):
+        raise ShortPasswordError
+    #else:
+        # replace in query
+
+
+def change_email():
+    if (email_taken(email)):
+        raise EmailInUseError
+    #elif (not validate_email(email)):
+        raise BadEmailError
+    #else:
+        # replace in query
+
+
+def change_username():
+    # do nothing as of now
+    raise Error
 
 
 def get_session_data(token):

@@ -7,6 +7,10 @@ from server import app, socketio
 def sessions():
     return render_template('game.html')
 
+@app.route('/privategame/')
+def session():
+    return render_template('private_game.html')
+
 def messageReceived(methods=['GET', 'POST']):
     print('message was received!!!')
 
