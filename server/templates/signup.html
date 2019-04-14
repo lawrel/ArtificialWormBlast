@@ -61,6 +61,7 @@
         } 
         else {
             var fd = new FormData();
+            fd.append( 'input-username', $("#input-username").val())
             fd.append( 'input-email', $("#input-email").val());
             fd.append( 'input-password', $("#input-password").val());
 

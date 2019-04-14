@@ -19,6 +19,10 @@ class ShortPasswordError(Error):
     """Raised when password is too short"""
     pass
 
+class UsernameInUseError(Error):
+   """Raised when username is already in use"""
+   pass
+
 class EmailInUseError(Error):
     """Raised when email is already in use"""
     pass
@@ -66,49 +70,63 @@ def execute(query_stmt, params):
         return rows
 
 
-def signup(email, password):
+def signup(username, email, password):
     query = """
-            INSERT INTO MonsterCards.Users (Email, Password)
-            VALUES (%s, sha2(%s, 256));
+            INSERT INTO MonsterCards.Users (Email, Password, Username)
+            VALUES (%s, sha2(%s, 256), %s);
             COMMIT;
             """
 
     if (len(str(password)) < _min_pwd_len):
         raise ShortPasswordError
+    elif (username_taken(username)):
+        raise UsernameInUseError
     elif (email_taken(email)):
         raise EmailInUseError
     elif (not validate_email(email)):
         raise BadEmailError
     else:
-        execute(query, (email, password))
+        execute(query, (email, password, username))
 
 
-def change_password(token, password):
+def change_password(username, email, password):
     query = """
         UDPATE MonsterCards.Users
         SET Password = sha2(%s, 256);
-        WHERE Email = %s;
+        WHERE Username = %s and Email = %s;
         COMMIT;
         """
 
     if (len(str(password)) < _min_pwd_len):
         raise ShortPasswordError
-    #else:
-        # replace in query
+    else:
+        execute(query, (password, username, email))
 
 
 def change_email():
+    query = """
+        UDPATE MonsterCards.Users
+        SET Email = %s;
+        WHERE Email = %s;
+        COMMIT;
+        """
     if (email_taken(email)):
         raise EmailInUseError
-    #elif (not validate_email(email)):
+    elif (not validate_email(email)):
         raise BadEmailError
-    #else:
-        # replace in query
+    else:
+        execute(query, (email, email)) # wrong
 
 
 def change_username():
-    # do nothing as of now
-    raise Error
+    query = """
+        UDPATE MonsterCards.Users
+        SET Email = %s;
+        WHERE Email = %s;
+        COMMIT;
+        """
+    if (username_taken(email)):
+        raise UsernameInUseError
 
 
 def get_session_data(token):
@@ -185,6 +203,14 @@ def email_taken(email):
             from MonsterCards.Users
             where Email = %s;"""
     count = execute(query, (email,))[0][0]
+    return bool(count)
+
+
+def username_taken(username):
+    query = """select count(*)
+            from MonsterCards.Users
+            where Username = %s;"""
+    count = execute(query, (username,))[0][0]
     return bool(count)
 
 

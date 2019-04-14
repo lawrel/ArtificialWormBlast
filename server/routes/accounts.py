@@ -84,6 +84,9 @@ def signup():
         return render_template("signup.html")
     if request.method == "POST":
         # Did we get inputs (as strings)?
+        username = request.form["input-username"]
+        if (username == None):
+            return "Username is empty"
         email = request.form["input-email"]
         if (email is None):
             return "Email is empty"
@@ -92,11 +95,13 @@ def signup():
             return "Password is empty"
 
         try:
-            l.signup(email, password)
+            l.signup(username, email, password)
             if (not l.email_taken(email)):
                 raise Error
             else:
                 return jsonify({"success":""})
+        except UsernameInUseError:
+            return jsonify({"error":"UsernameInUseError"})
         except EmailInUseError:
             return jsonify({"error":"EmailInUseError"})
         except ShortPasswordError:
@@ -115,12 +120,16 @@ def forgotpassword():
     else:
         email_reset(email, link)
         return jsonify({"success":""})
-        
+
+
 @app.route("/changepassword/<newlink>", methods=['GET', 'POST'])
 def changepassword(newlink):
     if request.method == "GET":
         return render_template("changepassword.html")
     if request.method == "POST":
+        username = request.form["input-username"]
+        if (username == None):
+            return "Username is empty"
         email = request.form["input-email"]
         if (email is None):
             return "Email is empty"
@@ -129,7 +138,7 @@ def changepassword(newlink):
             return "Password is empty"
 
         try:
-            l.change_password(email, password)
+            l.change_password(username, email, password)
             if (not l.email_taken(email)):
                 raise Error
             else:
