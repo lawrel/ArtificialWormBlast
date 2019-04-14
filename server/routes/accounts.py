@@ -160,16 +160,3 @@ def changepass():
 @app.route('/myaccount')
 def myAccount():
     return render_template('Account.html')
-
-
-    
-@app.route("/login/token-valid", methods=['POST'])
-def login_valid_token():
-    if request.method == "POST":
-        token = request.form["login-token"]
-        print("login/token-valid: " + token)
-        return jsonify({"valid":is_valid_token(token)})
-    
-
-
-    
