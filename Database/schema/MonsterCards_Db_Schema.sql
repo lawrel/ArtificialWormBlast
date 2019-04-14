@@ -68,12 +68,12 @@ create table UsersCards(
 	CardID int,
 
 	foreign key (UserID)
-        REFERENCES Cards(ID)
+        REFERENCES Users(ID)
         ON DELETE CASCADE
         ON UPDATE CASCADE,
 
 	foreign key (CardID)
-        REFERENCES Users(ID)
+        REFERENCES Cards(ID)
         ON DELETE CASCADE
         ON UPDATE CASCADE,
 
