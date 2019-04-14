@@ -18,7 +18,12 @@
         <button class="button" display inline-block; onclick="window.location.href='/game'">Play without Friends</button>
     </div>
 </body>
-
+<script>
+    document.addEventListener("logged-in", function () {
+        $("#name").html(retrieveSessionData()["username"] + "'s Monsters");
+        loadImages_ajax();
+    });
+</script>
 
 {% endblock %}
 </html>
