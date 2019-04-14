@@ -34,7 +34,7 @@ def getPlayerDeck(playerId):
             where UserID = %s;
             """
     cards = execute(query, (playerId, ))
-    return [CardID for CardID in cards]
+    return [card[0] for card in cards]
 
 
 def addPlayerCard(playerId, cardId):
