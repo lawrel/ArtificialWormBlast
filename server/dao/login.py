@@ -61,9 +61,9 @@ def signup(username, email, password):
 
 def change_password(username, email, password):
     query = """
-        UDPATE MonsterCards.Users
-        SET Password = sha2(%s, 256);
-        WHERE Username = %s and Email = %s;
+        update MonsterCards.Users
+        SET Password = sha2(%s, 256)
+        WHERE UserName = %s and Email = %s;
         """
 
     if (len(str(password)) < _min_pwd_len):
@@ -74,7 +74,7 @@ def change_password(username, email, password):
 
 def change_email():
     query = """
-        UDPATE MonsterCards.Users
+        update MonsterCards.Users
         SET Email = %s;
         WHERE Email = %s;
         """
@@ -89,7 +89,7 @@ def change_email():
 
 def change_username():
     query = """
-        UDPATE MonsterCards.Users
+        update MonsterCards.Users
         SET Email = %s;
         WHERE Email = %s;
         """
