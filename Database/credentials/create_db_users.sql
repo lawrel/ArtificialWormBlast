@@ -1,3 +1,3 @@
-create user 'MonsterCardsDev'@'localhost' identified by 'TSitMonsterCards';
+create user 'MonsterCardsDev'@'%' identified by 'TSitMonsterCards';
 grant select, insert, update, delete, create, drop
-	on MonsterCards.* to 'MonsterCardsDev'@'localhost';
+	on MonsterCards.* to 'MonsterCardsDev'@'%';
