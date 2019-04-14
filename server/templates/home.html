@@ -21,6 +21,7 @@
 <script>
     var sessionData = {};
     var retrieveInfo = {};
+    var deck = [];
     var names = ["Paul the Cloud", "Not Paul the Cloud", "Ice Cream Dude", "Jelly Dude", "Galusha", "Space Pampootee", "Raccoon", "Spooder Dude", "Fat Zombie Mario", "Badderlocks"]
     var locations = ["monsterExample1.JPG", "monsterExample2.JPG", "monsterExample3.JPG", "monsterExample4.JPG", "monsterExample5.JPG", "monsterExample6.JPG", "monsterExample7.JPG", "monsterExample8.JPG", "monsterExample9.JPG", "monsterExample10.JPG"]
     for( var kasey=0; kasey<10; kasey++)
@@ -35,7 +36,34 @@
         retrieveInfo = retrieveSessionData();
         $("#name").html(retrieveInfo["username"] + "'s Monsters");
     });
-    </script>
-    
+
+    function loadImages_ajax() {
+        // ask for email
+        var fd = new FormData();
+        fd.append( 'token', retrieveLoginToken());
+
+        $.ajax({
+            url: '/cards/player_cards',
+            data: fd,
+            processData: false,
+            contentType: false,
+            type: 'POST',
+            success: function(data){
+                if ("error" in data) {}
+                else {
+                    deck = data['cards'];
+                }
+            }
+        });
+    }
+
+    function buildDeck(deck){
+        for(var i=0; i<deck.length; i++){
+            var ref = `<div class="polaroid" id="one"> <img src="/cards/preview/${deck[i]}" alt="Monster 1" style="width:100%; height: 75%"> <div class="container"> <p>${"monster_name"}</p> </div> </div>`
+            $("#kevin").prepend(ref)
+        }
+    }
+</script>
+
 {% endblock %}
 </html>
