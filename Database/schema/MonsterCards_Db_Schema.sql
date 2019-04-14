@@ -1,14 +1,11 @@
 /* 	Monster Cards Db Schema
-
-	Authors: Sean Rice, (add your name here)
-
+	Authors: Sean Rice, Jake Kloman
     Proposed Schema:
 		Users(PK_ID, First, MidInit, Last, Email)
         UserLogins(PK_AuthToken, FK_AccountID, ExpirationDate)
-
-        Card(ID*, Name, DoodleData)
+        Card(PK_ID, Name, ImgData, Attributes)
+        UserCards(FK_UserID, FK_CardID)
 */
-drop table Users;
 
 
 create database MonsterCards;
@@ -16,14 +13,27 @@ use MonsterCards;
 
 create table Users(
 	ID int auto_increment,
+    Email varchar(255) not null,
+    Password char(64) not null,
+    UserName varchar(31),
+
+    primary key (ID),
+    unique (Email, UserName)
+);
+
+create table UserInfo(
+    UserID int not null,
     First varchar(127),
     MidInit varchar(1),
     Last varchar(127),
-    Email varchar(255) not null,
-    Password char(64) not null,
 
-    primary key (ID),
-    unique (Email)
+    primary key(UserID),
+
+    FOREIGN KEY (UserID)
+        REFERENCES Users(ID)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+
 );
 -- alter table Users
 -- modify First varchar(127);
@@ -44,29 +54,26 @@ create table UserLogins(
 
 create table Cards(
 	ID int auto_increment,
-	CardName varchar(256),
-	ImgData BLOB not null,
+	Name varchar(255),
+	ImgData BLOB,
+    Attributes varchar(511),
 
-	primary key (CardID)
+	primary key (ID)
 );
 
-create table PlayerCards(
-	PlayerID int,
-	CardID int
+create table UsersCards(
+	UserID int,
+	CardID int,
 
-	foreign key (PlayerID),
+	foreign key (UserID)
+        REFERENCES Cards(ID)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
 	foreign key (CardID)
+        REFERENCES Users(ID)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
 
-	REFERENCES Cards(ID)
-	ON DELETE CASCADE
-    ON UPDATE CASCADE
-
-	REFERENCES Users(ID)
-	ON DELETE CASCADE
-	ON UPDATE CASCADE
+    unique(UserID, CardID)
 );
-
-begin;
-SELECT ID, Email, Password FROM MonsterCards.Users
-WHERE Email = "" AND Password = sha2("",256);
-commit;
