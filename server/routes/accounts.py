@@ -3,6 +3,11 @@ import mysql.connector
 from mysql.connector import errorcode
 import uuid
 from datetime import date, datetime, timedelta
+from validate_email import validate_email
+
+import urllib.parse
+
+from server.routes.emailSending import email_reset
 
 from server import app
 from server.dao import login as l
@@ -80,8 +85,10 @@ def signup():
     if request.method == "GET":
         return render_template("signup.html")
     if request.method == "POST":
-
         # Did we get inputs (as strings)?
+        username = request.form["input-username"]
+        if (username == None):
+            return "Username is empty"
         email = request.form["input-email"]
         if (email is None):
             return "Email is empty"
@@ -90,19 +97,75 @@ def signup():
             return "Password is empty"
 
         try:
-            l.signup(email, password)
+            l.signup(username, email, password)
             if (not l.email_taken(email)):
                 raise Error
             else:
-                return jsonify({"success": ""})
+                return jsonify({"success":""})
+        except UsernameInUseError:
+            return jsonify({"error":"UsernameInUseError"})
         except EmailInUseError:
             return jsonify({"error": "EmailInUseError"})
         except ShortPasswordError:
             return jsonify({"error": "ShortPasswordError"})
         except Error:
-            return jsonify({"error": "OtherError"})     
+            return jsonify({"error":"OtherError"})
+
+
+@app.route("/forgotpassword", methods=['POST'])
+def forgotpassword():
+    email = request.form["send-email"]
+    domain = request.url_root
+    link = urllib.parse.urljoin(domain, (url_for("changepassword", newlink = str(uuid.uuid4()))))
+    if (not validate_email(email)):
+        return jsonify({"error":"BadEmailError"})
+    else:
+        email_reset(email, link)
+        return jsonify({"success":""})
+
+
+@app.route("/changepassword/<newlink>", methods=['GET', 'POST'])
+def changepassword(newlink):
+    if request.method == "GET":
+        return render_template("changepassword.html")
+    if request.method == "POST":
+        username = request.form["input-username"]
+        if (username == None):
+            return "Username is empty"
+        email = request.form["input-email"]
+        if (email is None):
+            return "Email is empty"
+        password = request.form["input-password"]
+        if (password == None):
+            return "Password is empty"
+
+        try:
+            l.change_password(username, email, password)
+            if (not l.email_taken(email)):
+                raise Error
+            else:
+                return jsonify({"success":""})
+        except ShortPasswordError:
+            return jsonify({"error":"ShortPasswordError"})
+        except Error:
+            return jsonify({"error":"OtherError"})
+
+    
 
 
 @app.route('/myaccount')
 def myAccount():
     return render_template('Account.html')
+
+
+    
+@app.route("/login/token-valid", methods=['POST'])
+def login_valid_token():
+    if request.method == "POST":
+        token = request.form["login-token"]
+        print("login/token-valid: " + token)
+        return jsonify({"valid":is_valid_token(token)})
+    
+
+
+    

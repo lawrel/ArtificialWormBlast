@@ -1,0 +1,100 @@
+{%extends 'shared.html'%}
+{% block content %}
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+                <div class="card card-signin my-5">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Game Settings</h5>
+                        <form id="login-form" method="POST" enctype="multipart/form-data" name="login-form">
+                            <div class="form-group">
+                                    <label for="input-username">Number of Players</label>
+                                    <input type="text" class="form-control" id="input-username" name="input-username" placeholder="Username">
+                                </div>
+                            <div class="form-group">
+                                <label for="input-email">Cards to Win</label>
+                                <input type="email" class="form-control" id="input-email" name="input-email" aria-describedby="emailHelp" placeholder="Enter email">
+                            </div>
+                            <button type="button" class="btn btn-primary" onclick="reset_ajax()">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modelWindow" role="dialog">
+            <div class="modal-dialog modal-sm vertical-align-center">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 class="modal-title">Friends Emails</h4>
+                </div>
+                <h5 class="card-title text-center">Sign In</h5>
+                    <form id="forgotpassword-form" method="POST" enctype="multipart/form-data" name="forgotpassword-form">
+                        <div class="form-group">
+                            <label for="send-email">Email address</label>
+                            <input type="email" class="form-control" id="send-email" name="send-email" aria-describedby="emailHelp" placeholder="Enter email">
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="forgotPassword_ajax()">Send Email</button>
+                    </form>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-default">Submit</button>
+                </div>
+              </div>
+            </div>
+        </div>
+
+    <div class="modal fade" id="badCreds" role="dialog">
+            <div class="modal-dialog modal-sm vertical-align-center">
+                 <div class="card card-signin my-5">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Incorrect Credentials</h5>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        </div>
+                 </div>
+              </div>
+            </div>
+        </div>
+
+</body>
+
+<script>
+    function validateForm() {
+        var input_username = $("#input-username").val();
+        var input_email = $("#input-email").val();
+        var input_password = $("#input-password").val();
+    }
+    
+    function reset_ajax() {
+        if ($("#input-password").val() != $("#input-password2").val()) {
+            $('#badCreds').modal('show');
+        } 
+        else {
+            var fd = new FormData();
+            fd.append( 'input-email', $("#input-email").val());
+            fd.append( 'input-password', $("#input-password").val());
+
+            $.ajax({
+                url: '/changepassword',
+                data: fd,
+                processData: false,
+                contentType: false,
+                type: 'POST',
+                success: function(data){
+                    console.log(data);
+                    if ("error" in data) {
+                        $('#badCreds').modal('show');
+                    }
+                    else {
+                        window.location.href = "/login";
+                    }
+                }
+            });
+        }
+
+    }
+</script>
+
+{% endblock %}

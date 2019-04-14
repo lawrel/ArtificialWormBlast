@@ -17,12 +17,48 @@
                                 <input type="password" class="form-control" id="input-password" name="input-password" placeholder="Password" pattern=".{8,16}" required title="8 to 16 characters">
                             </div>
                             <button type="button" class="btn btn-primary" onclick="submitLogin_ajax()">Submit</button>
+                            <button type="button" class="btn btn-primary" onclick="forgotPassword_popup()">Forgot Password</button>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="modelWindow" role="dialog">
+            <div class="modal-dialog modal-sm vertical-align-center">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 class="modal-title">Forgot Password</h4>
+                </div>
+                <h5 class="card-title text-center">Sign In</h5>
+                    <form id="forgotpassword-form" method="POST" enctype="multipart/form-data" name="forgotpassword-form">
+                        <div class="form-group">
+                            <label for="send-email">Email Address</label>
+                            <input type="email" class="form-control" id="send-email" name="send-email" aria-describedby="emailHelp" placeholder="Enter email">
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="forgotPassword_ajax()">Send Email</button>
+                    </form>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
+                </div>
+              </div>
+            </div>
+        </div>
+
+    <div class="modal fade" id="badCreds" role="dialog">
+            <div class="modal-dialog modal-sm vertical-align-center">
+                 <div class="card card-signin my-5">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Incorrect Credentials</h5>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        </div>
+                 </div>
+              </div>
+            </div>
+        </div>
+
 </body>
 
 <script>
@@ -45,14 +81,43 @@
             success: function(data){
                 console.log(data);
                 if ("error" in data) {
-
+                    $('#badCreds').modal('show');
                 }
                 else if ("login-token" in data) {
                     saveLoginToken(data["login-token"]);
-                    window.location.href = "/home";
+                    console.log(data["login-token"]);
+                    window.location.href = "/home/";
                 }
             }
         });
+    }
+
+    function forgotPassword_popup() {
+        $('#modelWindow').modal('show');
+    }
+
+    function forgotPassword_ajax() {
+        // ask for email
+        var fd = new FormData();
+        fd.append( 'send-email', $("#send-email").val());
+        
+        $.ajax({
+            url: '/forgotpassword',
+            data: fd,
+            processData: false,
+            contentType: false,
+            type: 'POST',
+            success: function(data){
+                console.log(data);
+                if ("error" in data) {
+
+                }
+                else {
+                    $('#modelWindow').modal('hide');
+                }
+            }
+        });
+
     }
 </script>
 

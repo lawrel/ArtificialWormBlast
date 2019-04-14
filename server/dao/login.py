@@ -21,6 +21,9 @@ class ShortPasswordError(Error):
     """Raised when password is too short"""
     pass
 
+class UsernameInUseError(Error):
+   """Raised when username is already in use"""
+   pass
 
 class EmailInUseError(Error):
     """Raised when email is already in use"""
@@ -37,19 +40,64 @@ class BadTokenError(Error):
     pass
 
 
-def signup(email, password):
+def signup(username, email, password):
     query = """
-            INSERT INTO MonsterCards.Users (Email, Password)
-            VALUES (%s, sha2(%s, 256));
+            INSERT INTO MonsterCards.Users (Email, Password, Username)
+            VALUES (%s, sha2(%s, 256), %s);
+            COMMIT;
             """
 
     if (len(str(password)) < _min_pwd_len):
         raise ShortPasswordError
+    elif (username_taken(username)):
+        raise UsernameInUseError
     elif (email_taken(email)):
         raise EmailInUseError
+    elif (not validate_email(email)):
+        raise BadEmailError
+    else:
+        execute(query, (email, password, username))
+
+
+def change_password(username, email, password):
+    query = """
+        UDPATE MonsterCards.Users
+        SET Password = sha2(%s, 256);
+        WHERE Username = %s and Email = %s;
+        COMMIT;
+        """
+
+    if (len(str(password)) < _min_pwd_len):
+        raise ShortPasswordError
+    else:
+        execute(query, (password, username, email))
+
+
+def change_email():
+    query = """
+        UDPATE MonsterCards.Users
+        SET Email = %s;
+        WHERE Email = %s;
+        COMMIT;
+        """
+    if (email_taken(email)):
+        raise EmailInUseError
+    elif (not validate_email(email)):
+        raise BadEmailError
     else:
         user_id = execute(query, (email, password), insert=True)
         return user_id
+
+
+def change_username():
+    query = """
+        UDPATE MonsterCards.Users
+        SET Email = %s;
+        WHERE Email = %s;
+        COMMIT;
+        """
+    if (username_taken(email)):
+        raise UsernameInUseError
 
 
 def get_session_data(token):
@@ -62,13 +110,19 @@ def get_session_data(token):
     get_user = """select Email
             from MonsterCards.Users
             where ID = %s;"""
+
+    get_name = """ select UserName
+            from MonsterCards.Users
+            where ID = %s;"""
+
     if (is_valid_token(token)):
         userid = execute(query, (token,))[0][0]
         email = execute(get_user, (userid,))[0][0]
+        username = execute(get_name, (userid,))[0][0]
     else:
         raise BadTokenError
 
-    return {"email": email, "userid": userid, "username": ""}
+    return {"email":email, "userid" : userid, "username" : username}
 
 
 def logout_user(token):
@@ -100,6 +154,7 @@ def login_user(email, password):
         token = str(uuid.uuid4())
         exp_date = datetime.now() + timedelta(seconds=1800)
         execute(update_userlogins, (userid, token, exp_date, token, exp_date))
+        print("Right after: " + token)
         return token
     else:
         raise BadLoginError
@@ -111,6 +166,12 @@ def login_user(email, password):
 
 def is_valid_token(token):
     curr_date = datetime.now().date()
+
+    print("is valid: " + token)
+
+    query = ("""select count(*) from MonsterCards.UserLogins""")
+    count1 = execute(query, ())[0][0]
+    print(count1)
 
     query = ("""select count(*) from MonsterCards.UserLogins
                     WHERE AuthToken = %s;""")
@@ -124,6 +185,14 @@ def email_taken(email):
             from MonsterCards.Users
             where Email = %s;"""
     count = execute(query, (email,))[0][0]
+    return bool(count)
+
+
+def username_taken(username):
+    query = """select count(*)
+            from MonsterCards.Users
+            where Username = %s;"""
+    count = execute(query, (username,))[0][0]
     return bool(count)
 
 

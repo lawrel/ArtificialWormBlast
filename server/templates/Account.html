@@ -9,16 +9,20 @@
 {% block content %}
 <body onload="init()">
     <div class="container">
-        <h1 id="welcome">Welcome to your Account, [Name]</h1>
+        <h1 id="welcome" aria-readonly="true">Welcome to your Account, [Name]</h1>
         <hr />
-        <p id="name"> Your Name: [name]</p>
-        <hr />
-        <p id="email"> Your Email: [email]</p>
-        <hr />
-        <p id="friends"> Your Friends: You have no friends</p>
-        <hr />
+        <textarea id="name" aria-readonly="true"> Your Username: [name]</p>
+        </textarea>
+        <textarea id="email" aria-readonly="true"> Your Email: [email]</p>
+        </textarea>
+        <textarea id="password" aria-readonly="true"> Your Password: We are more secure than this.</p>
+        </textarea>
+        <textarea id="friends" aria-readonly="true"> Your Friends: You have no friends (and neither do we).</p>
+        </textarea>
     </div>
 </body>
+<button type="button" class="btn btn-primary" onclick="show_edits()">Edit</button>
+<button type="button" class="btn btn-primary" onclick="save_edits()" hidden="hidden">Save</button>
 </html>
 
 <script>
@@ -32,6 +36,13 @@
             $("#email").html("Your Email: " + retrieveInfo["email"]);
         });
     } 
+
+    function show_edits() {
+        $('#name').removeAttr('readonly');
+        $('#email').removeAttr('readonly');
+        $('#password').removeAttr('readonly');
+
+    }
 </script>
 
 {% endblock %}

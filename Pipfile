@@ -11,6 +11,7 @@ pep8 = "*"
 flask = "*"
 mysql-connector-python = "*"
 flask_socketio = "*"
+validate-email = "*"
 
 [requires]
 python_version = "3.7"
