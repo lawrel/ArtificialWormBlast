@@ -136,7 +136,11 @@
 
     <div sytle= 'float:right'>
     <fieldset>
-            <label>Upload Image: </label><input id="fname" type="text"><button id="upload" onclick="upload()">Upload</button>
+        <form id="upload-img-form" enctype="multipart/form-data">
+            <label>Upload Image: </label>
+            <input type="file" id="monster-image" name="monster-image" accept="image/png, image/jpeg">
+            <button type="button" id="upload" onclick="uploadImage_ajax()">Upload</button>
+        </form>
     </fieldset>
     </div>
 
@@ -436,34 +440,59 @@ function text(words){
 }
 
 function upload() {
-var uploader = document.getElementById('uploader');
-/**
-   * UPLOAD SCRIPT
-   * This script uses the UploadAtClick library to upload files on a webserver folder
-   * using a PHP script ("upload/upload.php")
-   * Project homepage: http://code.google.com/p/upload-at-click/
-   */
-    upclick(
-{
-        element: uploader,
-    action: 'upload/upload.php', //need to fix
-    onstart:
-function(filename)
-{
-        //alert('Start upload: '+filename);
-    },
-        oncomplete:
-    function(response_data)
-{
-// Check upload Status
-if (response_data != "FAIL") {
-        // Draw the picture into Canvas
-        // "response_data" contains the image file name returned from the PHP script
-        displayPicture("upload/" + response_data);
-    }
-  }
-    });
+    uploadImage_ajax();
+    /**
+    * UPLOAD SCRIPT
+    * This script uses the UploadAtClick library to upload files on a webserver folder
+    * using a PHP script ("upload/upload.php")
+    * Project homepage: http://code.google.com/p/upload-at-click/
+    */
+    // upclick(
+    // {
+    //         element: uploader,
+    //     action: 'upload/upload.php', //need to fix
+    //     onstart:
+    // function(filename)
+    // {
+    //         //alert('Start upload: '+filename);
+    //     },
+    //         oncomplete:
+    //     function(response_data)
+    // {
+    // // Check upload Status
+    // if (response_data != "FAIL") {
+    //         // Draw the picture into Canvas
+    //         // "response_data" contains the image file name returned from the PHP script
+    //         displayPicture("upload/" + response_data);
+    //     }
+    // }
+    //     });
 
+
+
+}
+
+function uploadImage_ajax() {
+    var uploader = document.getElementById('uploader');
+    var fd = new FormData($("#upload-img-form")[0]);
+
+    $.ajax({
+        url: '/editor/upload-img',
+        data: fd,
+        cache:false,
+        processData:false,
+        contentType:false,
+        type: 'POST',
+        success: function(data){
+            console.log(data);
+            if ("error" in data) {
+
+            }
+            else if ("success" in data) {
+                
+            }
+        }
+    });
 }
 
 function save(){
