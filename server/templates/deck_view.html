@@ -1,0 +1,34 @@
+<div class="container" id="cards">
+    
+</div>
+
+
+<script>
+    function loadImages_ajax() {
+        // ask for email
+        var fd = new FormData();
+        fd.append( 'token', retrieveLoginToken());
+
+        $.ajax({
+            url: '/cards/player_cards',
+            data: fd,
+            processData: false,
+            contentType: false,
+            type: 'POST',
+            success: function(data){
+                if ("error" in data) {}
+                else {
+                    deck = data['cards'];
+                    buildDeck(deck);
+                }
+            }
+        });
+    }
+
+    function buildDeck(deck){
+        for(var i=0; i<deck.length; i++){
+            var ref = `<div class="polaroid" id="one"> <img src="/cards/preview/${deck[i]}" alt="Monster 1" style="width:100%; height: 75%"> <div class="container"> <p>${"monster_name"}</p> </div> </div>`
+            $("#cards").prepend(ref)
+        }
+    }
+</script>

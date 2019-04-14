@@ -28,6 +28,22 @@ class BadFileExtError(Error):
     pass
 
 
+def getPlayerDeck(playerId):
+    query = """
+            select CardID from MonsterCards.UsersCards
+            where UserID = %s;
+            """
+    cards = execute(query, (playerId, ))
+    return [card[0] for card in cards]
+
+
+def addPlayerCard(playerId, cardId):
+    query = """
+            INSERT INTO MonsterCards.UsersCards (UserID, CardID) VALUES (%s, %s);
+            """
+    execute(query, (playerId, cardId))
+    
+
 def convertToBinaryData(filename):
     # Convert digital data to binary format
     with open(filename, 'rb') as file:

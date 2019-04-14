@@ -7,9 +7,11 @@ import io
 from datetime import date, datetime, timedelta
 from server import app
 from server.dao import cards
-from server.dao.cards import (get_card,
+from server.dao.cards import (get_card, getPlayerDeck,
                               EmptyFileError, BadFileExtError,
                               FileTooLargeError, NoFileUploadedError)
+from server.dao import login
+from server.dao.login import get_session_data
 
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
@@ -54,3 +56,15 @@ def get_card_image(card_id):
                      mimetype='image/png',
                      as_attachment=True,
                      attachment_filename='%s.png' % card_id)
+
+
+@app.route("/cards/player_cards", methods=["POST"])
+def get_player_cards():
+    if ("token" not in request.form):
+        return jsonify({"error": ""})
+    token = request.form["token"]
+    sesh_data = get_session_data(token)
+    user_id = sesh_data["userid"]
+    cards = getPlayerDeck(user_id)
+    print(cards)
+    return jsonify({"cards": cards})

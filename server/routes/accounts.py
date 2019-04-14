@@ -188,9 +188,6 @@ def changesettings():
         return jsonify({"error":"OtherError"})
 
 
-    
-
-
 @app.route('/myaccount')
 def myAccount():
     return render_template('Account.html')
