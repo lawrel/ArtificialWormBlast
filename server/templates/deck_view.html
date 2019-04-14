@@ -1,9 +1,10 @@
-<div class="container" id="cards">
-    
-</div>
-
+<div class="container" id="cards"> </div>
 
 <script>
+    document.addEventListener("logged-in", function () {
+        loadImages_ajax();
+    });
+
     function loadImages_ajax() {
         // ask for email
         var fd = new FormData();
