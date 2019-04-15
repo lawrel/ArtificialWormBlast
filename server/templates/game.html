@@ -136,9 +136,9 @@ function enterGame() {
     $( 'input.message' ).val("");
     console.log(user_name);
     socket.emit( 'my event', {
-      user_name : getPlayerData()["email"],
+      user_name : getPlayerData()["username"],
       message : user_input
-    });
+    }, room = gameData["gameid"]);
   }
 
   $(document).ready(function () {
@@ -267,24 +267,12 @@ function enterGame() {
       waitString = "<p>Waiting for players to join...<br> Currently, the following players are connected:</p>";
       players = gameData.players;
       for (var i = 0; i < players.length; i++) {
-          waitString = waitString + players[i].email + "<br>";
+          waitString = waitString + players[i].username + "<br>";
       }
       document.getElementById("waitingTag").innerHTML = waitString;
   }
 </script>
 
-<audio id="myAudio">
-  <source src="/static/sounds/song.mp3" type="audio/mpeg">
-</audio>
-<audio id="myAudio2">
-  <source src="/static/sounds/ah.mp3" type="audio/mpeg">
-</audio>
-<audio id="myAudio3">
-  <source src="/static/sounds/clinton.mp3" type="audio/mpeg">
-</audio>
-<audio id="myAudio4">
-  <source src="/static/sounds/mac420.mp3" type="audio/mpeg">
-</audio>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
 <script src="/static/scripts/game_logic.js"></script>   
@@ -292,8 +280,8 @@ function enterGame() {
     var monsterChoices = new Array();
     var attackingCard = null;
     var defendingCard = null;
-    var names = [];
-    var locations = [];
+    var names = ["Paul the Cloud", "Not Paul the Cloud", "Ice Cream Dude", "Jelly Dude", "Galusha", "Space Pampootee", "Raccoon", "Spooder Dude", "Fat Zombie Mario", "Badderlocks", "Mike", "Sulley"];
+    var locations = ["monsterExample1.JPG", "monsterExample2.JPG", "monsterExample3.JPG", "monsterExample4.JPG", "monsterExample5.JPG", "monsterExample6.JPG", "monsterExample7.JPG", "monsterExample8.JPG", "monsterExample9.JPG", "monsterExample10.JPG", "monster.gif", "scaryMonster.gif"];
    
     socket.on( 'connect', function() {
       socket.emit( 'my event', {
@@ -306,7 +294,7 @@ function enterGame() {
         socket.emit( 'my event', {
           user_name : user_name,
           message : user_input
-        } )
+        }, room = gameData["gameid"])
         $( 'input.message' ).val( '' ).focus()
       } )
     } )
@@ -385,19 +373,19 @@ function listPlayers() {
         playerString = '<br>'
         for (var key in allPlayers)
         {
-            player_name = allPlayers[key]["email"];
+            var player_name = allPlayers[key]["username"];
             var uid = allPlayers[key]["userid"]
             
             playerString = playerString + 
          `<div class="card" style="display: inline-block; max-width:200px; color:#255760";> 
       <div class="card-body"> 
-      <button onclick="handlePlayerClick('${uid}')">${player_name}</button> </div> </div>`;
+      <button onclick="handlePlayerClick('${player_name}')">${player_name}</button> </div> </div>`;
         }
         document.getElementById("opponents").innerHTML = playerString ;
     }
 
     function handlePlayerClick(nameString) {
-        if ((gameData.state == "AttackState") && getPlayerData()["userid"] == gameData["attacker"])
+        if ((gameData.state == "AttackState") && getPlayerData()[player_name] == gameData["attacker"])
         {
             // defender = nameString;
             // gameData["defender"]= nameString;
@@ -417,13 +405,13 @@ function listPlayers() {
       defender = null;
       for (var key in allPlayers)
         {
-            if (allPlayers[key]["userid"] == gameData.winner) {
+            if (allPlayers[key]["username"] == gameData.winner) {
               console.log("FOUND WINNER")
-              if (allPlayers[key]["userid"] == gameData.attacker ) {
+              if (allPlayers[key]["username"] == gameData.attacker ) {
                 console.log("Attacker won")
                 // looking for defender as loser
                for (key2 in allPlayers2) {
-                  if (allPlayers2[key2]["userid"] == gameData.defender) {
+                  if (allPlayers2[key2]["username"] == gameData.defender) {
                     console.log("defender lost")
                     // take card from loser
                     allPlayers2[key2]["hand"].pop(gameData.dfs_card); //wrong syntax??
@@ -434,7 +422,7 @@ function listPlayers() {
               } else {
                 //looking for defender as winner
                 for (key2 in allPlayers2) {
-                  if (allPlayers2[key2]["userid"] == gameData.defender) {
+                  if (allPlayers2[key2]["username"] == gameData.defender) {
                     console.log("attacker lost")
                     // take card from loser
                     allPlayers2[key2]["hand"].pop(gameData.atk_card); //wrong syntax??
@@ -468,7 +456,7 @@ function listPlayers() {
 
 
     function handleHandClick(nameString) {
-        if ((gameData.state == "AttackState") && getPlayerData()["userid"] == gameData["attacker"])
+        if ((gameData.state == "AttackState") && getPlayerData()["username"] == gameData["attacker"])
         {
             attackingCard = nameString;
             attackCard_io(gameData["gameid"] ,attackingCard)
@@ -477,7 +465,7 @@ function listPlayers() {
             document.getElementById("lc1").innerHTML = `<button onclick="handleVote('${attackingCard}')"><img src="/static/images/${pictureName}"></button>`;
         }
 
-        else if ((gameData.state == "DefendState") && getPlayerData()["userid"] == gameData["defender"])
+        else if ((gameData.state == "DefendState") && getPlayerData()["username"] == gameData["defender"])
         {
             defendingCard = nameString;
             defendCard_io(gameData["gameid"] ,defendingCard)
@@ -487,7 +475,7 @@ function listPlayers() {
         }
     }
     function handleVote(nameString){
-      submitVote_io(gameData["gameid"], getPlayerData()["userid"], nameString)
+      submitVote_io(gameData["gameid"], getPlayerData()["username"], nameString)
     }
 
 </script>
