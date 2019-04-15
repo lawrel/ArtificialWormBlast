@@ -9,16 +9,22 @@
     <h1 id="name" align="center"> [Username]'s Monsters</h1>
     <div class="container" id="main">
         {{ cardview|safe }}
-        <button class="button button2" display inline-block; onclick="window.location.href='/myaccount'">Manage Team</button>
+        <button class="button button2" display inline-block; onclick="window.location.href='/sitedeck'">Manage Team</button>
     </div>
 
     <hr />
     <div class="container">
-        <button class="button" display inline-block; onclick="window.location.href='/privategame'">Play with Friends</button>
-        <button class="button" display inline-block; onclick="window.location.href='/game'">Play without Friends</button>
+        <button class="button" display inline-block; onclick="window.location.href='/privategame'">Play With Friends</button>
+        <button class="button" display inline-block; onclick="window.location.href='/publicgame'">Play Without Friends</button>
     </div>
 </body>
 
+<script>
+    document.addEventListener("logged-in", function () {
+            retrieveInfo = retrieveSessionData();
+            $("#name").html(retrieveInfo["username"]+ "'s Monsters");
+        });
+</script>
 
 {% endblock %}
 </html>
