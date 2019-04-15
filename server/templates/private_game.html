@@ -83,7 +83,7 @@
         var gameid = createGame_io($("#input-victory :selected").val(), $("#input-players :selected").val());
         fd.append( 'game-id', "/game/?game_id="+gameid.id);
 
-        console.log("/game/?game_id="+gameid.id)
+        console.log("/publicgame/?game_id="+gameid.id)
 
         // Get Friends Emails
         fd.append( 'send-email1', $("#send-email1").val());
