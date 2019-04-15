@@ -33,35 +33,51 @@
     #color-strip:hover {
         cursor: crosshair;
     }
+    #paint {
+        border: 5px solid #000000;
+        margin: 10px 20px;
+        display: inline-block;
+        position: relative;
+    }
+    #panel {
+        border: 2px solid #E8fcff;
+        padding: 20px 20px 20px 20px;
+        background-color: #273238;
+    }
 </style>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
 <script src="http://code.createjs.com/easeljs-0.5.0.min.js"></script>
 <script type="text/javascript" src="libs/upclick-min.js">
 
-
-    <title></title>
-</head>
-
 {% block content %}
 <body onload="pencil()">
     <h1>MonsterEditor</h1>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+        <table>
+        <td>
 
-    <div style= 'float:left'>
-        <canvas id="paint" width="450" height="630" style="border: 5px solid #000000;"></canvas>
-    </div>
-
+            <button id="reset" value="pencil" onclick="change(this.value)"><img src="/static/assets/pencilicon.png" alt="Pencil" style="width:60px; height:55px"></button>
+                <button id="reset" value="line" onclick="change(this.value)"><img src="/static/assets/linetool.png" alt="Line" style="width:60px; height:55px"></button>
+            </td>
+                <td>
+                    <button id="reset" value="rectangle" onclick="change(this.value)"><img src="/static/assets/squaretool.png" alt="Rectangle" style="width:60px; height:55px"></button>
+                        <button id="reset" value="circle" onclick="change(this.value)"><img src="/static/assets/circletool.png" alt="Circle" style="width:60px; height:55px"></button>
+      </td><td>
+      <button id="reset" value="eraser" onclick="change(this.value)"><img src="/static/assets/erasertool.png" alt="Eraser" style="width:60px; height:55px"></button>
+    </td></table>
+    <div style= 'float:left; margin: 10px 20px;'>
+        <canvas id="paint" width="450" height="630" ></canvas>
+        </div>
+        <div id="panel">
+            <div id="color-picker">
+                <canvas id="color-block" height="150" width="150"></canvas>
+                <canvas id="color-strip" height="150" width="30"></canvas>
+            </div>
+        </div>
     <div position = 'relative'>
         <fieldset id="colorset" width="450" height="630">
         <table width=50% height=100% >
-            <label>Tool: <select id="toolselect" onchange="change(this.value)" style="height: 30px; width: 90px;">
-                <option value="pencil">Pencil</option>
-                <option value="line">Line</option>
-                <option value="rectangle">Rectangle</option>
-                <option value="circle">Circle</option>
-                <option value="eraser">Eraser</option>
-            </select></label>
             <label> Options: <select id="optionsselect" onchange="change(this.value)" style="height: 30px; width: 90px;">
                 <option value="fill">Fill</option>
                 <option value="outline">Outline</option>
@@ -69,25 +85,19 @@
 
     <td>
         <label> Line Width: </label>
-            <button id="pixel_plus" type="button" onclick="add_pixel()" style="width: 25px;">+</button>
-            <button id="pixel_minus" type="button" onclick="reduce_pixel()" style="width: 25px;">-</button>
-    </td>
+            <button id="reset" type="button" onclick="add_pixel()" style="width: 50px; font-size:2em;">+</button>
+            <button id="reset" type="button" onclick="reduce_pixel()" style="width: 50px; font-size:2em;">-</button>
+          </td>
     </fieldset>
     </div>
 
    
-    <label for="color-input" id="color-label" style="background-color: red"></label>
-    <input type="checkbox" id="color-input" checked></input>
-
-    <div id="color-picker">
-        <canvas id="color-block" height="150" width="150"></canvas>
-        <canvas id="color-strip" height="150" width="30"></canvas>
-    </div>
+    
 
     <div sytle= 'float:right'>
     <fieldset>
             </table>
-        <label>Style: <select id="fontselect" onchange="font(this.value)" style="height: 30px; width: 90px;">
+        <label>Style: <select id="fontselect" onchange="font(this.value)" style="height: 30px; width: 100px;">
             <option value="20px Arial">Small Arial</option>
             <option value="30px Arial">Medium Arial</option>
             <option value="40px Arial">Large Arial</option>
@@ -111,14 +121,14 @@
         <form id="upload-img-form" enctype="multipart/form-data">
             <label>Upload Image: </label>
             <input type="file" id="monster-image" name="monster-image" accept="image/png, image/jpeg">
-            <button type="button" id="upload" onclick="uploadImage_ajax()">Upload</button>
+            <button type="button" id="reset" onclick="uploadImage_ajax()">Upload</button>
         </form>
     </fieldset>
     </div>
 
     <div sytle= 'float:right'>
     <fieldset>
-            <label>Monster Name: </label><input id="fname" type="text"><button id="save" onclick="save()">Save</button>
+            <label>Monster Name: </label><input id="fname" type="text"><button id="reset" onclick="save()">Save</button>
             <button id="reset" onclick="reset()">Reset</button>
     </fieldset>
     </div>

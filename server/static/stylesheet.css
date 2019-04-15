@@ -48,6 +48,7 @@ body {
     border: 1px dashed #01ACC1;
     background: #181d23;
     color: #01ACC1;
+    font-size: 2em;
     text-shadow: 0 -15px 2.5px transparent, 0 15px 2.5px transparent;
     -webkit-transition: all .3s linear 0s;
     -moz-transition: all .3s linear 0s;
