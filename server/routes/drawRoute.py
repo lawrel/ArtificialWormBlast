@@ -8,7 +8,7 @@ import io
 from datetime import date, datetime, timedelta
 from server import app
 from server.dao import cards
-from server.dao.cards import (get_card, getPlayerDeck,
+from server.dao.cards import (get_card, getPlayerDeck, getSiteDeck,
                               EmptyFileError, BadFileExtError,
                               FileTooLargeError, NoFileUploadedError)
 from server.dao import login
@@ -155,5 +155,38 @@ def get_player_cards():
         return jsonify({"error": "NoFileUploadedError"})
     except BadFileExtError:
         return jsonify({"error": "NoFileUploadedError"})
-    except BadRequestKeyError:
-        return jsonify({"error": "BadRequestKeyError"})
+
+
+@app.route("/cards/site_cards", methods=["POST"])
+def get_site_cards():
+    try:
+        cards = getSiteDeck()
+        return jsonify({"cards": cards})
+    except BadTokenError:
+        return jsonify({"error": "BadTokenError"})
+    except NoFileUploadedError:
+        return jsonify({"error": "NoFileUploadedError"})
+    except BadFileExtError:
+        return jsonify({"error": "NoFileUploadedError"})
+
+
+@app.route("/cards/add-card", methods=["POST"])
+def add_site_cards():
+    try:
+        if ("token" not in request.form):
+            return jsonify({"error": ""})
+        token = request.form["token"]
+        sesh_data = get_session_data(token)
+        user_id = sesh_data["userid"]
+        card_id = request.form["card-id"]
+        print(user_id, card_id)
+        if (card_id is None):
+            return "No card to add"
+        card = cards.addPlayerCard(user_id, card_id)
+        return jsonify({"cards": card})
+    except BadTokenError:
+        return jsonify({"error": "BadTokenError"})
+    except NoFileUploadedError:
+        return jsonify({"error": "NoFileUploadedError"})
+    except BadFileExtError:
+        return jsonify({"error": "NoFileUploadedError"})

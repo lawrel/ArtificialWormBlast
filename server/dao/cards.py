@@ -47,6 +47,23 @@ def getPlayerDeck(playerIdselect):
     return dict_cards
 
 
+def getSiteDeck():
+    query = """
+            select ID, Name, Attributes from MonsterCards.Cards
+            where ID > 0 and ID <= 18;
+            """
+    cards = execute(query, ())
+    dict_cards = []
+    for card_id, card_name, card_attr in cards:
+        card = {
+            "id": card_id,
+            "name": card_name,
+            "attr": card_attr
+        }
+        dict_cards.append(card)
+    return dict_cards
+
+
 def addPlayerCard(playerId, cardId):
     query = """
             INSERT INTO MonsterCards.UserCards (UserID, CardID) VALUES (%s, %s);

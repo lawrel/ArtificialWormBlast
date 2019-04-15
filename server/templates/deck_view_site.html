@@ -15,7 +15,7 @@
         fd.append( 'token', retrieveLoginToken());
 
         $.ajax({
-            url: '/cards/player_cards',
+            url: '/cards/site_cards',
             data: fd,
             processData: false,
             contentType: false,
@@ -42,7 +42,31 @@
 
     function handleMonsterClick(monsterId) {
         console.log("clicked");
-        window.location.href = "/monstereditor/?card_id=" + String(monsterId)
+        var fd = new FormData();
+        fd.append("token", retrieveLoginToken());
+        fd.append("card-id", monsterId);
+        $("#waitingModal").modal('show');
+        $.ajax({
+            url: '/cards/add-card',
+            data: fd,
+            cache: false,
+            processData: false,
+            contentType: false,
+            type: 'POST',
+            success: function (data) {
+                console.log(data);
+                if ("error" in data) {
+
+                }
+                else if ("success" in data) {
+
+                }
+            },
+            complete: function () {
+                $("#waitingModal").modal('hide');
+            }
+        });
+        console.log("saved?");
     }
 
 

@@ -147,11 +147,14 @@
 
     <div sytle='float:right'>
         <fieldset>
-            <label>Monster Name: </label><input id="monster-name" type="text"><button id="reset"
-                onclick="save()">Save</button>
+            <label>Monster Name: </label><input id="monster-name" type="text">
+            <button id="save" onclick="save()">Save</button>
             <button id="reset" onclick="reset()">Reset</button>
+            <button id="delete" onclick="deleteCard()">Delete</button>
         </fieldset>
     </div>
+
+    
 
     <!-- Waiting for players modal -->
     <div class="modal fade" id="waitingModal" tabindex="-1" role="dialog">

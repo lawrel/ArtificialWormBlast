@@ -173,4 +173,4 @@ def changesettings():
 
 @app.route('/myaccount')
 def myAccount():
-    return render_template('Account.html')
+    return render_template('account.html')
