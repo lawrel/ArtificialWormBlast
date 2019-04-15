@@ -507,8 +507,6 @@ function save() {
     } else {
         editCard_ajax();
     }
-
-    newCard_ajax()
     //redirect to page that was on
 }
 
