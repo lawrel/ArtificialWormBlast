@@ -72,29 +72,31 @@ def change_password(username, email, password):
         execute(query, (password, username, email))
 
 
-def change_email():
+def change_email(username, email):
     query = """
         update MonsterCards.Users
-        SET Email = %s;
-        WHERE Email = %s;
+        SET Email = %s
+        WHERE UserName = %s;
         """
     if (email_taken(email)):
         raise EmailInUseError
     elif (not validate_email(email)):
         raise BadEmailError
     else:
-        user_id = execute(query, (email, password), insert=True)
-        return user_id
+        user_id = execute(query, (email, username))
 
 
-def change_username():
+def change_username(username, email):
     query = """
         update MonsterCards.Users
-        SET Email = %s;
+        SET UserName = %s
         WHERE Email = %s;
         """
+
     if (username_taken(email)):
         raise UsernameInUseError
+    else:
+        user_id = execute(query, (username, email))
 
 
 def get_session_data(token):
@@ -119,7 +121,7 @@ def get_session_data(token):
     else:
         raise BadTokenError
 
-    return {"email": email, "userid": userid, "username": username}
+    return {"email":email, "userid" : userid, "username" : username}
 
 
 def logout_user(token):

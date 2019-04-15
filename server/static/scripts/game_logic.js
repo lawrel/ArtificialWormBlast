@@ -69,6 +69,8 @@ function handleJoinGame() {
         var gameid = params["game_id"];
         var playerData = getPlayerData();
         joinGame_io(gameid, playerData);
+    } else if (gameData == null) {
+        console.log("Game data is null")
     } else if ("gameid" in gameData) {
         joinGame_io(gameData["gameid"], getPlayerData());
     } else {
@@ -118,8 +120,16 @@ function joinGame_res(msg) {
     }
 }
 
-function createGame_io() {
-    socket.emit('create-game', {player: getPlayerData()});
+function checkGames_io() {
+    socket.emit('check-games', {player: getPlayerData()});
+}
+
+function checkGames_res() {
+   
+}
+
+function createGame_io(towin, maxplayers) {
+    socket.emit('create-game', {player: getPlayerData(), cards: towin, players: maxplayers});
 }
 
 function createGame_res() {

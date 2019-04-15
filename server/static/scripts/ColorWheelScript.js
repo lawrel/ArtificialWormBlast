@@ -1,218 +1,205 @@
-// JavaScript source code for the COLOR WHEEL on the DrawMonsterPage
-// code snippets taken from: 
-// https://forum.processing.org/two/discussion/10104/drawing-x-number-of-lines-from-the-centre-of-a-circle-out-to-the-circumference
-// http://stackoverflow.com/questions/9705123/how-can-i-get-sin-cos-and-tan-to-use-degrees-instead-of-radians
-// http://stackoverflow.com/questions/2353211/hsl-to-rgb-color-conversion
-// http://stackoverflow.com/questions/21771939/html5-canvas-overlay-transparent-gradients
-// https://gist.github.com/conorbuck/2606166
-// http://stackoverflow.com/questions/2049582/how-to-determine-if-a-point-is-in-a-2d-triangle
+var canvascolor = (function () {//Code Isolation
+    "use strict";
 
-rgbToHsl = (r, g, b) => {
-    r /= 255, g /= 255, b /= 255;
-    var max = Math.max(r, g, b), min = Math.min(r, g, b);
-    var h, s, l = (max + min) / 2;
+    (function addCSS() {
+        var styleTag = document.createElement("style");
+        styleTag.innerHTML = [".canvascolor-container{",
+            "background-color:black;",
+            "border-radius:5px;",
+            "overflow:hidden;",
+            "width:179px;",
+            "padding:2px;",
+            "display:none;",
+            "}",
+            ".canvascolor-container canvas{",
+            "cursor:crosshair;",
+            "}",
+            ".canvascolor-history{",
+            "overflow:auto;",
+            "}",
+            ".canvascolor-history > div{",
+            "margin:2px;",
+            "display:inline-block;",
+            "}"].join("");
+        document.head.appendChild(styleTag);
+    })();
 
-    if(max == min){
-        h = s = 0; // achromatic
-    } else {
-        var d = max - min;
-        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-        switch(max){
-            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-            case g: h = (b - r) / d + 2; break;
-            case b: h = (r - g) / d + 4; break;
+    function hsv2rgb(h, s, v) {
+        if (s === 0) return [v, v, v]; // achromatic (grey)
+
+        h /= (Math.PI / 6);			// sector 0 to 5
+        var i = h | 0,
+            f = h - i,			// factorial part of h
+            p = v * (1 - s),
+            q = v * (1 - s * f),
+            t = v * (1 - s * (1 - f));
+        switch (i % 6) {
+            case 0: return [v, t, p];
+            case 1: return [q, v, p];
+            case 2: return [p, v, t];
+            case 3: return [p, q, v];
+            case 4: return [t, p, v];
+            case 5: return [v, p, q];
         }
-        h /= 6;
     }
-    return [h, s, l];
-}
 
-class ColorWheel {
-	constructor(size, parent) {
-		// canvas setup
-		this.width = size;
-		this.height = size;
-		this.radLarge = (size / 2) - 5;
-		this.radSmall = this.radLarge - 40;
-		this.parent = document.querySelector(parent);
-		this.cx = this.width / 2;
-		this.cy = this.height / 2;
-		// event variables
-		this.active = false;
-		this.color = null;
-		this.pos = null;
-		// segment construction
-		this.points = 40;
-		this.angle = 360 / this.points;
-		this.arc = Math.PI * 2 / this.points;
-		// create
-		this.init();
-	}
-	init() {
-		// outer canvas
-		this.outer = document.createElement('canvas');
-		this.outer.width = this.width;
-		this.outer.height = this.height;
-		this.ctxA = this.outer.getContext('2d');
-		// inner canvas
-		this.inner = document.createElement('canvas');
-		this.inner.width = this.width;
-		this.inner.height = this.height;
-		this.ctxB = this.inner.getContext('2d');
-		this.ctxB.globalCompositeOperation = 'hard-light';
-		// dot canvas
-		this.dot = document.createElement('canvas');
-		this.dot.width = this.width;
-		this.dot.height = this.height;
-		this.ctxC = this.dot.getContext('2d');
-		// build
-		this.parent.appendChild(this.outer);
-		this.parent.appendChild(this.inner);
-		this.parent.appendChild(this.dot);
-		// add spectrum
-		this.spectrum();
-		// add events
-		this.setEvents();
-	}
-	circle(ctx, x, y, r, style, start, end) {
-		ctx.beginPath();
-		ctx.arc(x, y, r, start || 0, end || Math.PI * 2);
-		if (style.fill) {
-			ctx.fillStyle = style.fill;
-			ctx.fill();
-		}
-		if (style.stroke) {
-			ctx.strokeStyle = style.stroke;
-			ctx.stroke();
-		}
-		if (style.lineWidth) {
-			ctx.lineWidth = style.lineWidth;
-		}
-	}
-	triangle(ctx, points, fill) {
-		ctx.beginPath();
-		ctx.moveTo(points[0].x, points[0].y);
-		for (let i = points.length - 2; i >= 0; i--) {
-			ctx.lineTo(points[i].x, points[i].y);
-		}
-		ctx.fillStyle = fill;
-		ctx.fill();
-	}
-	spectrum() {
-		for (let i = 1; i <= this.points; i++) {
-			// arc points
-			let a = i * this.angle;
-			let b = (i - 1) * this.angle;
-			// gradient vector
-			let radius = this.radSmall + (this.radLarge - this.radSmall) / 2;
-			let x1 = Math.cos(this.toRadians(a)) * radius + this.cx;
-			let y1 = Math.sin(this.toRadians(a)) * radius + this.cy;
-			let x2 = Math.cos(this.toRadians(b)) * radius + this.cx;
-			let y2 = Math.sin(this.toRadians(b)) * radius + this.cy;
-			// gradient
-			let g = this.ctxA.createLinearGradient(x1, y1, x2, y2);
-			g.addColorStop(0, 'hsl( ' + a + ', 100%, 50%)');
-			g.addColorStop(1, 'hsl( ' + b + ', 100%, 50%)');
-			// draw arc
-			let o = 0.001;
-			this.ctxA.beginPath();
-			this.ctxA.arc(this.cx, this.cy, this.radLarge, this.toRadians(b) - o, this.toRadians(a) + o, false);
-			this.ctxA.arc(this.cx, this.cy, this.radSmall, this.toRadians(a) + o, this.toRadians(b) - o, true);
-			this.ctxA.fillStyle = g;
-			this.ctxA.fill();
-		}
-	}
-	toRadians(angle) {
-		// convert angle to radians
-		return angle * (Math.PI / 180);
-	}
-	inCircle(x0, y0, x1, y1, r) {
-		// center of circle (x0,y0), mouse coordinates (x1,y1), radius (r)
-		return Math.sqrt((x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0)) < r;
-	}
-	inTriangle(p, p0, p1, p2) {
-		// point in circle (p), triangle points (p0, p1, p2)
-		var A = 1/2 * (-p1.y * p2.x + p0.y * (-p1.x + p2.x) + p0.x * (p1.y - p2.y) + p1.x * p2.y);
-		var sign = A < 0 ? -1 : 1;
-		var s = (p0.y * p2.x - p0.x * p2.y + (p2.y - p0.y) * p.x + (p0.x - p2.x) * p.y) * sign;
-		var t = (p0.x * p1.y - p0.y * p1.x + (p0.y - p1.y) * p.x + (p1.x - p0.x) * p.y) * sign;
-		return s > 0 && t > 0 && (s + t) < 2 * A * sign;
-	}
-	update (e, cw) {
-		// get mouse pos
-		let x = e.clientX - cw.inner.offsetLeft;
-		let y = e.clientY - cw.inner.offsetTop;
-		this.pos = {x: x, y: y};
-		// check mouse is within bounds
-		let outer = cw.inCircle(cw.cx, cw.cy, x, y, cw.radLarge),
-			 inner = cw.inCircle(cw.cx, cw.cy, x, y, cw.radSmall),
-			 tri;
-		// check mouse in triangle
-		if (this.tri) {
-			tri = this.inTriangle( this.pos, this.tri[0], this.tri[1], this.tri[2] );
-		}
-		// draw
-		if (outer && !inner) {
-			cw.draw(x, y, false);
-		} else if (tri) {
-			cw.draw(x, y, true)
-		}
-	}
-	draw(x, y, tri) {
-		// get pixel data
-		let da = this.ctxA.getImageData(x, y, 1, 1).data;
-		let db = this.ctxB.getImageData(x, y, 1, 1).data;
-		// draw equilateral triangle
-		if (!tri) {
-			// clear triangle canvas
-			this.ctxB.clearRect(0, 0, this.inner.width, this.inner.height);
-			this.ang = Math.atan2(y - this.cy, x - this.cx) * (180 / Math.PI);
-			this.color = 'rgb(' + da[0] + ',' + da[1] + ',' + da[2] + ')';
-			let angs = [0, 120, 240, 180];
-			let pts = this.tri = [];
-			for (let i = 0; i < angs.length; i++) {
-				pts.push({
-					x: Math.cos( this.toRadians( this.ang + angs[i] )) * this.radSmall + this.cx,
-					y: Math.sin( this.toRadians( this.ang + angs[i] )) * this.radSmall + this.cy
-				})
-			}
-			// gradient 1 = black => white
-			let g1 = this.ctxB.createLinearGradient(pts[1].x, pts[1].y, pts[2].x, pts[2].y);
-			let hsl = rgbToHsl(da[0], da[1], da[2]);			
-			g1.addColorStop(0, 'hsl(' + hsl[0] * 360 + ',0%,100%)');
-			g1.addColorStop(1, 'hsl(' + hsl[0] * 360 + ',0%,0%)');
-			// gradient 2 = hue => transparent
-			let g2 = this.ctxB.createLinearGradient(pts[0].x, pts[0].y, pts[3].x, pts[3].y);
-			g2.addColorStop(0, this.color);
-			g2.addColorStop(1, 'rgba(' + da[0] + ',' + da[1] + ',' + da[2] + ', 0)');
-			// draw
-			this.triangle(this.ctxB, pts, g2);
-			this.triangle(this.ctxB, pts, g1);
-		}
-		// clear dot canvas
-		this.ctxC.clearRect(0, 0, this.dot.width, this.dot.height);
-		let choice = tri ? db : da;
-		this.dotCol = 'rgba(' + choice[0] + ',' + choice[1] + ',' + choice[2] + ',' + choice[3] + ')';
-		let s = {stroke: '#fff', lineWidth: 2, fill: this.dotCol};
-		this.circle(this.ctxC, x, y, 10, s);
-		
-		// TESTING - update view background
-		this.parent.style.background = this.dotCol;
-	}
-	setEvents() {
-		let self = this;
-		this.dot.addEventListener('mousedown', e => {
-			self.active = true;
-			if (self.active) self.update(e, self);
-		}, false);
-		this.dot.addEventListener('mouseup', e => {
-			self.active = false;
-		}, false);
-		this.dot.addEventListener('mousemove', e => {
-			if (self.active) self.update(e, self);
-		}, false);
-		this.draw( 230, 30, false );
-	}
-}
+    function isFixedPosition(elem) {
+        do {
+            if (getComputedStyle(elem).position === "fixed") return true;
+        } while ((elem = elem.parentElement) !== null);
+        return false;
+    }
 
-let colorWheel = new ColorWheel(350, '.view');
+    var containerTemplate;
+    (function createContainer() {
+        containerTemplate = document.createElement("div");
+        containerTemplate.className = "canvascolor-container";
+        var canvas = document.createElement("canvas");
+        var historyDiv = document.createElement("div");
+        historyDiv.className = "canvascolor-history";
+        containerTemplate.appendChild(canvas);
+        containerTemplate.appendChild(historyDiv);
+    })();
+
+    function canvascolor(elem) {
+        var curcolor = elem.value || "#000";
+
+        var w = 200, h = w / 2;
+
+        var container = containerTemplate.cloneNode(true);
+        container.style.width = w + "px";
+        container.style.position = isFixedPosition(elem) ? "fixed" : "absolute";
+        var canvas = container.getElementsByTagName("canvas")[0];
+        var ctx = canvas.getContext("2d");
+        canvas.width = w; canvas.height = h;
+
+        var prevcolorsDiv = container.getElementsByClassName("canvascolor-history")[0];
+        prevcolorsDiv.style.width = w + "px";
+        prevcolorsDiv.style.maxHeight = h + "px";
+
+        var previewdiv = createColorDiv(curcolor);
+        previewdiv.style.border = "1px solid white";
+        previewdiv.style.borderRadius = "5px";
+
+        document.body.appendChild(container);
+
+        function displayContainer() {
+            var rect = elem.getBoundingClientRect();
+            var conttop = (rect.top + rect.height + 3),
+                contleft = rect.left;
+            if (container.style.position !== "fixed") {
+                conttop += window.scrollY;
+                contleft += window.scrollX;
+            }
+            container.style.top = conttop + "px";
+            container.style.left = contleft + "px";
+            container.style.display = "block";
+        }
+        function hideContainer() {
+            container.style.display = "none";
+        }
+
+        elem.addEventListener("mouseover", displayContainer, true);
+        container.addEventListener("mouseleave", hideContainer, false);
+        elem.addEventListener("keyup", function () {
+            changeColor(elem.value, true);
+        }, true);
+
+        changeColor(elem.value, true);
+
+        var idata = ctx.createImageData(w, h);
+
+        function rgb2hex(rgb) {
+            function num2hex(c) { return (c * 15 / 255 | 0).toString(16); }
+            return "#" + num2hex(rgb[0]) + num2hex(rgb[1]) + num2hex(rgb[2]);
+        }
+
+        function colorAt(coords) {
+            var x = coords[0], y = coords[1];
+            return hsv2rgb(x / w * Math.PI, 1, (1 - y / h) * 255);
+        }
+
+        function render() {
+            for (var x = 0; x < w; x++) {
+                for (var y = 0; y < h; y++) {
+                    var i = 4 * (x + y * w);
+                    var rgb = colorAt([x, y]);
+                    idata.data[i] = rgb[0];//Red
+                    idata.data[i + 1] = rgb[1];//Green
+                    idata.data[i + 2] = rgb[2];//Blue
+                    idata.data[i + 3] = 255;
+                }
+            }
+            ctx.putImageData(idata, 0, 0);
+        }
+
+        render();
+
+
+        /** Changes the current color (the value of the input field) and updates other variables accordingly
+        * @param {string} color The new color. Must be a valid CSS color string if ensureValid is not specified
+        * @param {boolean} [ensureValid=false] Do not make the change if color is not a valid CSS color
+        */
+        function changeColor(color, ensureValid) {
+            elem.style.backgroundColor = color;
+            if (ensureValid && elem.style.backgroundColor.length === 0) {
+                elem.style.backgroundColor = curcolor;
+                return;
+            }
+            previewdiv.style.backgroundColor = color;
+            curcolor = color;
+            elem.value = color;
+            elem.focus();
+        }
+
+        function createColorDiv(color) {
+            var div = document.createElement("div");
+            div.style.width = (w / 3 - 10) + "px";
+            div.style.height = (h / 3 - 8) + "px";
+            div.style.backgroundColor = color;
+            div.addEventListener("click", function () {
+                changeColor(color);
+            }, true);
+            if (prevcolorsDiv.childElementCount <= 1) prevcolorsDiv.appendChild(div);
+            else prevcolorsDiv.insertBefore(div, prevcolorsDiv.children[1]);
+            return div;
+        }
+
+        function canvasPos(evt) {
+            var canvasrect = canvas.getBoundingClientRect();
+            return [evt.clientX - canvasrect.left, evt.clientY - canvasrect.top];
+        }
+
+        canvas.addEventListener("mousemove", function (evt) {
+            var coords = canvasPos(evt);
+            previewdiv.style.backgroundColor = rgb2hex(colorAt(coords));
+        }, true);
+
+        canvas.addEventListener("click", function (evt) {
+            var coords = canvasPos(evt);
+            var color = rgb2hex(colorAt(coords));
+            createColorDiv(color);
+            changeColor(color);
+        }, true);
+
+        canvas.addEventListener("mouseleave", function () {
+            previewdiv.style.backgroundColor = curcolor;
+        }, true);
+    }
+
+
+    //Put a color picker on every input[type=color] if the browser doesn't support this input type
+    //and on every input with the class canvascolor
+    var pickers = document.querySelectorAll("input.canvascolor, input[type=color]");
+    for (var i = 0; i < pickers.length; i++) {
+        var input = pickers.item(i);
+        //If the browser supports native color picker and the user didn't
+        //explicitly added canvascolor to the element, we do not add a custom color picker
+        if (input.type !== "color" ||
+            input.className.split(" ").indexOf("canvascolor") !== -1) {
+            canvascolor(input);
+        }
+    }
+
+    return canvascolor;
+}());
