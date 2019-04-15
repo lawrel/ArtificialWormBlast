@@ -9,7 +9,7 @@ from server.routes.emailObject import email_gamelink
 
 @app.route('/game/')
 def sessions():
-    return render_template('game.html')
+    return render_template('game.html', cardview=render_template("deck_view.html"))
 
 
 @app.route('/privategame/')
@@ -19,7 +19,7 @@ def session1():
 
 @app.route('/publicgame/')
 def session2():
-    return render_template('game.html')
+    return render_template('game.html', cardview=render_template("deck_view.html"))
 
 
 @app.route('/sitedeck/')

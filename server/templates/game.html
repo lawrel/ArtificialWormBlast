@@ -9,15 +9,15 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle">Welcome to the Monster Draft!</h5>
                 </div>
-                <div class="modal-body" id="" style="overflow-y:auto; max-height: 80%">
-                    <div class="container" id="kev">
-
+                <div class="modal-body" id="" style="overflow-y: initial; max-height: 80%">
                     </div>
-                    <div class=  "container" id="jake">
+                    <div class=  "" id="jake">
                         <p> Select five monsters that you want to draft onto your team before the battle begins.</p>
                         
                     </div>
-                </div>
+
+                    {{ cardview|safe }}
+
                 <div class="modal-footer">
                     <button onclick="sendHand()" type="button" class="btn btn-primary" data-dismiss="modal" id="saveButton" disabled>Save Team</button>
                 </div>
@@ -120,7 +120,7 @@
 
 function enterGame() {
       checkGames_io();
-      waitState();
+      // waitState();
     }
 
     
@@ -157,15 +157,15 @@ function enterGame() {
       keyboard: false, //remove option to close with keyboard
       show: false //Display loader!
     });
-    createMonsters()
+    //createMonsters()
   });
 
   function gameUpdate() {
     var state = gameData.state;
     console.log(state);
-    updateWaitModal();
     switch (state) {
       case "WaitState":
+        updateWaitModal();
         waitState();
         break;
       case "SelectHandState":
@@ -238,23 +238,25 @@ function enterGame() {
     listPlayers();
   }
   function attackState() {
+      $("#voteModal").modal('show');
       printAttacker();
       listHand();
       listPlayers();
   }
   function defendState() {
-      console.log("WHY?")
+    $("#voteModal").modal('show');
       printDefender();
       listHand();
   }
   function voteState() {
+      $("#voteModal").modal('show');
       listHand();
   }
   function winState() {
-    console.log("Enter Win State")
-      changeHand(); //for now just change the hand of the card
-      console.log("Init Next Round")
-      newRound();
+    $("#voteModal").modal('show');
+    changeHand(); //for now just change the hand of the card
+    console.log("Init Next Round")
+    newRound();
   }
   function endState() {
       showResults(); //no implemented for this release
@@ -335,9 +337,9 @@ function enterGame() {
         numCards = names.length;
         if (numCards >= 50) { numCards = 50; }
         var ref = "<p> Select five monsters that you want to draft onto your team before the battle begins.</p>";
-        for (var kasey = 0; kasey < numCards; kasey++) {
-            var monster_name = names[kasey];
-            var pictureName = locations[kasey];
+        for (var i = 0; i < numCards; i++) {
+            var monster_name = names[i];
+            var pictureName = locations[i];
             ref = ref + `<button onclick="handleMonsterClick('${monster_name}')"><img src="/static/images/${pictureName}" width="125px" height="215px"></button>`
         }
         document.getElementById("jake").innerHTML = ref;
