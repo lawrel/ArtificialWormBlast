@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for
 import mysql.connector
 from mysql.connector import errorcode
 from server import app
-from server.routes import accounts
 
 #Functions defining the pages
 @app.route('/home/')
