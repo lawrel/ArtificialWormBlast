@@ -57,13 +57,13 @@ create table UserLogins(
 create table Cards(
 	ID int auto_increment,
 	Name varchar(255),
-	ImgData BLOB,
+	ImgData MEDIUMBLOB,
     Attributes varchar(511),
 
 	primary key (ID)
 );
 
-create table UsersCards(
+create table UserCards(
 	UserID int,
 	CardID int,
 
