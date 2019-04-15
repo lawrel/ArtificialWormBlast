@@ -30,11 +30,21 @@ class BadFileExtError(Error):
 
 def getPlayerDeck(playerId):
     query = """
-            select CardID from MonsterCards.UsersCards
+            select CardID, Name, Attributes from MonsterCards.UsersCards
+            inner join MonsterCards.Cards
+            on CardID = ID
             where UserID = %s;
             """
     cards = execute(query, (playerId, ))
-    return [card[0] for card in cards]
+    dict_cards = []
+    for card_id, card_name, card_attr in cards:
+        card = {
+            "id": card_id,
+            "name": card_name,
+            "attr": card_attr
+        }
+        dict_cards.append(card)
+    return dict_cards
 
 
 def addPlayerCard(playerId, cardId):
@@ -51,28 +61,36 @@ def convertToBinaryData(filename):
     return binaryData
 
 
-def new_card(pic_bin, attrs=None):
+def new_card(pic_bin, attrs=None, name=None):
     insert_blob = """
                     INSERT INTO MonsterCards.Cards
-                        (ImgData, Attributes)
-                    VALUES (%s, %s);"""
+                        (Name, ImgData, Attributes)
+                    VALUES (%s, %s, %s);"""
     print(type(pic_bin))
-    card_id = execute(insert_blob, (pic_bin, attrs), insert=True)[0][0]
+    card_id = execute(insert_blob, (name, pic_bin, attrs), insert=True)[0][0]
     return card_id
 
 
-def edit_card(card_id, pic_bin, attrs=None):
-    insert_blob = """
+def edit_card(card_id, pic_bin, attrs=None, name=None):
+    if (name is None):
+        insert_blob = """
                     update MonsterCards.Cards
                     set ImgData = %s, Attributes = %s
                     where ID = %s;"""
-    card_id = execute(insert_blob, (pic_bin, attrs, card_id), insert=True)[0][0]
-    return card_id
+        card_id = execute(insert_blob, (pic_bin, attrs, card_id), insert=True)[0][0]
+        return card_id
+    else:
+        insert_blob = """
+                    update MonsterCards.Cards
+                    set Name = %s, ImgData = %s, Attributes = %s
+                    where ID = %s;"""
+        card_id = execute(insert_blob, (name, pic_bin, attrs, card_id), insert=True)[0][0]
+        return card_id
 
 
 def get_card(card_id):
     query = """
-            select ID, ImgData, Attributes
+            select ID, Name, ImgData, Attributes
             from MonsterCards.Cards
             where ID = %s;
             """

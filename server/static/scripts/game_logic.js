@@ -18,21 +18,14 @@ $( document ).ready(function() {
     connectGameSocket();
 
     // Check if the player is logged in
-    handleLogin();
-
-    document.addEventListener("logged-in", function() {
-        handleJoinGame();
-    });
-
-    document.addEventListener("player-data", function () {
-        handleJoinGame();
-    });
+    
+    handleJoinGame();
     
 });
 
     // Connect to game server
     socket = io.connect('ws://' + document.domain + ':' + location.port);
-    
+
 function connectGameSocket() {
 
 

@@ -6,7 +6,7 @@ from server import app
 #Functions defining the pages
 @app.route('/home/')
 def home():
-    return render_template('home.html', cardview=render_template("deck_view.html"))
+    return render_template('home.html', cardview=render_template("deck_view_home.html"))
 
 
 @app.route('/instructions/')
