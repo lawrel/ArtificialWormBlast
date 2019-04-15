@@ -28,7 +28,7 @@ class BadFileExtError(Error):
     pass
 
 
-def getPlayerDeck(playerIdselect):
+def getPlayerDeck(playerId):
     query = """
             select CardID, Name, Attributes from MonsterCards.UserCards
             inner join MonsterCards.Cards
