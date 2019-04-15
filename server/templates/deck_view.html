@@ -1,6 +1,9 @@
 <div class="container" id="cards"> </div>
 
 <script>
+    var deck;
+    var selectedMonsters = new Array();
+
     document.addEventListener("logged-in", function () {
         loadImages_ajax();
     });
@@ -28,8 +31,21 @@
 
     function buildDeck(deck){
         for(var i=0; i<deck.length; i++){
-            var ref = `<div class="polaroid" id="one"> <img src="/cards/preview/${deck[i]}" alt="Monster 1" style="width:100%; height: 75%"> <div class="container"> <p>${"monster_name"}</p> </div> </div>`
+            var ref = `<button onclick="handleMonsterClick('${deck[i]}')"><img src="/cards/preview/${deck[i]}" width="225px" height="315px"><br>Monster ${deck[i]}</button>`
             $("#cards").prepend(ref)
         }
     }
+
+    function handleMonsterClick(monsterId) {
+        console.log("clicked");
+        if(selectedMonsters.includes(monsterId)){
+            selectedMonsters = selectedMonsters.filter(function(value, index, arr){ return value != monsterId; });
+        } else {
+            selectedMonsters.push(monsterId);
+        }
+        console.log(selectedMonsters);
+    }
+
+
+
 </script>
