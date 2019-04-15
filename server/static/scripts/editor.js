@@ -80,307 +80,6 @@ function getDeck_ajax() {
     });
 }
 
-var canvas = document.getElementById("paint");
-var width;
-var height;
-var curX, curY, prevX, prevY;
-var hold;
-var fill_value;
-var stroke_value;
-var canvas_data;
-var vert;
-var horzt;
-$(document).ready(function () {
-    canvas = document.getElementById("paint");
-    ctx = canvas.getContext("2d");
-    width = canvas.width;
-    height = canvas.height;
-    hold = false;
-    ctx.lineWidth = 2;
-    fill_value = true;
-    stroke_value = false;
-    canvas_data = { "pencil": [], "line": [], "rectangle": [], "circle": [], "eraser": [], "text": [], "upload": [] }
-    vert = (2 / 100) * 630;
-    horzt = (1 / 100) * 450;
-
-    reset();
-    pencil();
-    img.onload = function () {
-        console.log("its")
-        ctx.drawImage(img, 0, 0);
-    }
-});
-
-
-function change(type) {
-    if (type == "pencil") {
-        pencil();
-    }
-    if (type == "line") {
-        line();
-    }
-    if (type == "rectangle") {
-        rectangle();
-    }
-    if (type == "circle") {
-        circle();
-    }
-    if (type == "eraser") {
-        eraser();
-    }
-    if (type == "upload") {
-        //check if new design ...
-        upload();
-    }
-    if (type == "fill") {
-        fill();
-    }
-    if (type == "outline") {
-        outline();
-    }
-}
-
-function color(color_value) {
-    ctx.strokeStyle = color_value;
-    ctx.fillStyle = color_value;
-}
-
-function font(font_value) {
-    ctx.font = font_value;
-}
-
-function changeVert(v) {
-    vert = (v / 100) * 630;
-}
-
-function changeHorzt(h) {
-    horzt = (h / 100) * 450;
-}
-
-function add_pixel() {
-    ctx.lineWidth += 1;
-}
-
-function reduce_pixel() {
-    if (ctx.lineWidth == 1) {
-        ctx.lineWidth = 1;
-    } else {
-        ctx.lineWidth -= 1;
-    }
-}
-
-function fill() {
-    fill_value = true;
-    stroke_value = false;
-}
-
-function outline() {
-    fill_value = false;
-    stroke_value = true;
-}
-
-function reset() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    canvas_data = { "pencil": [], "line": [], "rectangle": [], "circle": [], "eraser": [], "text": [], "upload": [] }
-    var oldcolor = ctx.strokeStyle;
-    color("#FFFFFF");
-    ctx.strokeRect(0, 0, 450, 630);
-    if (fill_value) {
-        ctx.fillRect(0, 0, 450, 630);
-    }
-    color(oldcolor);
-    ctx.drawImage(img, 0, 0);
-}
-
-// pencil tool
-
-function pencil() {
-
-    canvas.onmousedown = function (e) {
-        curX = e.clientX - canvas.offsetLeft;
-        curY = e.clientY - canvas.offsetTop;
-        hold = true;
-
-        prevX = curX;
-        prevY = curY;
-        ctx.beginPath();
-        ctx.moveTo(prevX, prevY);
-    };
-
-    canvas.onmousemove = function (e) {
-        if (hold) {
-            curX = e.clientX - canvas.offsetLeft;
-            curY = e.clientY - canvas.offsetTop;
-            draw();
-        }
-    };
-
-    canvas.onmouseup = function (e) {
-        hold = false;
-    };
-
-    canvas.onmouseout = function (e) {
-        hold = false;
-    };
-
-    function draw() {
-        ctx.lineTo(curX, curY);
-        ctx.stroke();
-        canvas_data.pencil.push({ "startx": prevX, "starty": prevY, "endx": curX, "endy": curY, "thick": ctx.lineWidth, "color": ctx.strokeStyle });
-    }
-}
-
-function encode_canvas() {
-    var dataURL = canvas.toDataURL("image/png;base64");
-    uploadImageB64_ajax(dataURL);
-}
-
-// line tool
-
-function line() {
-
-    canvas.onmousedown = function (e) {
-        img = ctx.getImageData(0, 0, width, height);
-        prevX = e.clientX - canvas.offsetLeft;
-        prevY = e.clientY - canvas.offsetTop;
-        hold = true;
-    };
-
-    canvas.onmousemove = function linemove(e) {
-        if (hold) {
-            ctx.putImageData(img, 0, 0);
-            curX = e.clientX - canvas.offsetLeft;
-            curY = e.clientY - canvas.offsetTop;
-            ctx.beginPath();
-            ctx.moveTo(prevX, prevY);
-            ctx.lineTo(curX, curY);
-            ctx.stroke();
-            canvas_data.line.push({ "starx": prevX, "starty": prevY, "endx": curX, "endY": curY, "thick": ctx.lineWidth, "color": ctx.strokeStyle });
-            ctx.closePath();
-        }
-    };
-
-    canvas.onmouseup = function (e) {
-        hold = false;
-    };
-
-    canvas.onmouseout = function (e) {
-        hold = false;
-    };
-}
-
-// rectangle tool
-
-function rectangle() {
-
-    canvas.onmousedown = function (e) {
-        img = ctx.getImageData(0, 0, width, height);
-        prevX = e.clientX - canvas.offsetLeft;
-        prevY = e.clientY - canvas.offsetTop;
-        hold = true;
-    };
-
-    canvas.onmousemove = function (e) {
-        if (hold) {
-            ctx.putImageData(img, 0, 0);
-            curX = e.clientX - canvas.offsetLeft - prevX;
-            curY = e.clientY - canvas.offsetTop - prevY;
-            ctx.strokeRect(prevX, prevY, curX, curY);
-            if (fill_value) {
-                ctx.fillRect(prevX, prevY, curX, curY);
-            }
-            canvas_data.rectangle.push({ "starx": prevX, "stary": prevY, "width": curX, "height": curY, "thick": ctx.lineWidth, "stroke": stroke_value, "stroke_color": ctx.strokeStyle, "fill": fill_value, "fill_color": ctx.fillStyle });
-        }
-    };
-
-    canvas.onmouseup = function (e) {
-        hold = false;
-    };
-
-    canvas.onmouseout = function (e) {
-        hold = false;
-    };
-}
-
-// circle tool
-
-function circle() {
-
-    canvas.onmousedown = function (e) {
-        img = ctx.getImageData(0, 0, width, height);
-        prevX = e.clientX - canvas.offsetLeft;
-        prevY = e.clientY - canvas.offsetTop;
-        hold = true;
-    };
-
-    canvas.onmousemove = function (e) {
-        if (hold) {
-            ctx.putImageData(img, 0, 0);
-            curX = e.clientX - canvas.offsetLeft;
-            curY = e.clientY - canvas.offsetTop;
-            ctx.beginPath();
-            ctx.arc(Math.abs(curX + prevX) / 2, Math.abs(curY + prevY) / 2, Math.sqrt(Math.pow(curX - prevX, 2) + Math.pow(curY - prevY, 2)) / 2, 0, Math.PI * 2, true);
-            ctx.closePath();
-            ctx.stroke();
-            if (fill_value) {
-                ctx.fill();
-            }
-            canvas_data.circle.push({ "starx": prevX, "stary": prevY, "radius": curX - prevX, "thick": ctx.lineWidth, "stroke": stroke_value, "stroke_color": ctx.strokeStyle, "fill": fill_value, "fill_color": ctx.fillStyle });
-        }
-    };
-
-    canvas.onmouseup = function (e) {
-        hold = false;
-    };
-
-    canvas.onmouseout = function (e) {
-        hold = false;
-    };
-}
-
-// eraser tool
-
-function eraser() {
-
-    canvas.onmousedown = function (e) {
-        curX = e.clientX - canvas.offsetLeft;
-        curY = e.clientY - canvas.offsetTop;
-        hold = true;
-
-        prevX = curX;
-        prevY = curY;
-        ctx.beginPath();
-        ctx.moveTo(prevX, prevY);
-    };
-
-    canvas.onmousemove = function (e) {
-        if (hold) {
-            curX = e.clientX - canvas.offsetLeft;
-            curY = e.clientY - canvas.offsetTop;
-            draw();
-        }
-    };
-
-    canvas.onmouseup = function (e) {
-        hold = false;
-    };
-
-    canvas.onmouseout = function (e) {
-        hold = false;
-    };
-
-    function draw() {
-        ctx.lineTo(curX, curY);
-        ctx.strokeStyle = "#ffffff";
-        ctx.stroke();
-        canvas_data.pencil.push({ "startx": prevX, "starty": prevY, "endx": curX, "endy": curY, "thick": ctx.lineWidth, "color": ctx.strokeStyle });
-    }
-}
-
-function text(words) {
-    ctx.fillText(words, horzt, vert); //horzt, vert
-    canvas_data.line.push({ "starx": horzt, "starty": vert, "text": words, "font": ctx.font, "color": ctx.strokeStyle })
-}
 
 function upload(name) {
     uploadImage_ajax(name);
@@ -450,7 +149,34 @@ function editCard_ajax() {
 }
 
 function deleteCard_ajax(){
+    var uploader = document.getElementById('uploader');
+    var fd = new FormData();
+    fd.append("img-data", canvas.toDataURL("image/png;base64"));
+    fd.append("token", retrieveLoginToken());
+    fd.append("card-id", card_id);
+    fd.append("card-name", $("#monster-name").val());
+    $("#waitingModal").modal('show');
+    $.ajax({
+        url: '/cards/remove-card',
+        data: fd,
+        cache: false,
+        processData: false,
+        contentType: false,
+        type: 'POST',
+        success: function (data) {
+            console.log(data);
+            if ("error" in data) {
 
+            }
+            else if ("success" in data) {
+
+            }
+        },
+        complete: function () {
+            $("#waitingModal").modal('hide');
+        }
+    });
+    window.location.href = "/home/";
 }
 
 
