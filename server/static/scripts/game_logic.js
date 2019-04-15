@@ -23,8 +23,8 @@ $( document ).ready(function() {
     
 });
 
-    // Connect to game server
-    socket = io.connect('ws://' + document.domain + ':' + location.port);
+// Connect to game server
+socket = io.connect('ws://' + document.domain + ':' + location.port);
 
 function connectGameSocket() {
 

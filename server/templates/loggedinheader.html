@@ -67,10 +67,7 @@
           padding: 5px;
           width: 150px;
         }*/
-        #logout {
-            /* margin: 0px 0px 0px 65%; */
-            float: right;
-        }
+        
         img:hover {
           box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
         }
@@ -86,7 +83,7 @@
             <a href="{{url_for('Instructions')}}">How to Play</a>
             <a href="{{url_for('monsterEditor')}}">Draw Monster</a>
             <a href="{{url_for('myAccount')}}" style="float: right">My Account</a>
-            <a id="logout" href="{{url_for('myAccount')}}">Log Out</a>
+            <a href="javascript:handleLogout()"style="float: right">Log Out</a>
         </div>
         {% block content %}{% endblock %}
         <div class="footer">
