@@ -384,59 +384,9 @@ function text(words) {
 
 function upload(name) {
     uploadImage_ajax(name);
-    /**
-    * UPLOAD SCRIPT
-    * This script uses the UploadAtClick library to upload files on a webserver folder
-    * using a PHP script ("upload/upload.php")
-    * Project homepage: http://code.google.com/p/upload-at-click/
-    */
-    // upclick(
-    // {
-    //         element: uploader,
-    //     action: 'upload/upload.php', //need to fix
-    //     onstart:
-    // function(filename)
-    // {
-    //         //alert('Start upload: '+filename);
-    //     },
-    //         oncomplete:
-    //     function(response_data)
-    // {
-    // // Check upload Status
-    // if (response_data != "FAIL") {
-    //         // Draw the picture into Canvas
-    //         // "response_data" contains the image file name returned from the PHP script
-    //         displayPicture("upload/" + response_data);
-    //     }
-    // }
-    //     });
-
-
-
 }
 
-// function uploadImage_ajax() {
-//     var uploader = document.getElementById('uploader');
-//     var fd = new FormData($("#upload-img-form")[0]);
 
-//     $.ajax({
-//         url: '/editor/upload-img',
-//         data: fd,
-//         cache: false,
-//         processData: false,
-//         contentType: false,
-//         type: 'POST',
-//         success: function (data) {
-//             console.log(data);
-//             if ("error" in data) {
-
-//             }
-//             else if ("success" in data) {
-
-//             }
-//         }
-//     });
-// }
 
 function newCard_ajax() {
     var uploader = document.getElementById('uploader');
