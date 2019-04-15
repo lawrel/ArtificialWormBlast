@@ -306,10 +306,7 @@
         e.preventDefault()
         let user_name = $( 'input.username' ).val()
         let user_input = $( 'input.message' ).val()
-        socket.emit( 'my event', {
-          user_name : user_name,
-          message : user_input
-        } )
+        socket.emit( 'my event', { user_name : user_name, message : user_input}, room = gameData["gameid"] )
         $( 'input.message' ).val( '' ).focus()
       } )
     } )
