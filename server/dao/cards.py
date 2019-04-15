@@ -47,12 +47,37 @@ def getPlayerDeck(playerId):
     return dict_cards
 
 
+def getSiteDeck():
+    query = """
+            select ID, Name, Attributes from MonsterCards.Cards
+            where ID > 0 and ID <= 18;
+            """
+    cards = execute(query, ())
+    dict_cards = []
+    for card_id, card_name, card_attr in cards:
+        card = {
+            "id": card_id,
+            "name": card_name,
+            "attr": card_attr
+        }
+        dict_cards.append(card)
+    return dict_cards
+
+
 def addPlayerCard(playerId, cardId):
     query = """
             INSERT INTO MonsterCards.UsersCards (UserID, CardID) VALUES (%s, %s);
             """
     execute(query, (playerId, cardId))
-    
+
+
+def remove_player_card(player_id, card_id):
+    query = """
+            delete from MonsterCards.UsersCards
+            where CardID = %s and UserID = %s;
+            """
+    execute(query, (card_id, player_id))
+
 
 def convertToBinaryData(filename):
     # Convert digital data to binary format

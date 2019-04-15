@@ -11,7 +11,7 @@ def home():
 
 @app.route('/instructions/')
 def Instructions():
-    return render_template('Instructions.html')
+    return render_template('instructions.html')
 
 @app.route('/monstereditor/')
 def monsterEditor():

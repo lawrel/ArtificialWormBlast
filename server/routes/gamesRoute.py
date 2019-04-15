@@ -24,7 +24,7 @@ def session2():
 
 @app.route('/sitedeck/')
 def monsters():
-    return render_template('site_deck.html')
+    return render_template('site_deck.html', cardview=render_template("deck_view_site.html"))
 
 
 @app.route('/sendinvites', methods=['POST'])
