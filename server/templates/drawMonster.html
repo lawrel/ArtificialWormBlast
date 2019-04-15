@@ -104,7 +104,7 @@
             <button id="reset" onclick="document.getElementById('colorin').jscolor.hide()">
                 Hide Picker
             </button>
-            Color: <input id="colorin" class="jscolor {width:243, height:150,
+            Color: <input id="colorin" class="jscolor {width:243, height:150, 
     borderColor:'#FFF', insetColor:'#FFF', backgroundColor:'#666'}" onchange="update(this.jscolor)" value="ab2567">
         </div>
     </div>
@@ -175,9 +175,9 @@
     <div sytle='float:right'>
         <fieldset>
             <label>Monster Name: </label><input id="monster-name" type="text">
-            <button id="save" onclick="save()">Save</button>
+            <button id="reset" id="save" onclick="save()">Save</button>
             <button id="reset" onclick="reset()">Reset</button>
-            <button id="delete" onclick="deleteCard()">Delete</button>
+            <button id="reset" id="delete" onclick="deleteCard()">Delete</button>
         </fieldset>
     </div>
 
