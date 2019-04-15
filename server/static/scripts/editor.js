@@ -149,7 +149,34 @@ function editCard_ajax() {
 }
 
 function deleteCard_ajax(){
+    var uploader = document.getElementById('uploader');
+    var fd = new FormData();
+    fd.append("img-data", canvas.toDataURL("image/png;base64"));
+    fd.append("token", retrieveLoginToken());
+    fd.append("card-id", card_id);
+    fd.append("card-name", $("#monster-name").val());
+    $("#waitingModal").modal('show');
+    $.ajax({
+        url: '/cards/remove-card',
+        data: fd,
+        cache: false,
+        processData: false,
+        contentType: false,
+        type: 'POST',
+        success: function (data) {
+            console.log(data);
+            if ("error" in data) {
 
+            }
+            else if ("success" in data) {
+
+            }
+        },
+        complete: function () {
+            $("#waitingModal").modal('hide');
+        }
+    });
+    window.location.href = "/home/";
 }
 
 
