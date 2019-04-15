@@ -15,7 +15,7 @@ def home():
 
     print("HERE TO OPEN HOME")
 
-    return render_template('home.html')
+    return render_template('home.html', cardview=render_template("deck_view.html"))
 
 
 @app.route('/instructions/')
