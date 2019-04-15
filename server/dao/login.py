@@ -119,7 +119,7 @@ def get_session_data(token):
     else:
         raise BadTokenError
 
-    return {"email":email, "userid" : userid, "username" : username}
+    return {"email": email, "userid": userid, "username": username}
 
 
 def logout_user(token):
