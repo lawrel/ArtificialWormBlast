@@ -21,23 +21,20 @@ $( document ).ready(function() {
     handleLogin();
 
     document.addEventListener("logged-in", function() {
-        //playerData_io();
         handleJoinGame();
     });
 
     document.addEventListener("player-data", function () {
         handleJoinGame();
     });
-
-    // document.addEventListener("game-update", function () {
-    //     joinGame_io(gameData["gameid"], getPlayerData())
-    // })
     
 });
 
-function connectGameSocket() {
     // Connect to game server
     socket = io.connect('ws://' + document.domain + ':' + location.port);
+    
+function connectGameSocket() {
+
 
     // Event handlers with callback functions
     socket.on("join-game", joinGame_res);
@@ -49,7 +46,7 @@ function connectGameSocket() {
     // socket.on("state", )
     socket.on('connect', function() {
         socket.emit('my event', {data: 'I\'m connected!'});
-        console.log(socket);
+        console.log("THIS IS THE SOCKET "+ socket);
     });
     socket.on('message', function (msg) {
         console.log(msg);

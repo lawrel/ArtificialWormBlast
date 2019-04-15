@@ -9,7 +9,7 @@ from server.routes.emailObject import email_gamelink
 
 @app.route('/game/')
 def sessions():
-    return render_template('waiting_game.html')
+    return render_template('game.html')
 
 
 @app.route('/privategame/')
@@ -19,7 +19,7 @@ def session1():
 
 @app.route('/publicgame/')
 def session2():
-    return render_template('waiting_game.html')
+    return render_template('game.html')
 
 
 @app.route('/sitedeck/')
@@ -32,7 +32,6 @@ def invites():
     newlink = request.form["game-id"]
     if (newlink == None):
         return "Link is empty"
-    print("NEWWWWWWWWWWWWWWww: " + newlink)
     for i in range(1, 10):
         email = request.form["send-email"+ str(i)]
         if (email is not None):
