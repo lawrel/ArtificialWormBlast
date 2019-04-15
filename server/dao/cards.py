@@ -52,7 +52,15 @@ def addPlayerCard(playerId, cardId):
             INSERT INTO MonsterCards.UsersCards (UserID, CardID) VALUES (%s, %s);
             """
     execute(query, (playerId, cardId))
-    
+
+
+def remove_player_card(player_id, card_id):
+    query = """
+            delete from MonsterCards.UsersCards
+            where CardID = %s and UserID = %s;
+            """
+    execute(query, (card_id, player_id))
+
 
 def convertToBinaryData(filename):
     # Convert digital data to binary format

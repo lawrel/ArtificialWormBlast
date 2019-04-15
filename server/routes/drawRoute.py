@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for, send_file
+from flask import (Flask, render_template, request, jsonify, redirect, url_for,
+                   send_file)
 from werkzeug.utils import secure_filename
 import mysql.connector
 from mysql.connector import errorcode
@@ -106,6 +107,26 @@ def editor_edit_card():
         return jsonify({"error": "NoFileUploadedError"})
     except BadFileExtError:
         return jsonify({"error": "NoFileUploadedError"})
+    except BadRequestKeyError:
+        return jsonify({"error": "BadRequestKeyError"})
+
+
+@app.route("/cards/remove-card", methods=["POST"])
+def remove_card():
+    # print(request.files)
+    try:
+        token = request.form["token"]
+        card_id = request.form["card-id"]
+
+        user_id = get_session_data(token)["userid"]
+
+        cards.remove_player_card(user_id, card_id)
+
+        return jsonify({"success": ""})
+    except BadTokenError:
+        return jsonify({"error": "BadTokenError"})
+    except BadRequestKeyError:
+        return jsonify({"error": "BadRequestKeyError"})
 
 
 @app.route("/cards/preview/<card_id>", methods=["GET"])
@@ -134,3 +155,5 @@ def get_player_cards():
         return jsonify({"error": "NoFileUploadedError"})
     except BadFileExtError:
         return jsonify({"error": "NoFileUploadedError"})
+    except BadRequestKeyError:
+        return jsonify({"error": "BadRequestKeyError"})
