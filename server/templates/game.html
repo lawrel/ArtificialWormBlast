@@ -479,56 +479,7 @@ function listPlayers() {
         }
     }
     function handleVote(nameString){
-<<<<<<< Updated upstream
-      submitVote_io(gameData["gameid"], getPlayerData()["userid"], nameString)
-      // allPlayers = gameData["players"];
-      // player = null;
-      // attacker = null;
-      // defender = null;
-      // totalPlayers = 0;
-      // for (var key in allPlayers)
-      //   {
-      //       if (allPlayers[key]["email"] == getPlayerData()["email"]) {
-      //         player = allPlayers[key];
-      //         console.log(allPlayers[key]["vote"])
-      //         totalPlayers += 1;
-      //       }
-      //       if (allPlayers[key]["userid"] == gameData.attacker) {
-      //         attacker = allPlayers[key];
-      //       }
-      //       if (allPlayers[key]["userid"] == gameData.defender) {
-      //         defender = allPlayers[key];
-      //       }
-      //   }
-      // if (!player["vote"]) {
-      //   if (nameString == gameData["atk_card"]) {
-      //     //add name to votes
-      //     console.log("Voted for" + gameData["atk_card"])
-      //     attacker["numVotes"] += 1;
-
-      //     if(attacker["numVotes"]*2 >= totalPlayers) {
-      //       console.log("WINNER ATTACK")
-      //       winner_io(gameData["gameid"] ,attacker["userid"])
-      //     }
-      //   }
-      //   else {
-      //     // add name to votes
-      //     console.log("Voted for" + gameData["dts_card"])
-      //     defender["numVotes"] += 1;
-
-      //     if(defender["numVotes"]*2 >= totalPlayers) {
-      //       console.log("WINNER DEFENSE")
-      //       winner_io(gameData["gameid"] ,defender["userid"])
-      //     }
-      //   }
-      //   player["vote"] = true;
-      // }
-      
-
-
-=======
       submitVote_io(gameData["gameid"], getPlayerData()["username"], nameString)
->>>>>>> Stashed changes
     }
 
 </script>
