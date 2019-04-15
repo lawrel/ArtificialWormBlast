@@ -1,0 +1,112 @@
+{%extends 'shared.html'%}
+{% block content %}
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+                <div class="card card-signin my-5">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Game Settings</h5>
+                        <form id="settings-form" method="POST" enctype="multipart/form-data" name="settings-form">
+                            <div class="form-group">
+
+                                    <div class="form-group">
+                                            <label for="input-victory">Cards to Win</label>
+                                            <select>
+                                                    <option value = "0"> Someone Runs Out </option>
+                                                    <option value = "3"> Three </option>
+                                                    <option value = "4"> Four </option>
+                                                    <option value = "5"> Five </option>
+                                                    <option value = "6"> Six </option>
+                                                    <option value = "7"> Seven </option>
+                                                    <option value = "8"> Eight </option>
+                                                    <option value = "9"> Nine </option>
+                                                    <option value = "10"> Ten </option>
+                                                </select>
+                                        </div>
+
+
+                                    <label for="input-players">Number of Players</label>
+                                    <select>
+                                        <option value = "3"> Three </option>
+                                        <option value = "4"> Four </option>
+                                        <option value = "5"> Five </option>
+                                        <option value = "6"> Six </option>
+                                        <option value = "7"> Seven </option>
+                                        <option value = "8"> Eight </option>
+                                        <option value = "9"> Nine </option>
+                                        <option value = "10"> Ten </option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                        <label for="send-email">Email Addresses</label>
+                                        <input type="email1" class="form-control" id="send-email1" name="send-email1" aria-describedby="emailHelp" placeholder="Enter Email 1">
+                                        <input type="email2" class="form-control" id="send-email2" name="send-email2" aria-describedby="emailHelp" placeholder="Enter Email 2">
+                                        <input type="email3" class="form-control" id="send-email3" name="send-email3" aria-describedby="emailHelp" placeholder="Enter Email 3">
+                                        <input type="email4" class="form-control" id="send-email4" name="send-email4" aria-describedby="emailHelp" placeholder="Enter Email 4">
+                                        <input type="email5" class="form-control" id="send-email5" name="send-email5" aria-describedby="emailHelp" placeholder="Enter Email 5">
+                                        <input type="email6" class="form-control" id="send-email6" name="send-email6" aria-describedby="emailHelp" placeholder="Enter Email 6">
+                                        <input type="email7" class="form-control" id="send-email7" name="send-email7" aria-describedby="emailHelp" placeholder="Enter Email 7">
+                                        <input type="email8" class="form-control" id="send-email8" name="send-email8" aria-describedby="emailHelp" placeholder="Enter Email 8">
+                                        <input type="email9" class="form-control" id="send-email9" name="send-email9" aria-describedby="emailHelp" placeholder="Enter Email 9">
+                                    </div>
+
+
+                            
+                            <button type="button" class="btn btn-primary" onclick="sendEmails_ajax()">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script src="/static/scripts/game_logic.js"></script>   
+<script>
+    function validateForm() {
+        var input_username = $("#input-victory").val();
+        var input_email = $("#input-players").val();
+    }
+    
+    function sendEmails_ajax() {
+
+        // Get Settings
+        var fd = new FormData();
+        fd.append( 'input-username', $("#input-victory").val());
+        fd.append( 'input-email1', $("#input-players").val());
+
+        // Create Game
+        var gameid = createGame_io($("#input-victory").val(), $("#input-players").val());
+        fd.append( 'game-id', gameid);
+
+        // Get Friends Emails
+        fd.append( 'send-email2', $("#send-email2").val());
+        fd.append( 'send-email3', $("#send-email3").val());
+        fd.append( 'send-email4', $("#send-email4").val());
+        fd.append( 'send-email5', $("#send-email5").val());
+        fd.append( 'send-email6', $("#send-email6").val());
+        fd.append( 'send-email7', $("#send-email7").val());
+        fd.append( 'send-email8', $("#send-email8").val());
+        fd.append( 'send-email9', $("#send-email9").val());
+
+        // Send invitations
+        $.ajax({
+            url: '/sendinvites',
+            data: fd,
+            processData: false,
+            contentType: false,
+            type: 'POST',
+            success: function(data){
+                console.log(data);
+                
+                // Go to the game
+                window.location.href = "/game<game-id>";
+            }
+        });
+
+    }
+</script>
+
+{% endblock %}

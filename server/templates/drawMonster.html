@@ -1,35 +1,83 @@
 ﻿<!DOCTYPE html>
 {%extends 'loggedinheader.html' %}
 <meta charset="utf-8" />
+<style>
+    @import url(https://fonts.googleapis.com/css?family=Open+Sans);
 
+    #color-input {
+        display: none;
+    }
+
+    #color-label {
+        margin-left: 15px;
+        position: absolute;
+        height: 30px;
+        width: 50px;
+    }
+
+    #color-input:checked ~ #color-picker {
+        opacity: 1;
+    }
+
+    #color-picker {
+        position: absolute;
+        left: 70px;
+        background-color: white;
+        height: 150px;
+        width: 185px;
+        border: solid 1px #ccc;
+        opacity: 0;
+        padding: 5px;
+    }
+
+    #color-strip:hover {
+        cursor: crosshair;
+    }
+    #paint {
+        border: 5px solid #000000;
+        margin: 10px 20px;
+        display: inline-block;
+        position: relative;
+    }
+    #panel {
+        border: 2px solid #E8fcff;
+        padding: 20px 20px 20px 20px;
+        background-color: #273238;
+    }
+</style>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
 <script src="http://code.createjs.com/easeljs-0.5.0.min.js"></script>
 <script type="text/javascript" src="libs/upclick-min.js">
 
-
-    <title></title>
-</head>
-
 {% block content %}
 <body onload="pencil()">
     <h1>MonsterEditor</h1>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+        <table>
+        <td>
 
-    <div style= 'float:left'>
-        <canvas id="paint" width="450" height="630" style="border: 5px solid #000000;"></canvas>
-    </div>
-
+            <button id="reset" value="pencil" onclick="change(this.value)"><img src="/static/assets/pencilicon.png" alt="Pencil" style="width:60px; height:55px"></button>
+                <button id="reset" value="line" onclick="change(this.value)"><img src="/static/assets/linetool.png" alt="Line" style="width:60px; height:55px"></button>
+            </td>
+                <td>
+                    <button id="reset" value="rectangle" onclick="change(this.value)"><img src="/static/assets/squaretool.png" alt="Rectangle" style="width:60px; height:55px"></button>
+                        <button id="reset" value="circle" onclick="change(this.value)"><img src="/static/assets/circletool.png" alt="Circle" style="width:60px; height:55px"></button>
+      </td><td>
+      <button id="reset" value="eraser" onclick="change(this.value)"><img src="/static/assets/erasertool.png" alt="Eraser" style="width:60px; height:55px"></button>
+    </td></table>
+    <div style= 'float:left; margin: 10px 20px;'>
+        <canvas id="paint" width="450" height="630" ></canvas>
+        </div>
+        <div id="panel">
+            <div id="color-picker">
+                <canvas id="color-block" height="150" width="150"></canvas>
+                <canvas id="color-strip" height="150" width="30"></canvas>
+            </div>
+        </div>
     <div position = 'relative'>
         <fieldset id="colorset" width="450" height="630">
         <table width=50% height=100% >
-            <label>Tool: <select id="toolselect" onchange="change(this.value)" style="height: 30px; width: 90px;">
-                <option value="pencil">Pencil</option>
-                <option value="line">Line</option>
-                <option value="rectangle">Rectangle</option>
-                <option value="circle">Circle</option>
-                <option value="eraser">Eraser</option>
-            </select></label>
             <label> Options: <select id="optionsselect" onchange="change(this.value)" style="height: 30px; width: 90px;">
                 <option value="fill">Fill</option>
                 <option value="outline">Outline</option>
@@ -37,85 +85,19 @@
 
     <td>
         <label> Line Width: </label>
-            <button id="pixel_plus" type="button" onclick="add_pixel()" style="width: 25px;">+</button>
-            <button id="pixel_minus" type="button" onclick="reduce_pixel()" style="width: 25px;">-</button>
-    </td>
+            <button id="reset" type="button" onclick="add_pixel()" style="width: 50px; font-size:2em;">+</button>
+            <button id="reset" type="button" onclick="reduce_pixel()" style="width: 50px; font-size:2em;">-</button>
+          </td>
     </fieldset>
     </div>
 
-    <div style = 'float:right'>
-    <table align="center">
-        <td><button style="background-color: #000000; height: 20px; width: 20px;" onclick="color('#000000')"></button>
-        <td><button style="background-color: #B0171F; height: 20px; width: 20px;" onclick="color('#B0171F')"></button>
-        <td><button style="background-color: #DA70D6; height: 20px; width: 20px;" onclick="color('#DA70D6')"></button>
-        <td><button style="background-color: #8A2BE2; height: 20px; width: 20px;" onclick="color('#8A2BE2')"></button>
-        <td><button style="background-color: #0000FF; height: 20px; width: 20px;" onclick="color('#0000FF')"></button>
-        <td><button style="background-color: #4876FF; height: 20px; width: 20px;" onclick="color('#4876FF')"></button>
-        <td><button style="background-color: #CAE1FF; height: 20px; width: 20px;" onclick="color('#CAE1FF')"></button>
-        <td><button style="background-color: #6E7B8B; height: 20px; width: 20px;" onclick="color('#6E7B8B')"></button>
-        <tr><td><button style="background-color: #00C78C; height: 20px; width: 20px;" onclick="color('#00C78C')"></button>
-        <td><button style="background-color: #00FA9A; height: 20px; width: 20px;" onclick="color('#00FA9A')"></button>
-        <td><button style="background-color: #00FF7F; height: 20px; width: 20px;" onclick="color('#00FF7F')"></button>
-        <td><button style="background-color: #00C957; height: 20px; width: 20px;" onclick="color('#00C957')"></button>
-        <td><button style="background-color: #3D9140; height: 20px; width: 20px;" onclick="color('#3D9140')"></button>
-        <td><button style="background-color: #32CD32; height: 20px; width: 20px;" onclick="color('#32CD32')"></button>
-        <td><button style="background-color: #00EE00; height: 20px; width: 20px;" onclick="color('#00EE00')"></button>
-        <td><button style="background-color: #008B00; height: 20px; width: 20px;" onclick="color('#008B00')"></button>
-        <tr><td><button style="background-color: #76EE00; height: 20px; width: 20px;" onclick="color('#76EE00')"></button>
-        <td><button style="background-color: #CAFF70; height: 20px; width: 20px;" onclick="color('#CAFF70')"></button>
-        <td><button style="background-color: #FFFF00; height: 20px; width: 20px;" onclick="color('#FFFF00')"></button>
-        <td><button style="background-color: #CDCD00; height: 20px; width: 20px;" onclick="color('#CDCD00')"></button>
-        <td><button style="background-color: #FFF68F; height: 20px; width: 20px;" onclick="color('#FFF68F')"></button>
-        <td><button style="background-color: #FFFACD; height: 20px; width: 20px;" onclick="color('#FFFACD')"></button>
-        <td><button style="background-color: #FFEC8B; height: 20px; width: 20px;" onclick="color('#FFEC8B')"></button>
-        <td><button style="background-color: #FFD700; height: 20px; width: 20px;" onclick="color('#FFD700')"></button>
-        <tr><td><button style="background-color: #F5DEB3; height: 20px; width: 20px;" onclick="color('#F5DEB3')"></button>
-        <td><button style="background-color: #FFE4B5; height: 20px; width: 20px;" onclick="color('#FFE4B5')"></button>
-        <td><button style="background-color: #EECFA1; height: 20px; width: 20px;" onclick="color('#EECFA1')"></button>
-        <td><button style="background-color: #FF9912; height: 20px; width: 20px;" onclick="color('#FF9912')"></button>
-        <td><button style="background-color: #8E388E; height: 20px; width: 20px;" onclick="color('#8E388E')"></button>
-        <td><button style="background-color: #7171C6; height: 20px; width: 20px;" onclick="color('#7171C6')"></button>
-        <td><button style="background-color: #7D9EC0; height: 20px; width: 20px;" onclick="color('#7D9EC0')"></button>
-        <td><button style="background-color: #388E8E; height: 20px; width: 20px;" onclick="color('#388E8E')"></button>
-        <tr><td><button style="background-color: #71C671; height: 20px; width: 20px;" onclick="color('#71C671')"></button>
-        <td><button style="background-color: #8E8E38; height: 20px; width: 20px;" onclick="color('#8E8E38')"></button>
-        <td><button style="background-color: #C5C1AA; height: 20px; width: 20px;" onclick="color('#C5C1AA')"></button>
-        <td><button style="background-color: #C67171; height: 20px; width: 20px;" onclick="color('#C67171')"></button>
-        <td><button style="background-color: #555555; height: 20px; width: 20px;" onclick="color('#555555')"></button>
-        <td><button style="background-color: #848484; height: 20px; width: 20px;" onclick="color('#848484')"></button>
-        <td><button style="background-color: #F4F4F4; height: 20px; width: 20px;" onclick="color('#F4F4F4')"></button>
-        <td><button style="background-color: #EE0000; height: 20px; width: 20px;" onclick="color('#EE0000')"></button>
-        <tr><td><button style="background-color: #FF4040; height: 20px; width: 20px;" onclick="color('#FF4040')"></button>
-        <td><button style="background-color: #EE6363; height: 20px; width: 20px;" onclick="color('#EE6363')"></button>
-        <td><button style="background-color: #FFC1C1; height: 20px; width: 20px;" onclick="color('#FFC1C1')"></button>
-        <td><button style="background-color: #FF7256; height: 20px; width: 20px;" onclick="color('#FF7256')"></button>
-        <td><button style="background-color: #FF4500; height: 20px; width: 20px;" onclick="color('#FF4500')"></button>
-        <td><button style="background-color: #F4A460; height: 20px; width: 20px;" onclick="color('#F4A460')"></button>
-        <td><button style="background-color: #FF8000; height: 20px; width: 20px;" onclick="color('FF8000')"></button>
-        <td><button style="background-color: #FFD700; height: 20px; width: 20px;" onclick="color('#FFD700')"></button>
-        <tr><td><button style="background-color: #8B864E; height: 20px; width: 20px;" onclick="color('#8B864E')"></button>
-        <td><button style="background-color: #9ACD32; height: 20px; width: 20px;" onclick="color('#9ACD32')"></button>
-        <td><button style="background-color: #66CD00; height: 20px; width: 20px;" onclick="color('#66CD00')"></button>
-        <td><button style="background-color: #BDFCC9; height: 20px; width: 20px;" onclick="color('#BDFCC9')"></button>
-        <td><button style="background-color: #76EEC6; height: 20px; width: 20px;" onclick="color('#76EEC6')"></button>
-        <td><button style="background-color: #40E0D0; height: 20px; width: 20px;" onclick="color('#40E0D0')"></button>
-        <td><button style="background-color: #E0EEEE; height: 20px; width: 20px;" onclick="color('#E0EEEE')"></button>
-        <td><button style="background-color: #98F5FF; height: 20px; width: 20px;" onclick="color('#98F5FF')"></button>
-        <tr><td><button style="background-color: #33A1C9; height: 20px; width: 20px;" onclick="color('#33A1C9')"></button>
-        <td><button style="background-color: #F0F8FF; height: 20px; width: 20px;" onclick="color('#F0F8FF')"></button>
-        <td><button style="background-color: #4682B4; height: 20px; width: 20px;" onclick="color('#4682B4')"></button>
-        <td><button style="background-color: #C6E2FF; height: 20px; width: 20px;" onclick="color('#C6E2FF')"></button>
-        <td><button style="background-color: #9B30FF; height: 20px; width: 20px;" onclick="color('#9B30FF')"></button>
-        <td><button style="background-color: #EE82EE; height: 20px; width: 20px;" onclick="color('#EE82EE')"></button>
-        <td><button style="background-color: #FFC0CB; height: 20px; width: 20px;" onclick="color('#FFC0CB')"></button>
-        <td><button style="background-color: #7CFC00; height: 20px; width: 20px;" onclick="color('#7CFC00')"></button>
-    </table>
-    </div>
+   
+    
 
     <div sytle= 'float:right'>
     <fieldset>
             </table>
-        <label>Style: <select id="fontselect" onchange="font(this.value)" style="height: 30px; width: 90px;">
+        <label>Style: <select id="fontselect" onchange="font(this.value)" style="height: 30px; width: 100px;">
             <option value="20px Arial">Small Arial</option>
             <option value="30px Arial">Medium Arial</option>
             <option value="40px Arial">Large Arial</option>
@@ -136,13 +118,17 @@
 
     <div sytle= 'float:right'>
     <fieldset>
-            <label>Upload Image: </label><input id="fname" type="text"><button id="upload" onclick="upload()">Upload</button>
+        <form id="upload-img-form" enctype="multipart/form-data">
+            <label>Upload Image: </label>
+            <input type="file" id="monster-image" name="monster-image" accept="image/png, image/jpeg">
+            <button type="button" id="reset" onclick="uploadImage_ajax()">Upload</button>
+        </form>
     </fieldset>
     </div>
 
     <div sytle= 'float:right'>
     <fieldset>
-            <label>Monster Name: </label><input id="fname" type="text"><button id="save" onclick="save()">Save</button>
+            <label>Monster Name: </label><input id="fname" type="text"><button id="reset" onclick="save()">Save</button>
             <button id="reset" onclick="reset()">Reset</button>
     </fieldset>
     </div>
@@ -154,6 +140,7 @@
 <script src=" {{ url_for('static', filename='script.js') }}"></script>
 
 <script>
+
     var canvas = document.getElementById("paint");
     var ctx = canvas.getContext("2d");
     var width = canvas.width;
@@ -163,6 +150,21 @@
     ctx.lineWidth = 2;
     var fill_value = true;
     var stroke_value = false;
+    var colorBlock = document.getElementById('color-block');
+    var ctx1 = colorBlock.getContext('2d');
+    var width1 = colorBlock.width;
+    var height1 = colorBlock.height;
+    var colorStrip = document.getElementById('color-strip');
+    var ctx2 = colorStrip.getContext('2d');
+    var width2 = colorStrip.width;
+    var height2 = colorStrip.height;
+
+            var colorLabel = document.getElementById('color-label');
+
+            var x = 0;
+            var y = 0;
+     var drag = false;
+     var rgbaColor = 'rgba(255,0,0,1)';
 var canvas_data = {"pencil": [], "line": [], "rectangle": [], "circle": [], "eraser": [], "text": [], "upload": []}
 
     var vert =  (2/100)*630;
@@ -203,6 +205,75 @@ function color(color_value){
         ctx.strokeStyle = color_value;
     ctx.fillStyle = color_value;
 }
+ctx1.rect(0, 0, width1, height1);
+            fillGradient();
+
+            ctx2.rect(0, 0, width2, height2);
+            var grd1 = ctx2.createLinearGradient(0, 0, 0, height1);
+            grd1.addColorStop(0, 'rgba(255, 0, 0, 1)');
+            grd1.addColorStop(0.17, 'rgba(255, 255, 0, 1)');
+            grd1.addColorStop(0.34, 'rgba(0, 255, 0, 1)');
+            grd1.addColorStop(0.51, 'rgba(0, 255, 255, 1)');
+            grd1.addColorStop(0.68, 'rgba(0, 0, 255, 1)');
+            grd1.addColorStop(0.85, 'rgba(255, 0, 255, 1)');
+            grd1.addColorStop(1, 'rgba(255, 0, 0, 1)');
+            ctx2.fillStyle = grd1;
+            ctx2.fill();
+
+            function click(e) {
+                x = e.offsetX;
+                y = e.offsetY;
+                var imageData = ctx2.getImageData(x, y, 1, 1).data;
+                rgbaColor = 'rgba(' + imageData[0] + ',' + imageData[1] + ',' + imageData[2] + ',1)';
+                fillGradient();
+            }
+
+            function fillGradient() {
+                ctx1.fillStyle = rgbaColor;
+                ctx1.fillRect(0, 0, width1, height1);
+
+                var grdWhite = ctx2.createLinearGradient(0, 0, width1, 0);
+                grdWhite.addColorStop(0, 'rgba(255,255,255,1)');
+                grdWhite.addColorStop(1, 'rgba(255,255,255,0)');
+                ctx1.fillStyle = grdWhite;
+                ctx1.fillRect(0, 0, width1, height1);
+
+                var grdBlack = ctx2.createLinearGradient(0, 0, 0, height1);
+                grdBlack.addColorStop(0, 'rgba(0,0,0,0)');
+                grdBlack.addColorStop(1, 'rgba(0,0,0,1)');
+                ctx1.fillStyle = grdBlack;
+                ctx1.fillRect(0, 0, width1, height1);
+            }
+
+            function mousedown(e) {
+                drag = true;
+                changeColor(e);
+            }
+
+            function mousemove(e) {
+                if (drag) {
+                    changeColor(e);
+                }
+            }
+
+            function mouseup(e) {
+                drag = false;
+            }
+
+            function changeColor(e) {
+                x = e.offsetX;
+                y = e.offsetY;
+                var imageData = ctx1.getImageData(x, y, 1, 1).data;
+                rgbaColor = 'rgba(' + imageData[0] + ',' + imageData[1] + ',' + imageData[2] + ',1)';
+                colorLabel.style.backgroundColor = rgbaColor;
+                color(rgbaColor);
+            }
+
+            colorStrip.addEventListener("click", click, false);
+
+            colorBlock.addEventListener("mousedown", mousedown, false);
+            colorBlock.addEventListener("mouseup", mouseup, false);
+            colorBlock.addEventListener("mousemove", mousemove, false);
 
 function font(font_value){
         ctx.font = font_value;
@@ -436,34 +507,59 @@ function text(words){
 }
 
 function upload() {
-var uploader = document.getElementById('uploader');
-/**
-   * UPLOAD SCRIPT
-   * This script uses the UploadAtClick library to upload files on a webserver folder
-   * using a PHP script ("upload/upload.php")
-   * Project homepage: http://code.google.com/p/upload-at-click/
-   */
-    upclick(
-{
-        element: uploader,
-    action: 'upload/upload.php', //need to fix
-    onstart:
-function(filename)
-{
-        //alert('Start upload: '+filename);
-    },
-        oncomplete:
-    function(response_data)
-{
-// Check upload Status
-if (response_data != "FAIL") {
-        // Draw the picture into Canvas
-        // "response_data" contains the image file name returned from the PHP script
-        displayPicture("upload/" + response_data);
-    }
-  }
-    });
+    uploadImage_ajax();
+    /**
+    * UPLOAD SCRIPT
+    * This script uses the UploadAtClick library to upload files on a webserver folder
+    * using a PHP script ("upload/upload.php")
+    * Project homepage: http://code.google.com/p/upload-at-click/
+    */
+    // upclick(
+    // {
+    //         element: uploader,
+    //     action: 'upload/upload.php', //need to fix
+    //     onstart:
+    // function(filename)
+    // {
+    //         //alert('Start upload: '+filename);
+    //     },
+    //         oncomplete:
+    //     function(response_data)
+    // {
+    // // Check upload Status
+    // if (response_data != "FAIL") {
+    //         // Draw the picture into Canvas
+    //         // "response_data" contains the image file name returned from the PHP script
+    //         displayPicture("upload/" + response_data);
+    //     }
+    // }
+    //     });
 
+
+
+}
+
+function uploadImage_ajax() {
+    var uploader = document.getElementById('uploader');
+    var fd = new FormData($("#upload-img-form")[0]);
+
+    $.ajax({
+        url: '/editor/upload-img',
+        data: fd,
+        cache:false,
+        processData:false,
+        contentType:false,
+        type: 'POST',
+        success: function(data){
+            console.log(data);
+            if ("error" in data) {
+
+            }
+            else if ("success" in data) {
+                
+            }
+        }
+    });
 }
 
 function save(){

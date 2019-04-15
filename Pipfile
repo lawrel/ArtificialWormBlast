@@ -5,11 +5,13 @@ verify_ssl = true
 
 [dev-packages]
 pylint = "*"
+pep8 = "*"
 
 [packages]
 flask = "*"
 mysql-connector-python = "*"
 flask_socketio = "*"
+validate-email = "*"
 
 [requires]
 python_version = "3.7"
