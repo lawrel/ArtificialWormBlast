@@ -1,0 +1,111 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+{% extends "loggedinheader.html" %}
+{% block content %}
+<body onload="init()">
+    <div class="container">
+        <h1 id="welcome" aria-readonly="true">Welcome to your Account, [Name]</h1>
+        <hr />
+        <h2 id="nameheading" aria-readonly="true"> Your Username:</h2>
+        <input type = "text" id="name" readonly="readonly" value = [name] >
+        <hr />
+        <h2 id="emailheading" aria-readonly="true"> Your Email:</h2>
+        <input type = "text" id="email" readonly="readonly" value = [email] >
+        <hr />
+        <h2 id="passwordheading" aria-readonly="true"> Your Password: </h2>
+        <input type = "text" id = "password" readonly="readonly" value = "You should know." >
+        <hr />
+        <h2 id="friends" aria-readonly="true"> Your Friends: You have no friends (and neither do we).</h2>
+    </div>
+</body>
+<div style = "text-align: center;">
+    <button type="button"  id = "edit" class="btn btn-primary" onclick="show_edits()">Edit</button>
+    <button type="button" id = "save" class="btn btn-primary" onclick="save_edits()" hidden="hidden">Save</button>
+</div>
+<hr />
+</html>
+
+<div class="modal fade" id="badCreds" role="dialog">
+        <div class="modal-dialog modal-sm vertical-align-center">
+             <div class="card card-signin my-5">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Incorrect Credentials</h5>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    </div>
+             </div>
+          </div>
+        </div>
+    </div>
+
+<script>
+    var retrieveInfo = {};
+    var currentName;
+    var currentEmail;
+
+    function init () {
+        document.addEventListener("logged-in", function () {
+            retrieveInfo = retrieveSessionData();
+            $("#welcome").html("Welcome to your Account, " + retrieveInfo["username"]);
+            document.getElementById("name").value = (retrieveInfo["username"]);
+            document.getElementById("email").value = (retrieveInfo["email"]);
+            currentName = retrieveInfo["username"];
+            currentEmail = retrieveInfo["email"];
+        });
+    } 
+
+    function show_edits() {
+        document.getElementById("name").readOnly = false;
+        document.getElementById("email").readOnly = false;
+        document.getElementById("password").readOnly = false;
+        document.getElementById("save").hidden = false;
+        document.getElementById("edit").hidden = true;
+    }
+
+    function save_edits() {
+        document.getElementById("name").readOnly = true;
+        document.getElementById("email").readOnly = true;
+        document.getElementById("password").readOnly = true;
+        document.getElementById("save").hidden = true;
+        document.getElementById("edit").hidden = false;
+
+        var fd = new FormData();
+        fd.append( 'input-username', $("#name").val())
+        fd.append( 'input-email', $("#email").val());
+        fd.append( 'input-password', $("#password").val());
+        fd.append( 'curr-username', currentName);
+        fd.append( 'curr-email', currentEmail);
+
+        $.ajax({
+            url: '/changesettings',
+            data: fd,
+            processData: false,
+            contentType: false,
+            type: 'POST',
+            success: function(data){
+                console.log(data);
+                if ("error" in data) {
+                    $('#badCreds').modal('show');
+                }
+                else {
+                    $("#welcome").html("Welcome to your Account, " + $("#name").val());
+                    document.getElementById("name").value =  $("#name").val();
+                    document.getElementById("email").value = $("#email").val();
+                    document.getElementById("password").value = "You should know.";
+                    currentName = $("#name").val();
+                    currentEmail = $("#email").val();
+                    window.location.href=window.location.href;
+                }
+            }
+        });
+
+
+
+    }
+</script>
+
+{% endblock %}

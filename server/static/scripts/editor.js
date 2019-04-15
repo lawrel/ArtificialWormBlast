@@ -17,22 +17,35 @@ function getParams() {
     return data;
 }
 
-var card_id = 0;
+var card_id = -1;
 var token = '';
 var img = new Image(450, 630);
 var deck = [];
+var card_data;
 getDeck_ajax();
 
 function init() {
     params = getParams();
     if ("card_id" in params && params.card_id != '') {
         card_id = Number(params.card_id);
-        if (deck.includes(card_id)) {
+        var incl_id = false;
+        for (var i = 0; i < deck.length; i++){
+            var c_id = deck[i]["id"];
+            if (c_id == card_id) {
+                incl_id = true;
+                card_data = deck[i];
+                break;
+            }
+        }
+
+        if (incl_id) {
             console.log("Editing card: " + String(card_id));
             img.src = 'http://localhost:8000/cards/preview/'+String(card_id);
+            $("#monster-name").val(card_data["name"]);
             
         } else {
             console.error("You don't own this card! " + String(card_id));
+            card_id = -1;
         }
     }
 }
@@ -423,7 +436,7 @@ function newCard_ajax() {
     var fd = new FormData();
     fd.append("img-data", canvas.toDataURL("image/png;base64"));
     fd.append("token", retrieveLoginToken());
-    fd.append("card-name", monsterName);
+    fd.append("card-name", $("#monster-name").val());
 
     $.ajax({
         url: '/cards/new-card',
@@ -451,6 +464,7 @@ function editCard_ajax() {
     fd.append("img-data", canvas.toDataURL("image/png;base64"));
     fd.append("token", retrieveLoginToken());
     fd.append("card-id", card_id);
+    fd.append("card-name", $("#monster-name").val());
 
     $.ajax({
         url: '/cards/edit-card',
@@ -474,12 +488,11 @@ function editCard_ajax() {
 
 
 function save() {
-    var filename = document.getElementById("fname").value;
-    var data = JSON.stringify(canvas_data);
-    var image = canvas.toDataURL();
-
-    $.post("/", { save_fname: filename, save_cdata: data, save_image: image });
-    alert(filename + " saved");
+    if (card_id == -1) {
+        newCard_ajax();
+    } else {
+        editCard_ajax();
+    }
 
     newCard_ajax()
     //redirect to page that was on

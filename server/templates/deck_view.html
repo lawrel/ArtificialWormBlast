@@ -1,4 +1,5 @@
-<div class="container" id="cards"> </div>
+<div class="modText" id="monsterChoicesText"> </div>
+<div class="" id="cards"> </div>
 
 <script>
     var deck;
@@ -31,21 +32,41 @@
 
     function buildDeck(deck){
         for(var i=0; i<deck.length; i++){
-            var ref = `<button onclick="handleMonsterClick('${deck[i]}')"><img src="/cards/preview/${deck[i]}" width="225px" height="315px"><br>Monster ${deck[i]}</button>`
+            monsterId = deck[i].id;
+            monsterName = deck[i].name;
+            
+            var ref = `<button onclick="handleMonsterClick('${monsterId}')"><img src="/cards/preview/${monsterId}" width="225px" height="315px"><br>${monsterName}</button>`
             $("#cards").prepend(ref)
         }
     }
 
     function handleMonsterClick(monsterId) {
         console.log("clicked");
+        
         if(selectedMonsters.includes(monsterId)){
             selectedMonsters = selectedMonsters.filter(function(value, index, arr){ return value != monsterId; });
-        } else {
-            selectedMonsters.push(monsterId);
+            document.getElementById("monsterChoicesText").innerHTML = "You have chosen: " + selectedMonsters.toString() + "\n";
+            document.getElementById("saveButton").disabled = true;
+        } else 
+        {
+            if (selectedMonsters.length >= 5){
+                 document.getElementById("monsterChoicesText").innerHTML = "You have chosen: " + selectedMonsters.toString() + "<br> Your draft is complete, please press 'Save Team' to prepare your monsters for battle";
+                 document.getElementById("saveButton").disabled = false;
+             }
+             else{
+                selectedMonsters.push(monsterId);
+                if (selectedMonsters.length >= 5){
+                     document.getElementById("monsterChoicesText").innerHTML = "You have chosen: " + selectedMonsters.toString() + "<br> Your draft is complete, please press 'Save Team' to prepare your monsters for battle";
+                     document.getElementById("saveButton").disabled = false;
+                 }
+                 else {
+                    document.getElementById("monsterChoicesText").innerHTML = "You have chosen: " + selectedMonsters.toString() + "\n";
+                }
+             }
+            
         }
         console.log(selectedMonsters);
     }
-
 
 
 </script>
