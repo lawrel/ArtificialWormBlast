@@ -126,6 +126,7 @@ function enterGame() {
     }
 
   function sendHand() {
+    console.log(selectedMonsters)
     sendHand_io(selectedMonsters, getPlayerData(), gameData["gameid"]);
   }
 

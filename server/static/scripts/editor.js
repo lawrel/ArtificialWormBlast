@@ -449,6 +449,10 @@ function editCard_ajax() {
     });
 }
 
+function deleteCard_ajax(){
+
+}
+
 
 
 function save() {
@@ -460,6 +464,12 @@ function save() {
     //redirect to page that was on
 }
 
+function deleteCard()
+{
+    if (card_id != -1){
+        deleteCard_ajax()
+    }
+}
 
 function reload() {
 }
