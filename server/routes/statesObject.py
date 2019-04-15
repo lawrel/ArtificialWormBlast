@@ -4,6 +4,8 @@ import uuid
 from flask import render_template, request, jsonify
 from flask_socketio import join_room, leave_room, send, emit
 from server import app, socketio
+from server.routes.playerObject import Player
+
 
 class GameState:
     def __init__(self):

@@ -4,6 +4,13 @@ import uuid
 from flask import render_template, request, jsonify
 from flask_socketio import join_room, leave_room, send, emit
 from server import app, socketio
+from server.routes.gameObject import Game
+from server.routes.playerObject import Player
+from server.routes.statesObject import GameState, WaitState, SelectHandState, NewRoundState, AttackState, DefendState, VoteState, WinnerState, EndState
+
+
+gameLst = {}
+
 
 @socketio.on('player-data')
 def player_data(msg):
@@ -23,18 +30,45 @@ def player_hand(msg):
 
     gameLst[gameid].set_player_hand(userid, hand)
 
+@socketio.on('check-games')
+def checkGames(data):
+    username = data['player']['username']
+    email = data['player']['email']
+    userid = data['player']['userid']
+    player = Player(userid, username, email)
+
+    for gameid, game in gameLst.items():
+        if (game.gameStatus()):
+            print("+++++++++++++++++++++++++++++++++++++++++++++++++++++ " + game.gameid)
+            #gameLst[game.gameid] = game
+            data['gameid'] = gameid
+            joinGame(data)
+            send(gameid, room=gameid)
+            return game.gameid
+
+    game = Game(True, 5, 0)
+    print("--------------------------------------------------------- " + game.gameid)
+    gameLst[game.gameid] = game
+    data['gameid'] = game.gameid
+    joinGame(data)
+    send(game.gameid, room=game.gameid)
+    return game.gameid
+
 @socketio.on('create-game')
 def createGame(data):
     username = data['player']['username']
     email = data['player']['email']
     userid = data['player']['userid']
     player = Player(userid, username, email)
+    cards = data['cards']
+    maxplayers = data['players']
 
-    game = Game()
+    game = Game(False, cards, maxplayers)
     gameLst[game.gameid] = game
     data['gameid'] = game.gameid
     joinGame(data)
     send(game.gameid, room=game.gameid)
+    return game.gameid
 
 @socketio.on('join-game')
 def joinGame(data):

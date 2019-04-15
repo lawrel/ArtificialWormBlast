@@ -4,7 +4,7 @@ from server import app, socketio
 
 
 @app.route('/game/')
-def sess():
+def sessions():
     return render_template('game.html')
 
 
@@ -15,7 +15,7 @@ def session1():
 
 @app.route('/publicgame/')
 def session2():
-    return render_template('public_game.html')
+    return render_template('waiting_game.html')
 
 
 @app.route('/sitedeck/')
@@ -25,9 +25,9 @@ def monsters():
 
 @app.route('/sendinvites')
 def invites():
-    newlink = str(uuid.uuid4())
-    for i in range(1,10):
-        email = request.form["send-email"+ i]
+    newlink = str(uuid.uuid4()) # wrong
+    for i in range(1, 10):
+        email = request.form["send-email"+ str(i)]
         if (email is not None):
             domain = request.url_root
             link = urllib.parse.urljoin(domain, (url_for("changepassword", newlink)))
@@ -37,6 +37,9 @@ def invites():
     else:
         upate_URL(newlink) # add url so can get for host
         return jsonify({"success":""})
+
+
+
 
 
 

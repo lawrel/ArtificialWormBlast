@@ -16,24 +16,7 @@ from server.dao.login import (Error, BadEmailError, BadLoginError,
                               BadTokenError, EmailInUseError,
                               ShortPasswordError, UsernameInUseError)
 
-# @app.route("/api/users")
-# def users_list():
-#     db_context = connect_db()
 
-#     if (db_context == None):
-#         return "Can't connect to database. See logs..."
-
-#     cursor = db_context.cursor(dictionary=True)
-
-#     query = ("select ID, First, MidInit, Last, Email from MonsterCards.Users;");
-
-#     cursor.execute("begin")
-#     cursor.execute(query)
-#     rows = cursor.fetchmany(size=10)
-
-#     cursor.close()
-
-#     return jsonify(rows);
 
 
 @app.route("/logout", methods=['POST'])
@@ -126,7 +109,7 @@ def forgotpassword():
 
 @app.route("/changepassword/<newlink>", methods=['GET'])
 def changepassword(newlink):
-    return render_template("changepassword.html")
+    return render_template("changePassword.html")
 
 
 

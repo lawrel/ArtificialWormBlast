@@ -4,11 +4,15 @@ import uuid
 from flask import render_template, request, jsonify
 from flask_socketio import join_room, leave_room, send, emit
 from server import app, socketio
+from server.routes.playerObject import Player
+from server.routes.statesObject import GameState, WaitState, SelectHandState, NewRoundState, AttackState, DefendState, VoteState, WinnerState, EndState
+
 
 class Game:
-    def __init__(self):
+    def __init__(self, public, maxplayers, endrule):
         self.gameid = str(uuid.uuid4())
         self.public = True
+        self.maxplayers = 0
         self.players = {}
         self.state = None
         self.round = 0
@@ -21,6 +25,15 @@ class Game:
         self.endgame = False
         self.endrule = 0
         self.set_state(WaitState(self))
+
+    def gameStatus(self):
+        if (self.public and self.maxplayers < len(self.players)):
+            return True
+        else:
+            return False
+    
+    def getSelf(self):
+        return self
 
     def new_round(self):
         self.attacker = None
@@ -42,9 +55,9 @@ class Game:
         self.update_clients()
 
     def check_end(self, winner, loser):
-        if (self.endrule == 0 and loser.hand.length == 0):
+        if (self.endrule == 0 and len(loser.hand) == 0):
             self.endgame = True
-        elif (self.endrule > 0 and winner.hand.length >= self.endrule):
+        elif (self.endrule > 0 and len(winner.hand) >= self.endrule):
             self.endgame = True
 
     def addPlayer(self, player):
@@ -77,6 +90,7 @@ class Game:
         gameData = {
                 "gameid" : self.gameid,
                 "public" : self.public,
+                "maxplayers":self.maxplayers,
                 "players" : playersData,
                 "state" : self.state.__str__(),
                 "round" : self.round,
