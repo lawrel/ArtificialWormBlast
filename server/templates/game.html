@@ -138,7 +138,7 @@
     $( 'input.message' ).val("");
     console.log(user_name);
     socket.emit( 'my event', {
-      user_name : getPlayerData()["email"],
+      user_name : getPlayerData()["username"],
       message : user_input
     });
   }
@@ -269,12 +269,16 @@
       waitString = "<p>Waiting for players to join...<br> Currently, the following players are connected:</p>";
       players = gameData.players;
       for (var i = 0; i < players.length; i++) {
-          waitString = waitString + players[i].email + "<br>";
+          waitString = waitString + players[i].username + "<br>";
       }
       document.getElementById("waitingTag").innerHTML = waitString;
   }
 </script>
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
 <script src="/static/scripts/game_logic.js"></script>   
 <script>
@@ -373,17 +377,17 @@ function listPlayers() {
         {
             player_name = allPlayers[key]["email"];
             var uid = allPlayers[key]["userid"]
-            
+            var playName = allPlayers[key]["username"]
             playerString = playerString + 
          `<div class="card" style="display: inline-block; max-width:200px; color:#255760";> 
       <div class="card-body"> 
-      <button onclick="handlePlayerClick('${uid}')">${player_name}</button> </div> </div>`;
+      <button onclick="handlePlayerClick('${playName}')">${playName}</button> </div> </div>`;
         }
         document.getElementById("opponents").innerHTML = playerString ;
     }
 
     function handlePlayerClick(nameString) {
-        if ((gameData.state == "AttackState") && getPlayerData()["userid"] == gameData["attacker"])
+        if ((gameData.state == "AttackState") && getPlayerData()["username"] == gameData["attacker"])
         {
             // defender = nameString;
             // gameData["defender"]= nameString;
@@ -403,13 +407,13 @@ function listPlayers() {
       defender = null;
       for (var key in allPlayers)
         {
-            if (allPlayers[key]["userid"] == gameData.winner) {
+            if (allPlayers[key]["username"] == gameData.winner) {
               console.log("FOUND WINNER")
-              if (allPlayers[key]["userid"] == gameData.attacker ) {
+              if (allPlayers[key]["username"] == gameData.attacker ) {
                 console.log("Attacker won")
                 // looking for defender as loser
                for (key2 in allPlayers2) {
-                  if (allPlayers2[key2]["userid"] == gameData.defender) {
+                  if (allPlayers2[key2]["username"] == gameData.defender) {
                     console.log("defender lost")
                     // take card from loser
                     allPlayers2[key2]["hand"].pop(gameData.dfs_card); //wrong syntax??
@@ -420,7 +424,7 @@ function listPlayers() {
               } else {
                 //looking for defender as winner
                 for (key2 in allPlayers2) {
-                  if (allPlayers2[key2]["userid"] == gameData.defender) {
+                  if (allPlayers2[key2]["username"] == gameData.defender) {
                     console.log("attacker lost")
                     // take card from loser
                     allPlayers2[key2]["hand"].pop(gameData.atk_card); //wrong syntax??
@@ -454,7 +458,7 @@ function listPlayers() {
 
 
     function handleHandClick(nameString) {
-        if ((gameData.state == "AttackState") && getPlayerData()["userid"] == gameData["attacker"])
+        if ((gameData.state == "AttackState") && getPlayerData()["username"] == gameData["attacker"])
         {
             console.log("selected")
             attackingCard = nameString;
@@ -464,7 +468,7 @@ function listPlayers() {
             document.getElementById("lc1").innerHTML = `<button onclick="handleVote('${attackingCard}')"><img src="/static/images/${pictureName}"></button>`;
         }
 
-        else if ((gameData.state == "DefendState") && getPlayerData()["userid"] == gameData["defender"])
+        else if ((gameData.state == "DefendState") && getPlayerData()["username"] == gameData["defender"])
         {
             console.log("DEFENSE")
             defendingCard = nameString;
@@ -475,6 +479,7 @@ function listPlayers() {
         }
     }
     function handleVote(nameString){
+<<<<<<< Updated upstream
       submitVote_io(gameData["gameid"], getPlayerData()["userid"], nameString)
       // allPlayers = gameData["players"];
       // player = null;
@@ -521,6 +526,9 @@ function listPlayers() {
       
 
 
+=======
+      submitVote_io(gameData["gameid"], getPlayerData()["username"], nameString)
+>>>>>>> Stashed changes
     }
 
 </script>
