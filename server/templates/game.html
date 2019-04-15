@@ -6,12 +6,12 @@
     <div class="modal fade" id="selectHandModal" tabindex="-1" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" style="overflow-y: initial; max-height: 80%">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modText">
                     <h5 class="modal-title" id="exampleModalLongTitle">Welcome to the Monster Draft!</h5>
                 </div>
                 <div class="modal-body" id="" style="overflow-y: initial; max-height: 80%">
                     </div>
-                    <div class=  "" id="jake">
+                    <div class=  "modText" id="jake">
                         <p> Select five monsters that you want to draft onto your team before the battle begins.</p>
                         
                     </div>
@@ -309,29 +309,6 @@ function enterGame() {
       document.getElementById("lc2").innerHTML = gameData.defender;
     }
 
-    function handleMonsterClick(nameString) {
-        var index = monsterChoices.indexOf(nameString);
-        if (index > -1) {
-            monsterChoices.splice(index, 1);
-            document.getElementById("kev").innerHTML = "You have chosen: " + monsterChoices.toString() + "\n";
-            document.getElementById("saveButton").disabled = true;
-        }
-        else{
-            if (monsterChoices.length >= 5){
-                document.getElementById("kev").innerHTML = "You have chosen: " + monsterChoices.toString() + "<br> Your draft is complete, please press 'SAVE TEAM' to prepare your monsters for battle";
-            }
-            else {
-                monsterChoices.push(nameString);
-                if (monsterChoices.length >= 5) {
-                    document.getElementById("kev").innerHTML = "You have chosen: " + monsterChoices.toString() + "<br> Your draft is complete, please press 'SAVE TEAM' to prepare your monsters for battle";
-                    document.getElementById("saveButton").disabled = false;
-                }
-                else {
-                    document.getElementById("kev").innerHTML = "You have chosen: " + monsterChoices.toString() + "\n";
-                }
-            }
-        }
-    }
     function createMonsters()
     {
         numCards = names.length;

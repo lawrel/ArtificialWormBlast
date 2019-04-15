@@ -18,7 +18,7 @@ $( document ).ready(function() {
     connectGameSocket();
 
     // Check if the player is logged in
-    handleLogin();
+    
     handleJoinGame();
     
 });

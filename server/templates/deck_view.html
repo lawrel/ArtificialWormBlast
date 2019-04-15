@@ -1,3 +1,4 @@
+<div class="modText" id="monsterChoicesText"> </div>
 <div class="" id="cards"> </div>
 
 <script>
@@ -40,12 +41,28 @@
         console.log("clicked");
         if(selectedMonsters.includes(monsterId)){
             selectedMonsters = selectedMonsters.filter(function(value, index, arr){ return value != monsterId; });
-        } else {
-            selectedMonsters.push(monsterId);
+            document.getElementById("monsterChoicesText").innerHTML = "You have chosen: " + selectedMonsters.toString() + "\n";
+            document.getElementById("saveButton").disabled = true;
+        } else 
+        {
+            if (selectedMonsters.length >= 5){
+                 document.getElementById("monsterChoicesText").innerHTML = "You have chosen: " + selectedMonsters.toString() + "<br> Your draft is complete, please press 'Save Team' to prepare your monsters for battle";
+                 document.getElementById("saveButton").disabled = false;
+             }
+             else{
+                selectedMonsters.push(monsterId);
+                if (selectedMonsters.length >= 5){
+                     document.getElementById("monsterChoicesText").innerHTML = "You have chosen: " + selectedMonsters.toString() + "<br> Your draft is complete, please press 'Save Team' to prepare your monsters for battle";
+                     document.getElementById("saveButton").disabled = false;
+                 }
+                 else {
+                    document.getElementById("monsterChoicesText").innerHTML = "You have chosen: " + selectedMonsters.toString() + "\n";
+                }
+             }
+            
         }
         console.log(selectedMonsters);
     }
-
 
 
 </script>
