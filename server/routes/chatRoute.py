@@ -4,11 +4,11 @@ from server import app, socketio
 
 
 @app.route('/game/')
-def sessions():
+def gamePage():
     return render_template('game.html')
 
 @app.route('/privategame/')
-def session():
+def privateGame():
     return render_template('private_game.html')
 
 def messageReceived(methods=['GET', 'POST']):
