@@ -11,6 +11,8 @@ var defendVotes= 0;
 var stateUpdateEvent = new Event('game-update');
 var playerDataEvent = new Event('player-data');
 
+
+
 $( document ).ready(function() {
     // Connect to game server over socketio
     connectGameSocket();
@@ -121,6 +123,7 @@ function joinGame_res(msg) {
 }
 
 function checkGames_io() {
+    console.log("ENTERED")
     socket.emit('check-games', {player: getPlayerData()});
 }
 
@@ -129,7 +132,7 @@ function checkGames_res() {
 }
 
 function createGame_io(towin, maxplayers) {
-    socket.emit('create-game', {player: getPlayerData(), cards: towin, players: maxplayers});
+    return socket.emit('create-game', {player: getPlayerData(), cards: towin, players: maxplayers});
 }
 
 function createGame_res() {

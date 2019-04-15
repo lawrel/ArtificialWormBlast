@@ -11,8 +11,8 @@
                             <div class="form-group">
 
                                     <div class="form-group">
-                                            <label for="input-victory">Cards to Win</label>
-                                            <select>
+                                            <label for="input-victory" value = "0">Cards to Win</label>
+                                            <select  id="input-victory" value = "0">
                                                     <option value = "0"> Someone Runs Out </option>
                                                     <option value = "3"> Three </option>
                                                     <option value = "4"> Four </option>
@@ -26,8 +26,8 @@
                                         </div>
 
 
-                                    <label for="input-players">Number of Players</label>
-                                    <select>
+                                    <label for="input-players" value = "5">Number of Players</label>
+                                    <select id="input-players" value = "5">
                                         <option value = "3"> Three </option>
                                         <option value = "4"> Four </option>
                                         <option value = "5"> Five </option>
@@ -63,6 +63,7 @@
     </div>
 </body>
 
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
 <script src="/static/scripts/game_logic.js"></script>   
 <script>
     function validateForm() {
@@ -74,14 +75,18 @@
 
         // Get Settings
         var fd = new FormData();
-        fd.append( 'input-username', $("#input-victory").val());
-        fd.append( 'input-email1', $("#input-players").val());
+
+        fd.append( 'input-victory', $("#input-victory :selected").val());
+        fd.append( 'input-players', $("#input-players :selected").val());
 
         // Create Game
-        var gameid = createGame_io($("#input-victory").val(), $("#input-players").val());
-        fd.append( 'game-id', gameid);
+        var gameid = createGame_io($("#input-victory :selected").val(), $("#input-players :selected").val());
+        fd.append( 'game-id', "/game/?game_id="+gameid.id);
+
+        console.log("/game/?game_id="+gameid.id)
 
         // Get Friends Emails
+        fd.append( 'send-email1', $("#send-email1").val());
         fd.append( 'send-email2', $("#send-email2").val());
         fd.append( 'send-email3', $("#send-email3").val());
         fd.append( 'send-email4', $("#send-email4").val());
@@ -91,6 +96,8 @@
         fd.append( 'send-email8', $("#send-email8").val());
         fd.append( 'send-email9', $("#send-email9").val());
 
+        console.log("FUCK")
+
         // Send invitations
         $.ajax({
             url: '/sendinvites',
@@ -99,10 +106,11 @@
             contentType: false,
             type: 'POST',
             success: function(data){
+                console.log("FUCK2")
                 console.log(data);
                 
                 // Go to the game
-                window.location.href = "/game<game-id>";
+                window.location.href = "/game/?game_id="+gameid.id;
             }
         });
 

@@ -27,7 +27,7 @@ class Game:
         self.set_state(WaitState(self))
 
     def gameStatus(self):
-        if (self.public and self.maxplayers < len(self.players)):
+        if (self.public and self.maxplayers < len(self.players) and WaitState != self.state.__str__()):
             return True
         else:
             return False
