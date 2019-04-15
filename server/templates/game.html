@@ -8,7 +8,7 @@
         DRAFT MY MONSTERS.
     </button>
 
-    <!-- Modal -->
+    <!-- Modal For Selecting the Hand from Deck -->
     <div class="modal fade" id="selectHandModal" tabindex="-1" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" style="overflow-y: initial; max-height: 80%">
             <div class="modal-content">
@@ -31,12 +31,12 @@
         </div>
     </div>
 
-   <div id="game-window">
-  <form>
-    <input type="button" value="New Game" onclick="createGame_io()" />
-    <input type="button" value="Wait" onclick="waitState()" />
-  </form>
-  <div id="game-window">
+    <div id="game-window">
+        <form>
+          <input type="button" value="New Game" onclick="checkGames_io()" />
+          <input type="button" value="Wait" onclick="waitState()" />
+        </form> 
+         <div id="game-window">
     <div class="row">
       <div id="left-col" class="leftcolumn">
         <div class="card-deck">
@@ -128,6 +128,7 @@
   </div>
 
 <script>
+  
   function sendHand() {
     sendHand_io(monsterChoices, getPlayerData(), gameData["gameid"]);
   }
@@ -296,7 +297,11 @@
         e.preventDefault()
         let user_name = $( 'input.username' ).val()
         let user_input = $( 'input.message' ).val()
+<<<<<<< HEAD
         socket.emit('my event', { user_name: user_name, message: user_input }, room = gameData["gameid"])
+=======
+        socket.emit( 'my event', { user_name : user_name, message : user_input}, room = gameData["gameid"] )
+>>>>>>> f10ce33bbaf5170e5558d76b69c9deb46d134437
         $( 'input.message' ).val( '' ).focus()
       } )
     } )
@@ -460,7 +465,6 @@ function listPlayers() {
     function handleHandClick(nameString) {
         if ((gameData.state == "AttackState") && getPlayerData()["username"] == gameData["attacker"])
         {
-            console.log("selected")
             attackingCard = nameString;
             attackCard_io(gameData["gameid"] ,attackingCard)
             index = names.indexOf(attackingCard)
@@ -470,7 +474,6 @@ function listPlayers() {
 
         else if ((gameData.state == "DefendState") && getPlayerData()["username"] == gameData["defender"])
         {
-            console.log("DEFENSE")
             defendingCard = nameString;
             defendCard_io(gameData["gameid"] ,defendingCard)
             index = names.indexOf(defendingCard)
@@ -481,6 +484,7 @@ function listPlayers() {
     function handleVote(nameString){
 <<<<<<< Updated upstream
       submitVote_io(gameData["gameid"], getPlayerData()["userid"], nameString)
+<<<<<<< HEAD
       // allPlayers = gameData["players"];
       // player = null;
       // attacker = null;
@@ -529,6 +533,8 @@ function listPlayers() {
 =======
       submitVote_io(gameData["gameid"], getPlayerData()["username"], nameString)
 >>>>>>> Stashed changes
+=======
+>>>>>>> f10ce33bbaf5170e5558d76b69c9deb46d134437
     }
 
 </script>

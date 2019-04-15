@@ -1,83 +1,102 @@
 import uuid
-from server.dao import cnxpool
+from server.dao import cnxpool, execute, SQLExecutionError
 from mysql.connector import MySQLConnection
 from mysql.connector.pooling import PooledMySQLConnection
 from datetime import date, datetime, timedelta
+from validate_email import validate_email
 
 _min_pwd_len = 7
 
+
 class Error(Exception):
-   """Base class for other exceptions"""
-   pass
+    """Base class for other exceptions"""
+    pass
+
 
 class BadEmailError(Error):
-   """Raised when email is malformed"""
-   pass
+    """Raised when email is malformed"""
+    pass
+
 
 class ShortPasswordError(Error):
     """Raised when password is too short"""
     pass
 
+class UsernameInUseError(Error):
+   """Raised when username is already in use"""
+   pass
+
 class EmailInUseError(Error):
     """Raised when email is already in use"""
     pass
 
+
 class BadLoginError(Error):
-   """Raised when login credentials are bad"""
-   pass
+    """Raised when login credentials are bad"""
+    pass
+
 
 class BadTokenError(Error):
-   """Raised when a login token is bad"""
-   pass
+    """Raised when a login token is bad"""
+    pass
 
 
-def execute(query_stmt, params):
-    """General purpose sql statement executor. Basically a wrapper around
-    a MySQL connector. Grabs a connection from a connection pool,
-    executes the statement, and returns all rows from the statement 
-    (if there are any).
-
-    Note: 
-        This does not autocommit. You must add a 'COMMIT;' line to your
-        statement.
-
-    Args:
-        query_stmt (str): SQL Statement to execute.
-        params (tuple): Parameters to put into the statement using string
-            formatting.
-    
-    Returns:
-        :obj:`list` of :obj:`tuple`: Rows retrieved from statement (if there are any).
-    """
-
-    conn = cnxpool.get_connection()
-    rows = []
-    try:
-        cursor = conn.cursor()
-        cursor.execute(query_stmt, params)
-        rows = cursor.fetchall()
-        conn.commit()
-    except Error:
-        print("Error with sql execution")
-    finally:
-        cursor.close()
-        conn.close()
-        return rows
-
-
-def signup(email, password):
+def signup(username, email, password):
     query = """
-            INSERT INTO MonsterCards.Users (Email, Password)
-            VALUES (%s, sha2(%s, 256));
-            COMMIT;
+            INSERT INTO MonsterCards.Users (Email, Password, Username)
+            VALUES (%s, sha2(%s, 256), %s);
             """
 
     if (len(str(password)) < _min_pwd_len):
         raise ShortPasswordError
+    elif (username_taken(username)):
+        raise UsernameInUseError
     elif (email_taken(email)):
         raise EmailInUseError
+    elif (not validate_email(email)):
+        raise BadEmailError
     else:
-        execute(query, (email, password))
+        execute(query, (email, password, username))
+
+
+def change_password(username, email, password):
+    query = """
+        update MonsterCards.Users
+        SET Password = sha2(%s, 256)
+        WHERE UserName = %s and Email = %s;
+        """
+
+    if (len(str(password)) < _min_pwd_len):
+        raise ShortPasswordError
+    else:
+        execute(query, (password, username, email,))
+
+
+def change_email(username, email):
+    query = """
+        update MonsterCards.Users
+        SET Email = %s
+        WHERE UserName = %s;
+        """
+    if (email_taken(email)):
+        raise EmailInUseError
+    elif (not validate_email(email)):
+        raise BadEmailError
+    else:
+        user_id = execute(query, (email, username,))
+
+
+def change_username(username, email):
+    query = """
+        update MonsterCards.Users
+        SET UserName = %s
+        WHERE Email = %s;
+        """
+
+    if (username_taken(email)):
+        raise UsernameInUseError
+    else:
+        user_id = execute(query, (username, email,))
 
 
 def get_session_data(token):
@@ -87,16 +106,22 @@ def get_session_data(token):
             from MonsterCards.UserLogins
             WHERE AuthToken = %s;"""
 
-    get_user =  """select Email
+    get_user = """select Email
             from MonsterCards.Users
             where ID = %s;"""
+
+    get_name = """ select UserName
+            from MonsterCards.Users
+            where ID = %s;"""
+
     if (is_valid_token(token)):
         userid = execute(query, (token,))[0][0]
         email = execute(get_user, (userid,))[0][0]
+        username = execute(get_name, (userid,))[0][0]
     else:
         raise BadTokenError
 
-    return {"email":email, "userid" : userid, "username" : ""}
+    return {"email":email, "userid" : userid, "username" : username}
 
 
 def logout_user(token):
@@ -119,9 +144,8 @@ def login_user(email, password):
                         INSERT INTO MonsterCards.UserLogins
                             (AccountID, AuthToken, ExpirationDate)
                         VALUES (%s, %s, %s)
-                        ON DUPLICATE KEY 
+                        ON DUPLICATE KEY
                             UPDATE AuthToken = %s, ExpirationDate = %s;
-                        COMMIT;
                         """
 
     if (valid_creds(email, password)):
@@ -129,10 +153,10 @@ def login_user(email, password):
         token = str(uuid.uuid4())
         exp_date = datetime.now() + timedelta(seconds=1800)
         execute(update_userlogins, (userid, token, exp_date, token, exp_date))
+        print("Right after: " + token)
         return token
     else:
         raise BadLoginError
-
 
 
 ##############################################################################
@@ -141,6 +165,12 @@ def login_user(email, password):
 
 def is_valid_token(token):
     curr_date = datetime.now().date()
+
+    print("is valid: " + token)
+
+    query = ("""select count(*) from MonsterCards.UserLogins""")
+    count1 = execute(query, ())[0][0]
+    print(count1)
 
     query = ("""select count(*) from MonsterCards.UserLogins
                     WHERE AuthToken = %s;""")
@@ -154,6 +184,14 @@ def email_taken(email):
             from MonsterCards.Users
             where Email = %s;"""
     count = execute(query, (email,))[0][0]
+    return bool(count)
+
+
+def username_taken(username):
+    query = """select count(*)
+            from MonsterCards.Users
+            where Username = %s;"""
+    count = execute(query, (username,))[0][0]
     return bool(count)
 
 
