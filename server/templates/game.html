@@ -119,9 +119,7 @@
 <script>
 
 function enterGame() {
-      console.log("BEFORE")
       checkGames_io();
-      console.log("AFTER")
       waitState();
     }
 
@@ -181,14 +179,13 @@ function enterGame() {
         case "DefendState":
         updateAtkCard();
         defendState();
-        console.log("HERE")
         updateDfsCard();
         break;
         case "VoteState":
         updateDfsCard();
         voteState();
-        // $('#voteModal').modal('show');
-        // setTimeout(function(){$('#voteModal').modal('hide'); }, 3000);
+        $('#voteModal').modal('show');
+        setTimeout(function(){$('#voteModal').modal('hide'); }, 3000);
         break;
       case "WinnerState":
         winState();
@@ -273,18 +270,6 @@ function enterGame() {
   }
 </script>
 
-<audio id="myAudio">
-  <source src="/static/sounds/song.mp3" type="audio/mpeg">
-</audio>
-<audio id="myAudio2">
-  <source src="/static/sounds/ah.mp3" type="audio/mpeg">
-</audio>
-<audio id="myAudio3">
-  <source src="/static/sounds/clinton.mp3" type="audio/mpeg">
-</audio>
-<audio id="myAudio4">
-  <source src="/static/sounds/mac420.mp3" type="audio/mpeg">
-</audio>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
 <script src="/static/scripts/game_logic.js"></script>   
