@@ -17,6 +17,14 @@ function getParams() {
     return data;
 }
 
+$(document).ready(function () {
+    $("#waitingModal").modal({
+        backdrop: "static", //remove ability to close modal with click
+        keyboard: false, //remove option to close with keyboard
+        show: false //Display loader!
+    });
+});
+
 var card_id = -1;
 var token = '';
 var img = new Image(450, 630);
@@ -29,7 +37,7 @@ function init() {
     if ("card_id" in params && params.card_id != '') {
         card_id = Number(params.card_id);
         var incl_id = false;
-        for (var i = 0; i < deck.length; i++){
+        for (var i = 0; i < deck.length; i++) {
             var c_id = deck[i]["id"];
             if (c_id == card_id) {
                 incl_id = true;
@@ -40,9 +48,9 @@ function init() {
 
         if (incl_id) {
             console.log("Editing card: " + String(card_id));
-            img.src = 'http://localhost:8000/cards/preview/'+String(card_id);
+            img.src = 'http://localhost:8000/cards/preview/' + String(card_id);
             $("#monster-name").val(card_data["name"]);
-            
+
         } else {
             console.error("You don't own this card! " + String(card_id));
             card_id = -1;
@@ -94,7 +102,7 @@ $(document).ready(function () {
     canvas_data = { "pencil": [], "line": [], "rectangle": [], "circle": [], "eraser": [], "text": [], "upload": [] }
     vert = (2 / 100) * 630;
     horzt = (1 / 100) * 450;
-    
+
     reset();
     pencil();
     img.onload = function () {
@@ -436,7 +444,7 @@ function newCard_ajax() {
     fd.append("img-data", canvas.toDataURL("image/png;base64"));
     fd.append("token", retrieveLoginToken());
     fd.append("card-name", $("#monster-name").val());
-
+    $("#waitingModal").modal('show');
     $.ajax({
         url: '/cards/new-card',
         data: fd,
@@ -452,6 +460,9 @@ function newCard_ajax() {
             else if ("success" in data) {
 
             }
+        },
+        complete: function () {
+            $("#waitingModal").modal('hide');
         }
     });
 }
@@ -464,7 +475,7 @@ function editCard_ajax() {
     fd.append("token", retrieveLoginToken());
     fd.append("card-id", card_id);
     fd.append("card-name", $("#monster-name").val());
-
+    $("#waitingModal").modal('show');
     $.ajax({
         url: '/cards/edit-card',
         data: fd,
@@ -480,6 +491,9 @@ function editCard_ajax() {
             else if ("success" in data) {
 
             }
+        },
+        complete: function () {
+            $("#waitingModal").modal('hide');
         }
     });
 }
