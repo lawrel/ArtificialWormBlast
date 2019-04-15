@@ -1,13 +1,7 @@
-
 {%extends 'loggedinheader.html'%}
 {% block content %}
 
-<body>
-    <!-- Button trigger modal -->
-    <button type="button" class="button" data-toggle="modal" data-target="#selectHandModal">
-        DRAFT MY MONSTERS.
-    </button>
-
+<body onload = "enterGame()">
     <!-- Modal For Selecting the Hand from Deck -->
     <div class="modal fade" id="selectHandModal" tabindex="-1" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" style="overflow-y: initial; max-height: 80%">
@@ -31,11 +25,6 @@
         </div>
     </div>
 
-    <div id="game-window">
-        <form>
-          <input type="button" value="New Game" onclick="checkGames_io()" />
-          <input type="button" value="Wait" onclick="waitState()" />
-        </form> 
          <div id="game-window">
     <div class="row">
       <div id="left-col" class="leftcolumn">
@@ -128,7 +117,15 @@
   </div>
 
 <script>
-  
+
+function enterGame() {
+      console.log("BEFORE")
+      checkGames_io();
+      console.log("AFTER")
+      waitState();
+    }
+
+    
   function sendHand() {
     sendHand_io(monsterChoices, getPlayerData(), gameData["gameid"]);
   }
@@ -295,8 +292,8 @@
     var monsterChoices = new Array();
     var attackingCard = null;
     var defendingCard = null;
-    var names = ["Paul the Cloud", "Not Paul the Cloud", "Ice Cream Dude", "Jelly Dude", "Galusha", "Space Pampootee", "Raccoon", "Spooder Dude", "Fat Zombie Mario", "Badderlocks", "Mike", "Sulley"];
-    var locations = ["monsterExample1.JPG", "monsterExample2.JPG", "monsterExample3.JPG", "monsterExample4.JPG", "monsterExample5.JPG", "monsterExample6.JPG", "monsterExample7.JPG", "monsterExample8.JPG", "monsterExample9.JPG", "monsterExample10.JPG", "monster.gif", "scaryMonster.gif"];
+    var names = [];
+    var locations = [];
    
     socket.on( 'connect', function() {
       socket.emit( 'my event', {
@@ -306,7 +303,10 @@
         e.preventDefault()
         let user_name = $( 'input.username' ).val()
         let user_input = $( 'input.message' ).val()
-        socket.emit( 'my event', { user_name : user_name, message : user_input}, room = gameData["gameid"] )
+        socket.emit( 'my event', {
+          user_name : user_name,
+          message : user_input
+        } )
         $( 'input.message' ).val( '' ).focus()
       } )
     } )

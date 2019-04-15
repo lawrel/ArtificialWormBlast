@@ -292,8 +292,8 @@ function enterGame() {
     var monsterChoices = new Array();
     var attackingCard = null;
     var defendingCard = null;
-    var names = ["Paul the Cloud", "Not Paul the Cloud", "Ice Cream Dude", "Jelly Dude", "Galusha", "Space Pampootee", "Raccoon", "Spooder Dude", "Fat Zombie Mario", "Badderlocks", "Mike", "Sulley"];
-    var locations = ["monsterExample1.JPG", "monsterExample2.JPG", "monsterExample3.JPG", "monsterExample4.JPG", "monsterExample5.JPG", "monsterExample6.JPG", "monsterExample7.JPG", "monsterExample8.JPG", "monsterExample9.JPG", "monsterExample10.JPG", "monster.gif", "scaryMonster.gif"];
+    var names = [];
+    var locations = [];
    
     socket.on( 'connect', function() {
       socket.emit( 'my event', {
