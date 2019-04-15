@@ -34,7 +34,7 @@ body {
         text-align: center;
         background: white;
 }
-
+ 
 .no-bg-border {
     background: none;
     border: none;
@@ -68,7 +68,10 @@ body {
         color: white;
     }
 
-
+.account {
+    border: 1px dashed #01ACC1;
+    background: #181d23;
+}
 
 /* Create two unequal columns that floats next to each other */
 /* Left column */

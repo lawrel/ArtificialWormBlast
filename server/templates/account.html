@@ -12,6 +12,7 @@
     <div class="container">
         <h1 id="welcome" aria-readonly="true">Welcome to your Account, [Name]</h1>
         <hr />
+        <div class="accountinfo">
         <h2 id="nameheading" aria-readonly="true"> Your Username:</h2>
         <input type="text" id="name" readonly="readonly" value=[name]>
         <hr />
@@ -22,11 +23,12 @@
         <input type="text" id="password" readonly="readonly" value="You should know.">
         <hr />
         <h2 id="friends" aria-readonly="true"> Your Friends: You have no friends (and neither do we).</h2>
+            </div>
     </div>
 </body>
 <div style="text-align: center;">
-    <button type="button" id="edit" class="btn btn-primary" onclick="show_edits()">Edit</button>
-    <button type="button" id="save" class="btn btn-primary" onclick="save_edits()" hidden="hidden">Save</button>
+    <button id="reset" type="button" id="edit" class="btn btn-primary" onclick="show_edits()">Edit</button>
+    <button id="reset" type="button" id="save" class="btn btn-primary" onclick="save_edits()" hidden="hidden">Save</button>
 </div>
 <hr />
 </html>
