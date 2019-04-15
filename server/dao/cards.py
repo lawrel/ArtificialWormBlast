@@ -30,7 +30,7 @@ class BadFileExtError(Error):
 
 def getPlayerDeck(playerId):
     query = """
-            select CardID, Name, Attributes from MonsterCards.UsersCards
+            select CardID, Name, Attributes from MonsterCards.UserCards
             inner join MonsterCards.Cards
             on CardID = ID
             where UserID = %s;
@@ -66,14 +66,14 @@ def getSiteDeck():
 
 def addPlayerCard(playerId, cardId):
     query = """
-            INSERT INTO MonsterCards.UsersCards (UserID, CardID) VALUES (%s, %s);
+            INSERT INTO MonsterCards.UserCards (UserID, CardID) VALUES (%s, %s);
             """
     execute(query, (playerId, cardId))
 
 
 def remove_player_card(player_id, card_id):
     query = """
-            delete from MonsterCards.UsersCards
+            delete from MonsterCards.UserCards
             where CardID = %s and UserID = %s;
             """
     execute(query, (card_id, player_id))

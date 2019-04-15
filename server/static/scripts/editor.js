@@ -81,37 +81,31 @@ function getDeck_ajax() {
 }
 
 var canvas = document.getElementById("paint");
-var width;
-var height;
+var ctx = canvas.getContext("2d");
+var width = canvas.width;
+var height = canvas.height;
 var curX, curY, prevX, prevY;
-var hold;
-var fill_value;
-var stroke_value;
-var canvas_data;
-var vert;
-var horzt;
-$(document).ready(function () {
-    canvas = document.getElementById("paint");
-    ctx = canvas.getContext("2d");
-    width = canvas.width;
-    height = canvas.height;
-    hold = false;
-    ctx.lineWidth = 2;
-    fill_value = true;
-    stroke_value = false;
-    canvas_data = { "pencil": [], "line": [], "rectangle": [], "circle": [], "eraser": [], "text": [], "upload": [] }
-    vert = (2 / 100) * 630;
-    horzt = (1 / 100) * 450;
-
-    reset();
-    pencil();
-    img.onload = function () {
-        console.log("its")
-        ctx.drawImage(img, 0, 0);
-    }
-});
-
-
+var hold = false;
+ctx.lineWidth = 2;
+var fill_value = true;
+var stroke_value = false;
+var colorBlock = document.getElementById('color-block');
+var ctx1 = colorBlock.getContext('2d');
+var width1 = colorBlock.width;
+var height1 = colorBlock.height;
+var colorStrip = document.getElementById('color-strip');
+var ctx2 = colorStrip.getContext('2d');
+var width2 = colorStrip.width;
+var height2 = colorStrip.height;
+var colorLabel = document.getElementById('color-label');
+var x = 0;
+var y = 0;
+var drag = false;
+var rgbaColor = 'rgba(255,0,0,1)';
+var canvas_data = { "pencil": [], "line": [], "rectangle": [], "circle": [], "eraser": [], "text": [], "upload": [] }
+var vert = (2 / 100) * 630;
+var horzt = (1 / 100) * 450;
+reset();
 function change(type) {
     if (type == "pencil") {
         pencil();
@@ -139,28 +133,80 @@ function change(type) {
         outline();
     }
 }
-
 function color(color_value) {
     ctx.strokeStyle = color_value;
     ctx.fillStyle = color_value;
 }
-
+ctx1.rect(0, 0, width1, height1);
+fillGradient();
+ctx2.rect(0, 0, width2, height2);
+var grd1 = ctx2.createLinearGradient(0, 0, 0, height1);
+grd1.addColorStop(0, 'rgba(255, 0, 0, 1)');
+grd1.addColorStop(0.17, 'rgba(255, 255, 0, 1)');
+grd1.addColorStop(0.34, 'rgba(0, 255, 0, 1)');
+grd1.addColorStop(0.51, 'rgba(0, 255, 255, 1)');
+grd1.addColorStop(0.68, 'rgba(0, 0, 255, 1)');
+grd1.addColorStop(0.85, 'rgba(255, 0, 255, 1)');
+grd1.addColorStop(1, 'rgba(255, 0, 0, 1)');
+ctx2.fillStyle = grd1;
+ctx2.fill();
+function click(e) {
+    x = e.offsetX;
+    y = e.offsetY;
+    var imageData = ctx2.getImageData(x, y, 1, 1).data;
+    rgbaColor = 'rgba(' + imageData[0] + ',' + imageData[1] + ',' + imageData[2] + ',1)';
+    fillGradient();
+}
+function fillGradient() {
+    ctx1.fillStyle = rgbaColor;
+    ctx1.fillRect(0, 0, width1, height1);
+    var grdWhite = ctx2.createLinearGradient(0, 0, width1, 0);
+    grdWhite.addColorStop(0, 'rgba(255,255,255,1)');
+    grdWhite.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx1.fillStyle = grdWhite;
+    ctx1.fillRect(0, 0, width1, height1);
+    var grdBlack = ctx2.createLinearGradient(0, 0, 0, height1);
+    grdBlack.addColorStop(0, 'rgba(0,0,0,0)');
+    grdBlack.addColorStop(1, 'rgba(0,0,0,1)');
+    ctx1.fillStyle = grdBlack;
+    ctx1.fillRect(0, 0, width1, height1);
+}
+function mousedown(e) {
+    drag = true;
+    changeColor(e);
+}
+function mousemove(e) {
+    if (drag) {
+        changeColor(e);
+    }
+}
+function mouseup(e) {
+    drag = false;
+}
+function changeColor(e) {
+    x = e.offsetX;
+    y = e.offsetY;
+    var imageData = ctx1.getImageData(x, y, 1, 1).data;
+    rgbaColor = 'rgba(' + imageData[0] + ',' + imageData[1] + ',' + imageData[2] + ',1)';
+    colorLabel.style.backgroundColor = rgbaColor;
+    color(rgbaColor);
+}
+colorStrip.addEventListener("click", click, false);
+colorBlock.addEventListener("mousedown", mousedown, false);
+colorBlock.addEventListener("mouseup", mouseup, false);
+colorBlock.addEventListener("mousemove", mousemove, false);
 function font(font_value) {
     ctx.font = font_value;
 }
-
 function changeVert(v) {
     vert = (v / 100) * 630;
 }
-
 function changeHorzt(h) {
     horzt = (h / 100) * 450;
 }
-
 function add_pixel() {
     ctx.lineWidth += 1;
 }
-
 function reduce_pixel() {
     if (ctx.lineWidth == 1) {
         ctx.lineWidth = 1;
@@ -168,17 +214,14 @@ function reduce_pixel() {
         ctx.lineWidth -= 1;
     }
 }
-
 function fill() {
     fill_value = true;
     stroke_value = false;
 }
-
 function outline() {
     fill_value = false;
     stroke_value = true;
 }
-
 function reset() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     canvas_data = { "pencil": [], "line": [], "rectangle": [], "circle": [], "eraser": [], "text": [], "upload": [] }
@@ -189,24 +232,18 @@ function reset() {
         ctx.fillRect(0, 0, 450, 630);
     }
     color(oldcolor);
-    ctx.drawImage(img, 0, 0);
 }
-
 // pencil tool
-
 function pencil() {
-
     canvas.onmousedown = function (e) {
         curX = e.clientX - canvas.offsetLeft;
         curY = e.clientY - canvas.offsetTop;
         hold = true;
-
         prevX = curX;
         prevY = curY;
         ctx.beginPath();
         ctx.moveTo(prevX, prevY);
     };
-
     canvas.onmousemove = function (e) {
         if (hold) {
             curX = e.clientX - canvas.offsetLeft;
@@ -214,38 +251,26 @@ function pencil() {
             draw();
         }
     };
-
     canvas.onmouseup = function (e) {
         hold = false;
     };
-
     canvas.onmouseout = function (e) {
         hold = false;
     };
-
     function draw() {
         ctx.lineTo(curX, curY);
         ctx.stroke();
         canvas_data.pencil.push({ "startx": prevX, "starty": prevY, "endx": curX, "endy": curY, "thick": ctx.lineWidth, "color": ctx.strokeStyle });
     }
 }
-
-function encode_canvas() {
-    var dataURL = canvas.toDataURL("image/png;base64");
-    uploadImageB64_ajax(dataURL);
-}
-
 // line tool
-
 function line() {
-
     canvas.onmousedown = function (e) {
         img = ctx.getImageData(0, 0, width, height);
         prevX = e.clientX - canvas.offsetLeft;
         prevY = e.clientY - canvas.offsetTop;
         hold = true;
     };
-
     canvas.onmousemove = function linemove(e) {
         if (hold) {
             ctx.putImageData(img, 0, 0);
@@ -259,27 +284,21 @@ function line() {
             ctx.closePath();
         }
     };
-
     canvas.onmouseup = function (e) {
         hold = false;
     };
-
     canvas.onmouseout = function (e) {
         hold = false;
     };
 }
-
 // rectangle tool
-
 function rectangle() {
-
     canvas.onmousedown = function (e) {
         img = ctx.getImageData(0, 0, width, height);
         prevX = e.clientX - canvas.offsetLeft;
         prevY = e.clientY - canvas.offsetTop;
         hold = true;
     };
-
     canvas.onmousemove = function (e) {
         if (hold) {
             ctx.putImageData(img, 0, 0);
@@ -292,27 +311,21 @@ function rectangle() {
             canvas_data.rectangle.push({ "starx": prevX, "stary": prevY, "width": curX, "height": curY, "thick": ctx.lineWidth, "stroke": stroke_value, "stroke_color": ctx.strokeStyle, "fill": fill_value, "fill_color": ctx.fillStyle });
         }
     };
-
     canvas.onmouseup = function (e) {
         hold = false;
     };
-
     canvas.onmouseout = function (e) {
         hold = false;
     };
 }
-
 // circle tool
-
 function circle() {
-
     canvas.onmousedown = function (e) {
         img = ctx.getImageData(0, 0, width, height);
         prevX = e.clientX - canvas.offsetLeft;
         prevY = e.clientY - canvas.offsetTop;
         hold = true;
     };
-
     canvas.onmousemove = function (e) {
         if (hold) {
             ctx.putImageData(img, 0, 0);
@@ -328,31 +341,24 @@ function circle() {
             canvas_data.circle.push({ "starx": prevX, "stary": prevY, "radius": curX - prevX, "thick": ctx.lineWidth, "stroke": stroke_value, "stroke_color": ctx.strokeStyle, "fill": fill_value, "fill_color": ctx.fillStyle });
         }
     };
-
     canvas.onmouseup = function (e) {
         hold = false;
     };
-
     canvas.onmouseout = function (e) {
         hold = false;
     };
 }
-
 // eraser tool
-
 function eraser() {
-
     canvas.onmousedown = function (e) {
         curX = e.clientX - canvas.offsetLeft;
         curY = e.clientY - canvas.offsetTop;
         hold = true;
-
         prevX = curX;
         prevY = curY;
         ctx.beginPath();
         ctx.moveTo(prevX, prevY);
     };
-
     canvas.onmousemove = function (e) {
         if (hold) {
             curX = e.clientX - canvas.offsetLeft;
@@ -360,15 +366,12 @@ function eraser() {
             draw();
         }
     };
-
     canvas.onmouseup = function (e) {
         hold = false;
     };
-
     canvas.onmouseout = function (e) {
         hold = false;
     };
-
     function draw() {
         ctx.lineTo(curX, curY);
         ctx.strokeStyle = "#ffffff";
@@ -376,7 +379,6 @@ function eraser() {
         canvas_data.pencil.push({ "startx": prevX, "starty": prevY, "endx": curX, "endy": curY, "thick": ctx.lineWidth, "color": ctx.strokeStyle });
     }
 }
-
 function text(words) {
     ctx.fillText(words, horzt, vert); //horzt, vert
     canvas_data.line.push({ "starx": horzt, "starty": vert, "text": words, "font": ctx.font, "color": ctx.strokeStyle })
