@@ -56,13 +56,10 @@ def checkGames(data):
 
 @socketio.on('create-game')
 def createGame(data):
-    for key, value in data.items():
-        print(key, value)
     username = data['player']['username']
     email = data['player']['email']
     userid = data['player']['userid']
     player = Player(userid, username, email)
-    print("CARDSSSSSSSSSSSSSSSSSS: "+ data['cards'])
     cards = data['cards']
     maxplayers = data['players']
 

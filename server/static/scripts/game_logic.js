@@ -21,17 +21,12 @@ $( document ).ready(function() {
     handleLogin();
 
     document.addEventListener("logged-in", function() {
-        //playerData_io();
         handleJoinGame();
     });
 
     document.addEventListener("player-data", function () {
         handleJoinGame();
     });
-
-    // document.addEventListener("game-update", function () {
-    //     joinGame_io(gameData["gameid"], getPlayerData())
-    // })
     
 });
 
