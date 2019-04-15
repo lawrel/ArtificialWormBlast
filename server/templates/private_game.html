@@ -61,35 +61,27 @@
             </div>
         </div>
     </div>
-
-    <div class="modal fade" id="badCreds" role="dialog">
-            <div class="modal-dialog modal-sm vertical-align-center">
-                 <div class="card card-signin my-5">
-                    <div class="card-body">
-                        <h5 class="card-title text-center">Incorrect Credentials</h5>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                        </div>
-                 </div>
-              </div>
-            </div>
-        </div>
-
 </body>
 
+<script src="/static/scripts/game_logic.js"></script>   
 <script>
     function validateForm() {
         var input_username = $("#input-victory").val();
         var input_email = $("#input-players").val();
-        var input_password = $("#input-password").val();
     }
     
     function sendEmails_ajax() {
 
-        createGame_io();
-        
+        // Get Settings
         var fd = new FormData();
-        fd.append( 'input-username', $("#input-username").val())
-        fd.append( 'input-email1', $("#input-email1").val());
+        fd.append( 'input-username', $("#input-victory").val());
+        fd.append( 'input-email1', $("#input-players").val());
+
+        // Create Game
+        var gameid = createGame_io($("#input-victory").val(), $("#input-players").val());
+        fd.append( 'game-id', gameid);
+
+        // Get Friends Emails
         fd.append( 'send-email2', $("#send-email2").val());
         fd.append( 'send-email3', $("#send-email3").val());
         fd.append( 'send-email4', $("#send-email4").val());
@@ -99,6 +91,7 @@
         fd.append( 'send-email8', $("#send-email8").val());
         fd.append( 'send-email9', $("#send-email9").val());
 
+        // Send invitations
         $.ajax({
             url: '/sendinvites',
             data: fd,
@@ -107,13 +100,9 @@
             type: 'POST',
             success: function(data){
                 console.log(data);
-                if ("error" in data) {
-                    $('#badCreds').modal('show');
-                }
-                else {
-                    window.location.href = "/game";
-                    // create game with these settings
-                }
+                
+                // Go to the game
+                window.location.href = "/game<game-id>";
             }
         });
 
