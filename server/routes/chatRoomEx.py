@@ -198,6 +198,8 @@ class Game:
         self.winner = None
         self.round += 1
         for playerid, player in self.players.items():
+            print(playerid)
+            print(player)
             player.vote = False
             player.vote_card = None
 
