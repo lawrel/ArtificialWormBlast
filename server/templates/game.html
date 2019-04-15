@@ -23,54 +23,56 @@
                 </div>
             </div>
         </div>
+      </div>
     </div>
+  </div>
 
-         <div id="game-window">
+  <div id="game-window">
     <div class="row">
       <div id="left-col" class="leftcolumn">
         <div class="card-deck">
-            <div class="card no-bg-border">
-                <div class="card-body">
-                    <h2 class="text-center">Attacker</h2>
-                    <div id="lc1" >
-                      
-                    </div>
-                </div>
+          <div class="card no-bg-border">
+            <div class="card-body">
+              <h2 class="text-center">Attacker</h2>
+              <div id="lc1">
+
+              </div>
             </div>
-            <div class="card no-bg-border">
-                <div class="card-body">
-                    <h2 class="text-center">Defender</h2>
-                    <div id="lc2" >
-                      
-                    </div>
-                </div>
+          </div>
+          <div class="card no-bg-border">
+            <div class="card-body">
+              <h2 class="text-center">Defender</h2>
+              <div id="lc2">
+
+              </div>
             </div>
+          </div>
         </div>
 
         <div class="card-deck" style="color: black">
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="text-center">Players:</h2>
-                </div>
-                <div class="card-body">
-                    <div class="card-deck" id="opponents">
-
-                    </div>
-                </div>
+          <div class="card">
+            <div class="card-header">
+              <h2 class="text-center">Players:</h2>
             </div>
+            <div class="card-body">
+              <div class="card-deck" id="opponents">
+
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="card-deck" style="color: black">
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="text-center">Your Hand:</h2>
-                </div>
-                <div class="card-body">
-                    <div class="card-deck" id="monsterHand">
-
-                    </div>
-                </div>
+          <div class="card">
+            <div class="card-header">
+              <h2 class="text-center">Your Hand:</h2>
             </div>
+            <div class="card-body">
+              <div class="card-deck" id="monsterHand">
+
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="rightcolumn">
@@ -78,11 +80,11 @@
         <form action="javascript:void(0);" method="POST">
           <!-- <input type="text" class="username" placeholder="User Name" /> -->
 
-          <input type="text" class="message" placeholder="Messages" style="width: 300px;"/>
+          <input type="text" class="message" placeholder="Messages" style="width: 300px;" />
           <button onclick="sendChat()" type="button">Submit</button>
         </form>
       </div>
-    </div> 
+    </div>
   </div>
 </body>
 
@@ -93,7 +95,7 @@
       <div class="modal-body text-center modal-text">
         <div class="fa-3x"><i class="fas fa-circle-notch fa-spin"></i></div>
         <div id="waitingTag">
-            <p>Waiting for players to join...<br> Currently, the following players are connected:</p>
+          <p>Waiting for players to join...<br> Currently, the following players are connected:</p>
 
         </div>
       </div>
@@ -103,18 +105,18 @@
 
 <!-- Waiting for players modal -->
 <div class="modal fade" id="voteModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-body text-center modal-text">
-          <div class="fa-3x"><i class="fas fa-circle-notch fa-spin"></i></div>
-          <div id="waitingTag">
-              <p>Vote for a winner</p>
-  
-          </div>
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-body text-center modal-text">
+        <div class="fa-3x"><i class="fas fa-circle-notch fa-spin"></i></div>
+        <div id="waitingTag">
+          <p>Vote for a winner</p>
+
         </div>
       </div>
     </div>
   </div>
+</div>
 
 <script>
 
@@ -123,25 +125,24 @@ function enterGame() {
       // waitState();
     }
 
-    
   function sendHand() {
     sendHand_io(monsterChoices, getPlayerData(), gameData["gameid"]);
   }
 
   function sendChat() {
-    let user_name = $( 'input.username' ).val();
-    let user_input = $( 'input.message' ).val();
-    $( 'input.message' ).val("");
+    let user_name = $('input.username').val();
+    let user_input = $('input.message').val();
+    $('input.message').val("");
     console.log(user_name);
-    socket.emit( 'my event', {
-      user_name : getPlayerData()["username"],
-      message : user_input
+    socket.emit('my event', {
+      user_name: getPlayerData()["username"],
+      message: user_input
     }, room = gameData["gameid"]);
   }
 
   $(document).ready(function () {
     document.addEventListener('game-update', gameUpdate);
-      
+
     $("#voteMddal").modal({
       backdrop: "static", //remove ability to close modal with click
       keyboard: false, //remove option to close with keyboard
@@ -176,16 +177,16 @@ function enterGame() {
         attackState();
         updateAtkCard();
         break;
-        case "DefendState":
+      case "DefendState":
         updateAtkCard();
         defendState();
         updateDfsCard();
         break;
-        case "VoteState":
+      case "VoteState":
         updateDfsCard();
         voteState();
         $('#voteModal').modal('show');
-        setTimeout(function(){$('#voteModal').modal('hide'); }, 3000);
+        setTimeout(function () { $('#voteModal').modal('hide'); }, 3000);
         break;
       case "WinnerState":
         winState();
@@ -238,76 +239,72 @@ function enterGame() {
     listPlayers();
   }
   function attackState() {
-      $("#voteModal").modal('show');
-      printAttacker();
-      listHand();
-      listPlayers();
+    printAttacker();
+    listHand();
+    listPlayers();
   }
   function defendState() {
-    $("#voteModal").modal('show');
-      printDefender();
-      listHand();
+    console.log("WHY?")
+    printDefender();
+    listHand();
   }
   function voteState() {
-      $("#voteModal").modal('show');
-      listHand();
+    listHand();
   }
   function winState() {
-    $("#voteModal").modal('show');
+    console.log("Enter Win State")
     changeHand(); //for now just change the hand of the card
     console.log("Init Next Round")
     newRound();
   }
   function endState() {
-      showResults(); //no implemented for this release
+    showResults(); //no implemented for this release
   }
 
   function updateWaitModal() {
-      waitString = "<p>Waiting for players to join...<br> Currently, the following players are connected:</p>";
-      players = gameData.players;
-      for (var i = 0; i < players.length; i++) {
-          waitString = waitString + players[i].username + "<br>";
-      }
-      document.getElementById("waitingTag").innerHTML = waitString;
+    waitString = "<p>Waiting for players to join...<br> Currently, the following players are connected:</p>";
+    players = gameData.players;
+    for (var i = 0; i < players.length; i++) {
+      waitString = waitString + players[i].username + "<br>";
+    }
+    document.getElementById("waitingTag").innerHTML = waitString;
   }
 </script>
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
-<script src="/static/scripts/game_logic.js"></script>   
+<script src="/static/scripts/game_logic.js"></script>
 <script>
-    var monsterChoices = new Array();
-    var attackingCard = null;
-    var defendingCard = null;
-    var names = [];
-    var locations = [];
-   
-    socket.on( 'connect', function() {
-      socket.emit( 'my event', {
-        data: 'User Connected'
-      } )
-      var form = $( 'form' ).on( 'submit', function( e ) {
-        e.preventDefault()
-        let user_name = $( 'input.username' ).val()
-        let user_input = $( 'input.message' ).val()
-        socket.emit( 'my event', {
-          user_name : user_name,
-          message : user_input
-        }, room = gameData["gameid"])
-        $( 'input.message' ).val( '' ).focus()
-      } )
-    } )
-    
+  var monsterChoices = new Array();
+  var attackingCard = null;
+  var defendingCard = null;
+  var names = [];
+  var locations = [];
 
-    function printAttacker()
-    {
-      document.getElementById("lc1").innerHTML = gameData.attacker;
-    }
+  socket.on('connect', function () {
+    socket.emit('my event', {
+      data: 'User Connected'
+    })
+    var form = $('form').on('submit', function (e) {
+      e.preventDefault()
+      let user_name = $('input.username').val()
+      let user_input = $('input.message').val()
+      socket.emit('my event', {
+        user_name: user_name,
+        message: user_input
+      }, room = gameData["gameid"])
+      $('input.message').val('').focus()
+    })
+  })
 
-    function printDefender()
-    {
-      document.getElementById("lc2").innerHTML = gameData.defender;
-    }
+
+  function printAttacker() {
+    document.getElementById("lc1").innerHTML = gameData.attacker;
+  }
+
+  function printDefender() {
+    document.getElementById("lc2").innerHTML = gameData.defender;
+  }
 
     function createMonsters()
     {
@@ -321,139 +318,134 @@ function enterGame() {
         }
         document.getElementById("jake").innerHTML = ref;
     }
+    document.getElementById("jake").innerHTML = ref;
+  }
 
 
-    function listHand() {
-        var userid = getPlayerData()["userid"]
-        var uind = 0;
-        for (var i = 0; i < gameData['players'].length; i++) {
-          if (gameData['players'][i]["userid"] == userid) {
-            uind = i
-          }
-        }
-        numCards = gameData['players'][uind]["hand"].length;
-        printString = '<br>'
-        for (var i = 0; i < numCards; i++)
-        {
-            monster_name = gameData['players'][uind]["hand"][i]
-            index = names.indexOf(monster_name)
-            pictureName = locations[index]
-            
-            printString = printString + `<div class="card" style="display: inline-block; max-width:200px; color:#255760";> <img class="card-img-top" src="/static/images/${pictureName}"> <div class="card-body"> <button onclick="handleHandClick('${monster_name}')">${monster_name}</button> </div> </div>`;
-        }
-        document.getElementById("monsterHand").innerHTML = printString ;
+  function listHand() {
+    var userid = getPlayerData()["userid"]
+    var uind = 0;
+    for (var i = 0; i < gameData['players'].length; i++) {
+      if (gameData['players'][i]["userid"] == userid) {
+        uind = i
+      }
     }
+    numCards = gameData['players'][uind]["hand"].length;
+    printString = '<br>'
+    for (var i = 0; i < numCards; i++) {
+      monster_name = gameData['players'][uind]["hand"][i]
+      index = names.indexOf(monster_name)
+      pictureName = locations[index]
 
-function listPlayers() {
-        allPlayers = gameData["players"];
-        playerString = '<br>'
-        for (var key in allPlayers)
-        {
-            player_name = allPlayers[key]["username"];
-            var uid = allPlayers[key]["userid"]
-            
-            playerString = playerString + 
-         `<div class="card" style="display: inline-block; max-width:200px; color:#255760";> 
+      printString = printString + `<div class="card" style="display: inline-block; max-width:200px; color:#255760";> <img class="card-img-top" src="/static/images/${pictureName}"> <div class="card-body"> <button onclick="handleHandClick('${monster_name}')">${monster_name}</button> </div> </div>`;
+    }
+    document.getElementById("monsterHand").innerHTML = printString;
+  }
+
+  function listPlayers() {
+    allPlayers = gameData["players"];
+    playerString = '<br>'
+    for (var key in allPlayers) {
+      player_name = allPlayers[key]["username"];
+      var uid = allPlayers[key]["userid"]
+
+      playerString = playerString +
+        `<div class="card" style="display: inline-block; max-width:200px; color:#255760";> 
       <div class="card-body"> 
       <button onclick="handlePlayerClick('${player_name}')">${player_name}</button> </div> </div>`;
-        }
-        document.getElementById("opponents").innerHTML = playerString ;
     }
+    document.getElementById("opponents").innerHTML = playerString;
+  }
 
-    function handlePlayerClick(nameString) {
-        if ((gameData.state == "AttackState") && getPlayerData()["player_name"] == gameData["attacker"])
-        {
-            // defender = nameString;
-            // gameData["defender"]= nameString;
-            selectDefender_io(nameString, gameData["gameid"])
+  function handlePlayerClick(nameString) {
+    if ((gameData.state == "AttackState") && getPlayerData()["player_name"] == gameData["attacker"]) {
+      // defender = nameString;
+      // gameData["defender"]= nameString;
+      selectDefender_io(nameString, gameData["gameid"])
 
-        }
     }
+  }
 
-    function changeHand() {
-      //take card from loser
-      //give card to winner
-      console.log("CHANGE HAND")
-      allPlayers = gameData["players"];
-      allPlayers2 = gameData["players"]
-      winner = null;
-      attacker = null;
-      defender = null;
-      for (var key in allPlayers)
-        {
-            if (allPlayers[key]["username"] == gameData.winner) {
-              console.log("FOUND WINNER")
-              if (allPlayers[key]["username"] == gameData.attacker ) {
-                console.log("Attacker won")
-                // looking for defender as loser
-               for (key2 in allPlayers2) {
-                  if (allPlayers2[key2]["username"] == gameData.defender) {
-                    console.log("defender lost")
-                    // take card from loser
-                    allPlayers2[key2]["hand"].pop(gameData.dfs_card); //wrong syntax??
-                    //add it to winner
-                    allPlayers[key]["hand"].push(gameData.dfs_card); //wrong syntax??
-                  }
-                }
-              } else {
-                //looking for defender as winner
-                for (key2 in allPlayers2) {
-                  if (allPlayers2[key2]["username"] == gameData.defender) {
-                    console.log("attacker lost")
-                    // take card from loser
-                    allPlayers2[key2]["hand"].pop(gameData.atk_card); //wrong syntax??
-                    //add it to winner
-                    allPlayers[key]["hand"].push(gameData.atk_card); //wrong syntax??
-                  }
-                }
-              }
-               
+  function changeHand() {
+    //take card from loser
+    //give card to winner
+    console.log("CHANGE HAND")
+    allPlayers = gameData["players"];
+    allPlayers2 = gameData["players"]
+    winner = null;
+    attacker = null;
+    defender = null;
+    for (var key in allPlayers) {
+      if (allPlayers[key]["username"] == gameData.winner) {
+        console.log("FOUND WINNER")
+        if (allPlayers[key]["username"] == gameData.attacker) {
+          console.log("Attacker won")
+          // looking for defender as loser
+          for (key2 in allPlayers2) {
+            if (allPlayers2[key2]["username"] == gameData.defender) {
+              console.log("defender lost")
+              // take card from loser
+              allPlayers2[key2]["hand"].pop(gameData.dfs_card); //wrong syntax??
+              //add it to winner
+              allPlayers[key]["hand"].push(gameData.dfs_card); //wrong syntax??
             }
-            
-            
-        }
-      
-    }
-
-    function newRound() {
-      //for now new attacker will be random
-      gameData.attacker = null;
-      gameData.defender = null;
-      gameData.winner = null;
-      gameData.atk_card = null;
-      gameData.dfs_card = null;
-
-      newRound_io(gameData["gameid"])
-    }
-
-    function showResults() {
-
-    }
-
-
-    function handleHandClick(nameString) {
-        if ((gameData.state == "AttackState") && getPlayerData()["player_name"] == gameData["attacker"])
-        {
-            attackingCard = nameString;
-            attackCard_io(gameData["gameid"] ,attackingCard)
-            index = names.indexOf(attackingCard)
-            pictureName = locations[index]
-            document.getElementById("lc1").innerHTML = `<button onclick="handleVote('${attackingCard}')"><img src="/static/images/${pictureName}"></button>`;
+          }
+        } else {
+          //looking for defender as winner
+          for (key2 in allPlayers2) {
+            if (allPlayers2[key2]["username"] == gameData.defender) {
+              console.log("attacker lost")
+              // take card from loser
+              allPlayers2[key2]["hand"].pop(gameData.atk_card); //wrong syntax??
+              //add it to winner
+              allPlayers[key]["hand"].push(gameData.atk_card); //wrong syntax??
+            }
+          }
         }
 
-        else if ((gameData.state == "DefendState") && getPlayerData()["username"] == gameData["defender"])
-        {
-            defendingCard = nameString;
-            defendCard_io(gameData["gameid"] ,defendingCard)
-            index = names.indexOf(defendingCard)
-            pictureName = locations[index]
-            document.getElementById("lc2").innerHTML = `<button onclick="handleVote('${defendingCard}')"><img src="/static/images/${pictureName}"></button>`;
-        }
+      }
+
+
     }
-    function handleVote(nameString){
-      submitVote_io(gameData["gameid"], getPlayerData()["username"], nameString)
+
+  }
+
+  function newRound() {
+    //for now new attacker will be random
+    gameData.attacker = null;
+    gameData.defender = null;
+    gameData.winner = null;
+    gameData.atk_card = null;
+    gameData.dfs_card = null;
+
+    newRound_io(gameData["gameid"])
+  }
+
+  function showResults() {
+
+  }
+
+
+  function handleHandClick(nameString) {
+    if ((gameData.state == "AttackState") && getPlayerData()["player_name"] == gameData["attacker"]) {
+      attackingCard = nameString;
+      attackCard_io(gameData["gameid"], attackingCard)
+      index = names.indexOf(attackingCard)
+      pictureName = locations[index]
+      document.getElementById("lc1").innerHTML = `<button onclick="handleVote('${attackingCard}')"><img src="/static/images/${pictureName}"></button>`;
     }
+
+    else if ((gameData.state == "DefendState") && getPlayerData()["username"] == gameData["defender"]) {
+      defendingCard = nameString;
+      defendCard_io(gameData["gameid"], defendingCard)
+      index = names.indexOf(defendingCard)
+      pictureName = locations[index]
+      document.getElementById("lc2").innerHTML = `<button onclick="handleVote('${defendingCard}')"><img src="/static/images/${pictureName}"></button>`;
+    }
+  }
+  function handleVote(nameString) {
+    submitVote_io(gameData["gameid"], getPlayerData()["username"], nameString)
+  }
 
 </script>
 {% endblock %}
-

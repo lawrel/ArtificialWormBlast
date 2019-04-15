@@ -68,7 +68,7 @@ def editor_new_card():
 
         b64_f = b64_file.split(",")[-1]
         bin_file = base64.b64decode(b64_f)
-        card_id = cards.new_card(bin_file, "{}")
+        card_id = cards.new_card(bin_file, "{}", name=card_name)
         cards.addPlayerCard(user_id, card_id)
 
         return jsonify({"success": "", "card_id": card_id})
@@ -87,6 +87,7 @@ def editor_edit_card():
         token = request.form["token"]
         b64_file = request.form["img-data"]
         card_id = request.form["card-id"]
+        card_name = request.form.get("card-name")
 
         user_id = get_session_data(token)["userid"]
 
@@ -96,7 +97,7 @@ def editor_edit_card():
         b64_f = b64_file.split(",")[-1]
         bin_file = base64.b64decode(b64_f)
 
-        cards.edit_card(card_id, bin_file, "{}")
+        cards.edit_card(card_id, bin_file, "{}", name=card_name)
 
         return jsonify({"success": ""})
     except BadTokenError:
@@ -109,7 +110,7 @@ def editor_edit_card():
 
 @app.route("/cards/preview/<card_id>", methods=["GET"])
 def get_card_image(card_id):
-    card_id, img_bin, attrs = get_card(card_id)
+    card_id, card_name, img_bin, attrs = get_card(card_id)
     return send_file(io.BytesIO(img_bin),
                      mimetype='image/png',
                      as_attachment=True,
@@ -118,11 +119,18 @@ def get_card_image(card_id):
 
 @app.route("/cards/player_cards", methods=["POST"])
 def get_player_cards():
-    if ("token" not in request.form):
-        return jsonify({"error": ""})
-    token = request.form["token"]
-    sesh_data = get_session_data(token)
-    user_id = sesh_data["userid"]
-    cards = getPlayerDeck(user_id)
-    print(cards)
-    return jsonify({"cards": cards})
+    try:
+        if ("token" not in request.form):
+            return jsonify({"error": ""})
+        token = request.form["token"]
+        sesh_data = get_session_data(token)
+        user_id = sesh_data["userid"]
+        cards = getPlayerDeck(user_id)
+        print(cards)
+        return jsonify({"cards": cards})
+    except BadTokenError:
+        return jsonify({"error": "BadTokenError"})
+    except NoFileUploadedError:
+        return jsonify({"error": "NoFileUploadedError"})
+    except BadFileExtError:
+        return jsonify({"error": "NoFileUploadedError"})
