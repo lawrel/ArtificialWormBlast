@@ -119,9 +119,7 @@
 <script>
 
 function enterGame() {
-      console.log("BEFORE")
       checkGames_io();
-      console.log("AFTER")
       waitState();
     }
 
@@ -181,14 +179,13 @@ function enterGame() {
         case "DefendState":
         updateAtkCard();
         defendState();
-        console.log("HERE")
         updateDfsCard();
         break;
         case "VoteState":
         updateDfsCard();
         voteState();
-        // $('#voteModal').modal('show');
-        // setTimeout(function(){$('#voteModal').modal('hide'); }, 3000);
+        $('#voteModal').modal('show');
+        setTimeout(function(){$('#voteModal').modal('hide'); }, 3000);
         break;
       case "WinnerState":
         winState();
@@ -275,6 +272,7 @@ function enterGame() {
 
 
 <script src="/socket.io/socket.io.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
 <script src="/static/scripts/game_logic.js"></script>   
 <script>
     var monsterChoices = new Array();
