@@ -125,7 +125,7 @@ class WinnerState(GameState):
         self.context = context
     
     def handle(self):
-        votelist = [player.vote for playerid, player in self.context.players.items()]
+        votelist = [player.vote_card for playerid, player in self.context.players.items()]
         atk_cnt = 0
         dfs_cnt = 0
         for v in votelist:
@@ -152,7 +152,7 @@ class WinnerState(GameState):
             loser = self.context.defender
 
         self.context.swap_card(card, loser, winner)
-        self.context.check_end(loser)
+        self.context.check_end(winner, loser)
         self.next_state()
 
     def next_state(self):

@@ -6,6 +6,10 @@ import urllib.parse
 
 from server.routes.emailObject import email_gamelink
 
+# @app.route('/game/?game_id=<newlink>', methods=['GET'])
+# def sesh(newlink):
+#     print("helo wolrd =====================================================================")
+#     return render_template('game.html', cardview=render_template('deck_veiw.html'))
 
 @app.route('/game/')
 def sessions():

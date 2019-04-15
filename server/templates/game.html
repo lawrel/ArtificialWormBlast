@@ -126,7 +126,6 @@ function enterGame() {
     }
 
   function sendHand() {
-    console.log(selectedMonsters)
     sendHand_io(selectedMonsters, getPlayerData(), gameData["gameid"]);
   }
 
@@ -203,9 +202,7 @@ function enterGame() {
   function updateAtkCard() {
     console.log("Attack State")
     console.log(gameData)
-    index = names.indexOf(gameData["atk_card"])
-    pictureName = locations[index]
-    document.getElementById("lc1").innerHTML = `<button onclick="handleVote('${gameData["atk_card"]}')"><img src="/static/images/${pictureName}"></button>` + "<br> Attacking Player: " + gameData.attacker;
+    document.getElementById("lc1").innerHTML = `<button onclick="handleVote('${gameData["atk_card"]}')"><img src="/cards/preview/${gameData["atk_card"]}"></button>` + "<br> Attacking Player: " + gameData.attacker;
   }
 
   function disableDefCard() {
@@ -220,7 +217,7 @@ function enterGame() {
     console.log(index)
     pictureName = locations[index]
     console.log(pictureName)
-    document.getElementById("lc2").innerHTML = `<button onclick="handleVote('${gameData["dfs_card"]}')"><img src="/static/images/${pictureName}"></button>` + "<br> Defending Player: " + gameData.defender;
+    document.getElementById("lc2").innerHTML = `<button onclick="handleVote('${gameData["dfs_card"]}')"><img src="/cards/preview/${gameData["dfs_card"]}"></button>` + "<br> Defending Player: " + gameData.defender;
   }
 
   function defaultState() {
@@ -261,6 +258,7 @@ function enterGame() {
   function endState() {
     showResults(); //no implemented for this release
   }
+
 
   function updateWaitModal() {
     waitString = "<p>Waiting for players to join...<br> Currently, the following players are connected:</p>";
@@ -316,7 +314,7 @@ function enterGame() {
         for (var i = 0; i < numCards; i++) {
             var monster_name = names[i];
             var pictureName = locations[i];
-            ref = ref + `<button onclick="handleMonsterClick('${monster_name}')"><img src="/static/images/${pictureName}" width="125px" height="215px"></button>`
+            ref = ref + `<button onclick="handleMonsterClick('${monster_name}')"><img src="/cards/preview/${pictureName}"" width="125px" height="215px"></button>`
         }
         document.getElementById("jake").innerHTML = ref;
     }
@@ -327,7 +325,7 @@ function enterGame() {
     var uind = 0;
     for (var i = 0; i < gameData['players'].length; i++) {
       if (gameData['players'][i]["userid"] == userid) {
-        uind = i
+        uind = i;
       }
     }
     numCards = countMonsters(gameData['players'][uind]["hand"]);
@@ -347,21 +345,22 @@ function enterGame() {
     playerString = '<br>'
     for (var key in allPlayers) {
       player_name = allPlayers[key]["username"];
-      var uid = allPlayers[key]["userid"]
-
+      uid = allPlayers[key]["userid"]
+      console.log("Userid = " + String(uid))
       playerString = playerString +
         `<div class="card" style="display: inline-block; max-width:200px; color:#255760";> 
       <div class="card-body"> 
-      <button onclick="handlePlayerClick('${player_name}')">${player_name}</button> </div> </div>`;
+      <button onclick="handlePlayerClick('${player_name}', '${uid}')">${player_name}</button> </div> </div>`;
     }
     document.getElementById("opponents").innerHTML = playerString;
   }
 
-  function handlePlayerClick(nameString) {
-    if ((gameData.state == "AttackState") && getPlayerData()["player_name"] == gameData["attacker"]) {
+  function handlePlayerClick(nameString, userid) {
+    if ((gameData.state == "AttackState") && getPlayerData()["userid"] == gameData["attacker"]) {
       // defender = nameString;
       // gameData["defender"]= nameString;
-      selectDefender_io(nameString, gameData["gameid"])
+      console.log(userid)
+      selectDefender_io(userid, gameData["gameid"])
 
     }
   }
@@ -427,24 +426,20 @@ function enterGame() {
 
 
   function handleHandClick(nameString, monsterId) {
-    if ((gameData.state == "AttackState") && getPlayerData()["player_name"] == gameData["attacker"]) {
+    if ((gameData.state == "AttackState") && getPlayerData()["userid"] == gameData["attacker"]) {
       attackingCard = nameString;
-      attackCard_io(gameData["gameid"], attackingCard)
-      index = names.indexOf(attackingCard)
-      pictureName = locations[index]
-      document.getElementById("lc1").innerHTML = `<button onclick="handleVote('${attackingCard}')"><img src="/cards/preview/${monsterId}"></button>`;
+      attackCard_io(gameData["gameid"], monsterId)
+      document.getElementById("lc1").innerHTML = `<button onclick="handleVote('${monsterId}')"><img src="/cards/preview/${monsterId}"></button>`;
     }
 
-    else if ((gameData.state == "DefendState") && getPlayerData()["username"] == gameData["defender"]) {
+    else if ((gameData.state == "DefendState") && getPlayerData()["userid"] == gameData["defender"]) {
       defendingCard = nameString;
-      defendCard_io(gameData["gameid"], defendingCard)
-      index = names.indexOf(defendingCard)
-      pictureName = locations[index]
-      document.getElementById("lc2").innerHTML = `<button onclick="handleVote('${defendingCard}')"><img src="/cards/preview/${monsterId}"></button>`;
+      defendCard_io(gameData["gameid"], monsterId)
+      document.getElementById("lc2").innerHTML = `<button onclick="handleVote('${monsterId}')"><img src="/cards/preview/${monsterId}"></button>`;
     }
   }
   function handleVote(nameString) {
-    submitVote_io(gameData["gameid"], getPlayerData()["username"], nameString)
+    submitVote_io(gameData["gameid"], getPlayerData()["userid"], nameString)
   }
 
 </script>

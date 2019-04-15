@@ -7,6 +7,9 @@ from server import app, socketio
 from server.routes.playerObject import Player
 from server.routes.statesObject import GameState, WaitState, SelectHandState, NewRoundState, AttackState, DefendState, VoteState, WinnerState, EndState
 
+##States
+currState = None
+prevState = None
 
 class Game:
     def __init__(self, public, maxplayers, endrule):
@@ -50,14 +53,15 @@ class Game:
         loser = self.players[loserid]
         winner = self.players[winnerid]
         print(loser.hand)
-        loser.hand.remove(card)
-        winner.hand.append(card)
+        l_card_name = loser.hand.pop(card)
+        self.players[winnerid].edit_card(l_card_name)
+        winner.hand[card] = l_card_name
         self.update_clients()
 
     def check_end(self, winner, loser):
-        if (self.endrule == 0 and len(loser.hand) == 0):
+        if (self.endrule == 0 and len(self.players[loser].hand) == 0):
             self.endgame = True
-        elif (self.endrule > 0 and len(winner.hand) >= self.endrule):
+        elif (self.endrule > 0 and len(self.players[winner].hand) >= self.endrule):
             self.endgame = True
 
     def addPlayer(self, player):
