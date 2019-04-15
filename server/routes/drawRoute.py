@@ -11,7 +11,9 @@ from server.dao.cards import (get_card, getPlayerDeck,
                               EmptyFileError, BadFileExtError,
                               FileTooLargeError, NoFileUploadedError)
 from server.dao import login
-from server.dao.login import get_session_data
+from server.dao.login import get_session_data, BadTokenError
+import base64
+from werkzeug.exceptions import BadRequestKeyError
 
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
@@ -27,22 +29,78 @@ def editor():
     return render_template('drawMonster.html')
 
 
-@app.route("/editor/upload-img", methods=["POST"])
-def editor_upload_img():
-    # print(request.files)
-    try:
-        if "monster-image" not in request.files:
-            raise NoFileUploadedError
-        img_file = request.files.get("monster-image")
-        if img_file.filename == '':
-            raise NoFileUploadedError
-        if (not allowed_file(img_file.filename)):
-            raise BadFileExtError
+# @app.route("/cards/new-card", methods=["POST"])
+# @app.route("/editor/upload-img", methods=["POST"])
+# def editor_upload_img():
+#     # print(request.files)
+#     try:
+#         if "monster-image" not in request.files:
+#             raise NoFileUploadedError
+#         img_file = request.files.get("monster-image")
+#         if img_file.filename == '':
+#             raise NoFileUploadedError
+#         if (not allowed_file(img_file.filename)):
+#             raise BadFileExtError
 
-        filename = secure_filename(img_file.filename)
-        card_id = cards.new_card(img_file)
+#         filename = secure_filename(img_file.filename)
+#         card_id = cards.new_card(img_file.read(), "{}")
+
+#         return jsonify({"success": "", "card_id": card_id})
+#     except NoFileUploadedError:
+#         return jsonify({"error": "NoFileUploadedError"})
+#     except BadFileExtError:
+#         return jsonify({"error": "NoFileUploadedError"})
+
+
+@app.route("/cards/new-card", methods=["POST"])
+@app.route("/editor/upload-img-b64", methods=["POST"])
+def editor_new_card():
+    print(request.files)
+    try:
+        token = request.form["token"]
+        b64_file = request.form["img-data"]
+        card_name = request.form.get("card-name")
+
+        user_id = get_session_data(token)["userid"]
+
+        if b64_file == '':
+            raise NoFileUploadedError
+
+        b64_f = b64_file.split(",")[-1]
+        bin_file = base64.b64decode(b64_f)
+        card_id = cards.new_card(bin_file, "{}")
+        cards.addPlayerCard(user_id, card_id)
 
         return jsonify({"success": "", "card_id": card_id})
+    except BadTokenError:
+        return jsonify({"error": "BadTokenError"})
+    except NoFileUploadedError:
+        return jsonify({"error": "NoFileUploadedError"})
+    except BadRequestKeyError:
+        return jsonify({"error": "BadRequestKeyError"})
+
+
+@app.route("/cards/edit-card", methods=["POST"])
+def editor_edit_card():
+    # print(request.files)
+    try:
+        token = request.form["token"]
+        b64_file = request.form["img-data"]
+        card_id = request.form["card-id"]
+
+        user_id = get_session_data(token)["userid"]
+
+        if b64_file == '':
+            raise NoFileUploadedError
+
+        b64_f = b64_file.split(",")[-1]
+        bin_file = base64.b64decode(b64_f)
+
+        cards.edit_card(card_id, bin_file, "{}")
+
+        return jsonify({"success": ""})
+    except BadTokenError:
+        return jsonify({"error": "BadTokenError"})
     except NoFileUploadedError:
         return jsonify({"error": "NoFileUploadedError"})
     except BadFileExtError:

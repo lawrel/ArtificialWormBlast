@@ -51,24 +51,21 @@ def convertToBinaryData(filename):
     return binaryData
 
 
-def new_card(file, attrs=None):
+def new_card(pic_bin, attrs=None):
     insert_blob = """
                     INSERT INTO MonsterCards.Cards
                         (ImgData, Attributes)
-                    VALUES (%s,%s);"""
-    pic_bin = file.read()
-
+                    VALUES (%s, %s);"""
+    print(type(pic_bin))
     card_id = execute(insert_blob, (pic_bin, attrs), insert=True)[0][0]
     return card_id
 
 
-def edit_card(card_id, file, attrs=None):
+def edit_card(card_id, pic_bin, attrs=None):
     insert_blob = """
                     update MonsterCards.Cards
                     set ImgData = %s, Attributes = %s
                     where ID = %s;"""
-    pic_bin = file.read()
-
     card_id = execute(insert_blob, (pic_bin, attrs, card_id), insert=True)[0][0]
     return card_id
 
