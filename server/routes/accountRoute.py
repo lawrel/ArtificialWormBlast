@@ -7,7 +7,7 @@ from validate_email import validate_email
 
 import urllib.parse
 
-from server.routes.emailSending import email_reset
+from server.routes.emailObject import email_reset
 
 from server import app
 from server.dao import login as l
@@ -190,4 +190,4 @@ def changesettings():
 
 @app.route('/myaccount')
 def myAccount():
-    return render_template('Account.html')
+    return render_template('account.html')

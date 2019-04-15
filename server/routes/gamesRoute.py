@@ -4,7 +4,7 @@ from server import app, socketio
 
 
 @app.route('/game/')
-def sessions():
+def sess():
     return render_template('game.html')
 
 
@@ -25,12 +25,12 @@ def monsters():
 
 @app.route('/sendinvites')
 def invites():
-    newlink = str(uuid.uuid4()
+    newlink = str(uuid.uuid4())
     for i in range(1,10):
         email = request.form["send-email"+ i]
         if (email is not None):
             domain = request.url_root
-            link = urllib.parse.urljoin(domain, (url_for("changepassword", newlink))))
+            link = urllib.parse.urljoin(domain, (url_for("changepassword", newlink)))
             if (not validate_email(email)):
                 return jsonify({"error":"BadEmailError"})
             email_gamelink(email, link)

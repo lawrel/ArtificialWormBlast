@@ -90,10 +90,3 @@ class Game:
                 "newRound":self.newRound
             }
         return gameData
-
-
-gameLst = {}
-
-@app.route("/chat-ex")
-def chat_ex():
-    return render_template("chatRoomEx.html")

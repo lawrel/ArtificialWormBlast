@@ -11,6 +11,7 @@ body {
 .nav {
 	background-color: #383f47;
 	overflow: hidden;
+    height: 200px;
 }
 .nav a {
 	float: left;
@@ -29,7 +30,7 @@ body {
 }
 
 .header {
-        padding: 30px;
+        padding: 0px;
         text-align: center;
         background: white;
 }
