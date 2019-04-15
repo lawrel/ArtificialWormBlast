@@ -69,7 +69,7 @@ def change_password(username, email, password):
     if (len(str(password)) < _min_pwd_len):
         raise ShortPasswordError
     else:
-        execute(query, (password, username, email,))
+        execute(query, (password, username, email))
 
 
 def change_email(username, email):
@@ -83,10 +83,13 @@ def change_email(username, email):
     elif (not validate_email(email)):
         raise BadEmailError
     else:
-        user_id = execute(query, (email, username,))
+        execute(query, (email, username))
 
 
 def change_username(username, email):
+
+    print(username, email)
+
     query = """
         update MonsterCards.Users
         SET UserName = %s
@@ -96,7 +99,7 @@ def change_username(username, email):
     if (username_taken(email)):
         raise UsernameInUseError
     else:
-        user_id = execute(query, (username, email,))
+        execute(query, (username, email))
 
 
 def get_session_data(token):

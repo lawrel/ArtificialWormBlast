@@ -1,0 +1,17 @@
+{% extends "loggedinheader.html" %}
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head >
+</head>
+{% block content %}
+<body>
+    <h1 id="name" align="center"> Monsters Ink's Monsters</h1>
+    <div class="container" id="main">
+        {{ cardview|safe }}
+        <button class="button button2" display inline-block; onclick="window.location.href='/sitedeck'">Add Monsters</button>
+    </div>
+</body>
+
+{% endblock %}
+</html>

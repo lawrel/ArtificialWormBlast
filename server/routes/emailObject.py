@@ -3,6 +3,8 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import uuid
 
+# turn into class ??
+
 
 def send_email(r_email, subjectline, body):
     # Create a secure SSL context
