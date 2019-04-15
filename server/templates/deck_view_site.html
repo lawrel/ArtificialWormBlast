@@ -1,0 +1,73 @@
+<div class="modText" id="monsterChoicesText"> </div>
+<div class="" id="cards"> </div>
+
+<script>
+    var deck;
+    var selectedMonsters = new Array();
+
+    document.addEventListener("logged-in", function () {
+        loadImages_ajax();
+    });
+
+    function loadImages_ajax() {
+        // ask for email
+        var fd = new FormData();
+        fd.append( 'token', retrieveLoginToken());
+
+        $.ajax({
+            url: '/cards/site_cards',
+            data: fd,
+            processData: false,
+            contentType: false,
+            type: 'POST',
+            success: function(data){
+                if ("error" in data) {}
+                else {
+                    deck = data['cards'];
+                    buildDeck(deck);
+                }
+            }
+        });
+    }
+
+    function buildDeck(deck){
+        for(var i=0; i<deck.length; i++){
+            monsterId = deck[i].id;
+            monsterName = deck[i].name;
+            
+            var ref = `<button onclick="handleMonsterClick('${monsterId}')"><img src="/cards/preview/${monsterId}" width="225px" height="315px"><br>${monsterName}</button>`
+            $("#cards").prepend(ref)
+        }
+    }
+
+    function handleMonsterClick(monsterId) {
+        console.log("clicked");
+        var fd = new FormData();
+        fd.append("token", retrieveLoginToken());
+        fd.append("card-id", monsterId);
+        $("#waitingModal").modal('show');
+        $.ajax({
+            url: '/cards/add-card',
+            data: fd,
+            cache: false,
+            processData: false,
+            contentType: false,
+            type: 'POST',
+            success: function (data) {
+                console.log(data);
+                if ("error" in data) {
+
+                }
+                else if ("success" in data) {
+
+                }
+            },
+            complete: function () {
+                $("#waitingModal").modal('hide');
+            }
+        });
+        console.log("saved?");
+    }
+
+
+</script>

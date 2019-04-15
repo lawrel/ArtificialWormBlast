@@ -499,7 +499,6 @@ function editCard_ajax() {
 }
 
 
-
 function save() {
     if (card_id == -1) {
         newCard_ajax();
