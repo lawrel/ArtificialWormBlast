@@ -382,8 +382,8 @@ function text(words) {
     canvas_data.line.push({ "starx": horzt, "starty": vert, "text": words, "font": ctx.font, "color": ctx.strokeStyle })
 }
 
-function upload() {
-    uploadImage_ajax();
+function upload(name) {
+    uploadImage_ajax(name);
     /**
     * UPLOAD SCRIPT
     * This script uses the UploadAtClick library to upload files on a webserver folder
@@ -440,6 +440,7 @@ function upload() {
 
 function newCard_ajax() {
     var uploader = document.getElementById('uploader');
+    var monsterName = document.getElementById('fname')
     var fd = new FormData();
     fd.append("img-data", canvas.toDataURL("image/png;base64"));
     fd.append("token", retrieveLoginToken());
@@ -506,7 +507,6 @@ function save() {
     } else {
         editCard_ajax();
     }
-
     //redirect to page that was on
 }
 

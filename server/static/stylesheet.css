@@ -10,8 +10,9 @@ body {
 }
 .nav {
 	background-color: #383f47;
-	overflow: hidden;
-    height: 200px;
+    overflow: hidden;
+    margin-bottom: 25px;
+    /* height: 200px; */
 }
 .nav a {
 	float: left;
