@@ -37,15 +37,17 @@ def checkGames(data):
     userid = data['player']['userid']
     player = Player(userid, username, email)
 
-    for game in gameLst:
-        if (game.getStatus()):
-            gameLst[game.gameid] = game
-            data['gameid'] = game.gameid
+    for gameid, game in gameLst.items():
+        if (game.gameStatus()):
+            print("+++++++++++++++++++++++++++++++++++++++++++++++++++++ " + game.gameid)
+            #gameLst[game.gameid] = game
+            data['gameid'] = gameid
             joinGame(data)
-            send(game.gameid, room=game.gameid)
+            send(gameid, room=gameid)
             return game.gameid
 
     game = Game(True, 5, 0)
+    print("--------------------------------------------------------- " + game.gameid)
     gameLst[game.gameid] = game
     data['gameid'] = game.gameid
     joinGame(data)

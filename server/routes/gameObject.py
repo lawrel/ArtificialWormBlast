@@ -27,10 +27,13 @@ class Game:
         self.set_state(WaitState(self))
 
     def gameStatus(self):
-        if (self.public and self.maxplayers < self.players.length):
+        if (self.public and self.maxplayers < len(self.players)):
             return True
         else:
             return False
+    
+    def getSelf(self):
+        return self
 
     def new_round(self):
         self.attacker = None
@@ -52,9 +55,9 @@ class Game:
         self.update_clients()
 
     def check_end(self, winner, loser):
-        if (self.endrule == 0 and loser.hand.length == 0):
+        if (self.endrule == 0 and len(loser.hand) == 0):
             self.endgame = True
-        elif (self.endrule > 0 and winner.hand.length >= self.endrule):
+        elif (self.endrule > 0 and len(winner.hand) >= self.endrule):
             self.endgame = True
 
     def addPlayer(self, player):
