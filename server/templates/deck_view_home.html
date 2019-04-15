@@ -32,7 +32,10 @@
 
     function buildDeck(deck){
         for(var i=0; i<deck.length; i++){
-            var ref = `<button onclick="handleMonsterClick('${deck[i]}')"><img src="/cards/preview/${deck[i]}" width="225px" height="315px"><br>Monster ${deck[i]}</button>`
+            monsterId = deck[i].id;
+            monsterName = deck[i].name;
+            
+            var ref = `<button onclick="handleMonsterClick('${monsterId}')"><img src="/cards/preview/${monsterId}" width="225px" height="315px"><br>${monsterName}</button>`
             $("#cards").prepend(ref)
         }
     }
