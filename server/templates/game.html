@@ -273,6 +273,18 @@ function enterGame() {
   }
 </script>
 
+<audio id="myAudio">
+  <source src="/static/sounds/song.mp3" type="audio/mpeg">
+</audio>
+<audio id="myAudio2">
+  <source src="/static/sounds/ah.mp3" type="audio/mpeg">
+</audio>
+<audio id="myAudio3">
+  <source src="/static/sounds/clinton.mp3" type="audio/mpeg">
+</audio>
+<audio id="myAudio4">
+  <source src="/static/sounds/mac420.mp3" type="audio/mpeg">
+</audio>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
 <script src="/static/scripts/game_logic.js"></script>   
@@ -280,8 +292,8 @@ function enterGame() {
     var monsterChoices = new Array();
     var attackingCard = null;
     var defendingCard = null;
-    var names = ["Paul the Cloud", "Not Paul the Cloud", "Ice Cream Dude", "Jelly Dude", "Galusha", "Space Pampootee", "Raccoon", "Spooder Dude", "Fat Zombie Mario", "Badderlocks", "Mike", "Sulley"];
-    var locations = ["monsterExample1.JPG", "monsterExample2.JPG", "monsterExample3.JPG", "monsterExample4.JPG", "monsterExample5.JPG", "monsterExample6.JPG", "monsterExample7.JPG", "monsterExample8.JPG", "monsterExample9.JPG", "monsterExample10.JPG", "monster.gif", "scaryMonster.gif"];
+    var names = [];
+    var locations = [];
    
     socket.on( 'connect', function() {
       socket.emit( 'my event', {
@@ -373,7 +385,7 @@ function listPlayers() {
         playerString = '<br>'
         for (var key in allPlayers)
         {
-            var player_name = allPlayers[key]["username"];
+            player_name = allPlayers[key]["username"];
             var uid = allPlayers[key]["userid"]
             
             playerString = playerString + 
@@ -385,7 +397,7 @@ function listPlayers() {
     }
 
     function handlePlayerClick(nameString) {
-        if ((gameData.state == "AttackState") && getPlayerData()[player_name] == gameData["attacker"])
+        if ((gameData.state == "AttackState") && getPlayerData()["player_name"] == gameData["attacker"])
         {
             // defender = nameString;
             // gameData["defender"]= nameString;
@@ -456,7 +468,7 @@ function listPlayers() {
 
 
     function handleHandClick(nameString) {
-        if ((gameData.state == "AttackState") && getPlayerData()["username"] == gameData["attacker"])
+        if ((gameData.state == "AttackState") && getPlayerData()["player_name"] == gameData["attacker"])
         {
             attackingCard = nameString;
             attackCard_io(gameData["gameid"] ,attackingCard)
