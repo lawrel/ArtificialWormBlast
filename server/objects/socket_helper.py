@@ -1,3 +1,10 @@
+"""
+AWB
+
+socket_helper.py Handles all of the socket operations
+
+"""
+
 from threading import Timer
 import random
 import uuid
@@ -8,28 +15,36 @@ from server.routes.gameObject import Game
 from server.routes.playerObject import Player
 from server.routes.statesObject import GameState, WaitState, SelectHandState, NewRoundState, AttackState, DefendState, VoteState, WinnerState, EndState
 
-
+# List of all active games
 gameLst = {}
 
-
+"""
+Socker for player data
+"""
 @socketio.on('player-data')
 def player_data(msg):
     if ("player" in msg):
         if ("userid" in msg["player"]):
             for gameid, game in gameLst.items():
                 if (msg["player"]["userid"] in game.players):
-                    print(request.sid)
                     emit('player-data', game.serialize(),room=request.sid)
                     break
 
+
+"""
+Socket for player hand
+"""
 @socketio.on('player-hand')
 def player_hand(msg):
     gameid = msg['gameid']
     userid = msg['userid']
     hand = msg['hand']
-
     gameLst[gameid].set_player_hand(userid, hand)
 
+
+"""
+Socket for checking games
+"""
 @socketio.on('check-games')
 def checkGames(data):
     username = data['player']['username']
@@ -37,23 +52,26 @@ def checkGames(data):
     userid = data['player']['userid']
     player = Player(userid, username, email)
 
+    # game is running
     for gameid, game in gameLst.items():
         if (game.gameStatus()):
-            print("+++++++++++++++++++++++++++++++++++++++++++++++++++++ " + game.gameid)
-            #gameLst[game.gameid] = game
             data['gameid'] = gameid
             joinGame(data)
             send(gameid, room=gameid)
             return game.gameid
 
+    # no games running, make new game
     game = Game(True, 5, 0)
-    print("--------------------------------------------------------- " + game.gameid)
     gameLst[game.gameid] = game
     data['gameid'] = game.gameid
     joinGame(data)
     send(game.gameid, room=game.gameid)
     return game.gameid
 
+
+"""
+Socket for creating (Private) game
+"""
 @socketio.on('create-game')
 def createGame(data):
     username = data['player']['username']
@@ -70,6 +88,10 @@ def createGame(data):
     send(game.gameid, room=game.gameid)
     return game.gameid
 
+
+"""
+Socket to join game
+"""
 @socketio.on('join-game')
 def joinGame(data):
     print(request.sid, "Wants to join")
@@ -92,6 +114,10 @@ def joinGame(data):
         emit('join-game', {"status":"failure", "reason":"Not a valid gameid"}, room=request.sid)
         return
 
+
+"""
+Socket to leave
+"""
 @socketio.on('leave')
 def on_leave(data):
     username = data['username']
@@ -99,10 +125,18 @@ def on_leave(data):
     leave_room(room)
     send(username + ' has left the room.', room=room)
 
+
+"""
+Socket to message
+"""
 @socketio.on('message')
 def handle_message(message):
     print('received message: ' + message)
 
+
+"""
+Socket for game data
+"""
 @socketio.on('game-data')
 def give_data(msg):
     gameid = msg["gameid"]
@@ -110,6 +144,10 @@ def give_data(msg):
         print(request.sid)
         emit('game-data', gameLst[gameid].serialize(),room=request.sid)
 
+
+"""
+Socket for attacking card update
+"""
 @socketio.on('atk-card-update')
 def atk_card(msg):
     gameid = msg["gameid"]
@@ -118,6 +156,10 @@ def atk_card(msg):
     gameLst[gameid].update()
     print(gameLst[gameid].serialize())
 
+
+"""
+Socket for defending card update
+"""
 @socketio.on('dfs-card-update')
 def dfs_card(msg):
     gameid = msg["gameid"]
@@ -126,6 +168,10 @@ def dfs_card(msg):
     gameLst[gameid].update()
     print(gameLst[gameid].serialize())
 
+
+"""
+Socket for setting up defender
+"""
 @socketio.on("set-defender")
 def set_defender(msg):
     gameid = msg["gameid"]
@@ -134,6 +180,10 @@ def set_defender(msg):
     gameLst[gameid].update()
     print(gameLst[gameid].serialize())
 
+
+"""
+Socket for vote
+"""
 @socketio.on('submit-vote')
 def reg_vote(msg):
     userid = msg["userid"]
@@ -142,9 +192,16 @@ def reg_vote(msg):
     gameLst[gameid].vote(userid, card)
 
 
+"""
+Function for receiving message
+"""
 def messageReceived(methods=['GET', 'POST']):
     print('message was received!!!')
 
+
+"""
+Socket for event
+"""
 @socketio.on('my event')
 def handle_my_custom_event(json, methods=['GET', 'POST']):
     print('received my event: ' + str(json))
