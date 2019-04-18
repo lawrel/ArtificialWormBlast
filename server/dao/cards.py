@@ -39,7 +39,7 @@ def get_player_deck(playerId):
 """
 Function gets the site's deck
 """
-def get_dite_deck():
+def get_site_deck():
     query = """
             select ID, Name, Attributes from MonsterCards.Cards
             where ID > 0 and ID <= 18;
