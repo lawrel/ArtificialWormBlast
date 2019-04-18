@@ -58,9 +58,6 @@
 {% block content %}
 
 <body>
-    <script type="text/javascript" src="/static/scripts/editor.js"></script>
-
-
     <h1>MonsterEditor</h1>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
     <table>
@@ -200,5 +197,6 @@
 
     <script src=" {{ url_for('static', filename='script.js') }}"></script>
     <script type="text/javascript" src="/static/scripts/ColorWheelScript.js"></script>
+    <script type="text/javascript" src="/static/scripts/editor.js"></script>
 </body>
 {% endblock %}

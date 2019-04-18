@@ -18,6 +18,10 @@ $(document).ready(function () {
         keyboard: false, //remove option to close with keyboard
         show: false //Display loader!
     });
+    img.onload = function () {
+        console.log("its")
+        ctx.drawImage(img, 0, 0);
+    }
 });
 
 
@@ -44,6 +48,7 @@ function init() {
         } else {
             console.error("You don't own this card! " + String(card_id));
             card_id = -1;
+            window.history.replaceState({}, document.title, "?card_id=-1");
         }
     }
 }
@@ -119,7 +124,8 @@ function newCard_ajax() {
 
             }
             else if ("success" in data) {
-
+                card_id = Number(data["card_id"]);
+                window.history.replaceState({}, document.title, "?card_id=" + card_id);
             }
         },
         complete: function () {
@@ -151,7 +157,6 @@ function editCard_ajax() {
 
             }
             else if ("success" in data) {
-
             }
         },
         complete: function () {
