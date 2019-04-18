@@ -11,15 +11,15 @@ from mysql.connector import MySQLConnection
 from mysql.connector.pooling import PooledMySQLConnection
 from datetime import date, datetime, timedelta
 from validate_email import validate_email
-from server.exceptions import exceptions
+from server.exceptions import *
 
 # global min password length
 _min_pwd_len = 7
 
-"""
-Function creates a user
-"""
+
 def signup(username, email, password):
+    """Function creates a user"""
+
     query = """
             INSERT INTO MonsterCards.Users (Email, Password, Username)
             VALUES (%s, sha2(%s, 256), %s);
@@ -37,10 +37,8 @@ def signup(username, email, password):
         execute(query, (email, password, username))
 
 
-"""
-Function changes a users password
-"""
 def change_password(username, email, password):
+    """Function changes a users password"""
     query = """
         update MonsterCards.Users
         SET Password = sha2(%s, 256)
@@ -53,10 +51,9 @@ def change_password(username, email, password):
         execute(query, (password, username, email))
 
 
-"""
-Function changes a users email
-"""
 def change_email(username, email):
+    """Function changes a users email"""
+
     query = """
         update MonsterCards.Users
         SET Email = %s
@@ -70,10 +67,9 @@ def change_email(username, email):
         user_id = execute(query, (email, username))
 
 
-"""
-Function changes a users username
-"""
 def change_username(username, email):
+    """Function changes a users username"""
+
     query = """
         update MonsterCards.Users
         SET UserName = %s
@@ -86,10 +82,9 @@ def change_username(username, email):
         user_id = execute(query, (username, email))
 
 
-"""
-Function gets a users session data
-"""
 def get_session_data(token):
+    """Function gets a users session data"""
+
     curr_date = datetime.now().date()
 
     query = """select AccountID
@@ -111,13 +106,12 @@ def get_session_data(token):
     else:
         raise BadTokenError
 
-    return {"email":email, "userid" : userid, "username" : username}
+    return {"email": email, "userid": userid, "username": username}
 
 
-"""
-Function logs a user out
-"""
 def logout_user(token):
+    """Function logs a user out"""
+
     curr_date = datetime.now().date()
 
     query = ("""
@@ -132,10 +126,9 @@ def logout_user(token):
     cursor.close()
 
 
-"""
-Function gets a player's deck based on their ID
-"""
 def login_user(email, password):
+    """Function gets a player's deck based on their ID"""
+
     update_userlogins = """
                         INSERT INTO MonsterCards.UserLogins
                             (AccountID, AuthToken, ExpirationDate)
@@ -155,10 +148,9 @@ def login_user(email, password):
         raise BadLoginError
 
 
-"""
-Function checks if login token is valid
-"""
 def is_valid_token(token):
+    """Function checks if login token is valid"""
+
     curr_date = datetime.now().date()
     query = """select count(*) from MonsterCards.UserLogins
                     WHERE AuthToken = %s;"""
@@ -168,10 +160,9 @@ def is_valid_token(token):
     return bool(count)
 
 
-"""
-Function checks if the email is in use by another user
-"""
 def email_taken(email):
+    """Function checks if the email is in use by another user"""
+
     query = """select count(*)
             from MonsterCards.Users
             where Email = %s;"""
@@ -180,10 +171,9 @@ def email_taken(email):
     return bool(count)
 
 
-"""
-Function checks if the username is in use by another user
-"""
 def username_taken(username):
+    """Function checks if the username is in use by another user"""
+
     query = """select count(*)
             from MonsterCards.Users
             where Username = %s;"""
@@ -192,10 +182,9 @@ def username_taken(username):
     return bool(count)
 
 
-"""
-Function checks the credentials of a user (login)
-"""
 def valid_creds(email, password):
+    """Function checks the credentials of a user (login)"""
+
     query = """select count(*)
         from MonsterCards.Users
         where Email = %s and Password = sha2(%s, 256);"""
@@ -204,10 +193,9 @@ def valid_creds(email, password):
     return bool(count)
 
 
-"""
-Function gets a user, userid
-"""
 def get_userid(email):
+    """Function gets a user, userid"""
+
     query = """
             select ID
             from MonsterCards.Users

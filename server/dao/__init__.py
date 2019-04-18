@@ -26,7 +26,6 @@ cnxpool = MySQLConnectionPool(pool_name="daopool", pool_size=10,
                               **_config)
 
 
-
 def execute(query_stmt, params, insert=False):
     """General purpose sql statement executor. Basically a wrapper around
     a MySQL connector. Grabs a connection from a connection pool,

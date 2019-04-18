@@ -1,10 +1,13 @@
-"""
-AWB
-
-execptions.py holds all of the exceptions for 
-the program.
-
-"""
+"""execptions holds all of the exceptions for the server."""
+from os.path import dirname, basename, isfile
+import glob
+modules = glob.glob(dirname(__file__)+"/*.py")
+__all__ = [basename(f)[:-3] for f in modules if isfile(f) and not
+           f.endswith('__init__.py')]
+__all__.extend(["Error", "BadEmailError", "ShortPasswordError",
+                "UsernameInUseError", "EmailInUseError", "BadLoginError",
+                "BadTokenError", "NoFileUploadedError", "EmptyFileError",
+                "FileTooLargeError", "BadFileExtError", "SQLExecutionError"])
 
 
 class Error(Exception):

@@ -15,8 +15,8 @@ from validate_email import validate_email
 import urllib.parse
 from server.objects.email_helper  import email_reset
 from server import app
-from server.dao import login as l
-from server.exceptions import exceptions
+from server.dao.login import *
+from server.exceptions import *
 
 
 """
