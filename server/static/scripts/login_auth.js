@@ -1,3 +1,7 @@
+/**
+ *  Login Authentication
+ */
+
 var loginToken = null;
 var loggedInEvent = new Event("logged-in");
 
@@ -88,10 +92,4 @@ function redirectHome() {
 }
 
 $(document).ready(function () {
-    
 });
-// This piece of logic handles the session data retrieval and login redirects
-// var sessionData = {};
-// $( document ).ready(function() {
-//     handleLogin();
-// });

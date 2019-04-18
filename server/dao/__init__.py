@@ -18,16 +18,12 @@ _used_cxns = []
 _config = {
     'user': 'MonsterCardsDev',
     'password': 'TSitMonsterCards',
-    'host': '25.86.80.235',
+    'host': 'monstercards.cxyxzhduq0n4.us-east-2.rds.amazonaws.com',
     'database': 'MonsterCards'
 }
 
 cnxpool = MySQLConnectionPool(pool_name="daopool", pool_size=10,
                               **_config)
-
-
-class SQLExecutionError(Error):
-    pass
 
 
 def execute(query_stmt, params, insert=False):

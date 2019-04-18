@@ -1,3 +1,10 @@
+"""AWB
+
+draw_route.py Handles all routes
+for cards and drawing tools, and
+decks/hands for players
+"""
+
 from flask import (Flask, render_template, request, jsonify, redirect, url_for,
                    send_file)
 from werkzeug.utils import secure_filename
@@ -8,55 +15,30 @@ import io
 from datetime import date, datetime, timedelta
 from server import app
 from server.dao import cards
-from server.dao.cards import (get_card, getPlayerDeck, getSiteDeck,
-                              EmptyFileError, BadFileExtError,
-                              FileTooLargeError, NoFileUploadedError)
+from server.exceptions import *
 from server.dao import login
-from server.dao.login import get_session_data, BadTokenError
 import base64
 from werkzeug.exceptions import BadRequestKeyError
 
 
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
-
-
 def allowed_file(filename):
+    """Function checks if the file is in an acceptable format"""
     return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+           filename.rsplit('.', 1)[1].lower() in set(['png', 'jpg', 'jpeg'])
 
 
 @app.route("/editor")
 def editor():
+    """Route to monster editor"""
     return render_template('drawMonster.html')
 
 
-# @app.route("/cards/new-card", methods=["POST"])
-# @app.route("/editor/upload-img", methods=["POST"])
-# def editor_upload_img():
-#     # print(request.files)
-#     try:
-#         if "monster-image" not in request.files:
-#             raise NoFileUploadedError
-#         img_file = request.files.get("monster-image")
-#         if img_file.filename == '':
-#             raise NoFileUploadedError
-#         if (not allowed_file(img_file.filename)):
-#             raise BadFileExtError
-
-#         filename = secure_filename(img_file.filename)
-#         card_id = cards.new_card(img_file.read(), "{}")
-
-#         return jsonify({"success": "", "card_id": card_id})
-#     except NoFileUploadedError:
-#         return jsonify({"error": "NoFileUploadedError"})
-#     except BadFileExtError:
-#         return jsonify({"error": "NoFileUploadedError"})
-
-
+"""
+Route to start editing new card
+"""
 @app.route("/cards/new-card", methods=["POST"])
 @app.route("/editor/upload-img-b64", methods=["POST"])
 def editor_new_card():
-    print(request.files)
     try:
         token = request.form["token"]
         b64_file = request.form["img-data"]
@@ -81,9 +63,11 @@ def editor_new_card():
         return jsonify({"error": "BadRequestKeyError"})
 
 
+"""
+Route to edit existing card
+"""
 @app.route("/cards/edit-card", methods=["POST"])
 def editor_edit_card():
-    # print(request.files)
     try:
         token = request.form["token"]
         b64_file = request.form["img-data"]
@@ -111,9 +95,11 @@ def editor_edit_card():
         return jsonify({"error": "BadRequestKeyError"})
 
 
+"""
+Route to remove card
+"""
 @app.route("/cards/remove-card", methods=["POST"])
 def remove_card():
-    # print(request.files)
     try:
         token = request.form["token"]
         card_id = request.form["card-id"]
@@ -129,6 +115,9 @@ def remove_card():
         return jsonify({"error": "BadRequestKeyError"})
 
 
+"""
+Route to preview card
+"""
 @app.route("/cards/preview/<card_id>", methods=["GET"])
 def get_card_image(card_id):
     card_id, card_name, img_bin, attrs = get_card(card_id)
@@ -138,6 +127,9 @@ def get_card_image(card_id):
                      attachment_filename='%s.png' % card_id)
 
 
+"""
+Route to get a player's hand
+"""
 @app.route("/cards/player_cards", methods=["POST"])
 def get_player_cards():
     try:
@@ -157,6 +149,9 @@ def get_player_cards():
         return jsonify({"error": "NoFileUploadedError"})
 
 
+"""
+Route to site deck
+"""
 @app.route("/cards/site_cards", methods=["POST"])
 def get_site_cards():
     try:
@@ -170,6 +165,9 @@ def get_site_cards():
         return jsonify({"error": "NoFileUploadedError"})
 
 
+"""
+Route to add card
+"""
 @app.route("/cards/add-card", methods=["POST"])
 def add_site_cards():
     try:

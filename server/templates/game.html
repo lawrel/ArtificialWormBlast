@@ -11,7 +11,7 @@
                 </div>
                 <div class="modal-body" id="" style="overflow-y: initial; max-height: 80%">
                     </div>
-                    <div class=  "modText" id="jake">
+                    <div class=  "modText" id="mtext">
                         <p> Select five monsters that you want to draft onto your team before the battle begins.</p>
                         
                     </div>
@@ -133,7 +133,6 @@ function enterGame() {
     let user_name = $('input.username').val();
     let user_input = $('input.message').val();
     $('input.message').val("");
-    console.log(user_name);
     socket.emit('my event', {
       user_name: getPlayerData()["username"],
       message: user_input
@@ -163,7 +162,6 @@ function enterGame() {
 
   function gameUpdate() {
     var state = gameData.state;
-    console.log(state);
     switch (state) {
       case "WaitState":
         updateWaitModal();
@@ -200,8 +198,6 @@ function enterGame() {
   }
 
   function updateAtkCard() {
-    console.log("Attack State")
-    console.log(gameData)
     document.getElementById("lc1").innerHTML = `<button onclick="handleVote('${gameData["atk_card"]}')"><img src="/cards/preview/${gameData["atk_card"]}"></button>` + "<br> Attacking Player: " + gameData.attacker;
   }
 
@@ -210,13 +206,8 @@ function enterGame() {
   }
 
   function updateDfsCard() {
-    console.log("Defense state")
-    console.log(gameData)
-    console.log(gameData["dfs_card"])
     index = names.indexOf(gameData["dfs_card"])
-    console.log(index)
     pictureName = locations[index]
-    console.log(pictureName)
     document.getElementById("lc2").innerHTML = `<button onclick="handleVote('${gameData["dfs_card"]}')"><img src="/cards/preview/${gameData["dfs_card"]}"></button>` + "<br> Defending Player: " + gameData.defender;
   }
 
@@ -242,7 +233,6 @@ function enterGame() {
     listPlayers();
   }
   function defendState() {
-    console.log("WHY?")
     printDefender();
     listHand();
   }
@@ -250,9 +240,7 @@ function enterGame() {
     listHand();
   }
   function winState() {
-    console.log("Enter Win State")
     changeHand(); //for now just change the hand of the card
-    console.log("Init Next Round")
     newRound();
   }
   function endState() {
@@ -316,7 +304,7 @@ function enterGame() {
             var pictureName = locations[i];
             ref = ref + `<button onclick="handleMonsterClick('${monster_name}')"><img src="/cards/preview/${pictureName}"" width="125px" height="215px"></button>`
         }
-        document.getElementById("jake").innerHTML = ref;
+        document.getElementById("mtext").innerHTML = ref;
     }
 
 
@@ -333,7 +321,6 @@ function enterGame() {
     for (monster_id in gameData['players'][uind]["hand"]) {
       index = names.indexOf(monster_id)
       monster_name = gameData['players'][uind]["hand"][monster_id]
-      console.log(monster_name)
 
       printString = printString + `<div class="card" style="display: inline-block; max-width:200px; color:#255760";> <img class="card-img-top" src="/cards/preview/${monster_id}"> <div class="card-body"> <button onclick="handleHandClick('${monster_name}', '${monster_id}')">${monster_name}</button> </div> </div>`;
     }
@@ -346,7 +333,6 @@ function enterGame() {
     for (var key in allPlayers) {
       player_name = allPlayers[key]["username"];
       uid = allPlayers[key]["userid"]
-      console.log("Userid = " + String(uid))
       playerString = playerString +
         `<div class="card" style="display: inline-block; max-width:200px; color:#255760";> 
       <div class="card-body"> 
@@ -357,18 +343,13 @@ function enterGame() {
 
   function handlePlayerClick(nameString, userid) {
     if ((gameData.state == "AttackState") && getPlayerData()["userid"] == gameData["attacker"]) {
-      // defender = nameString;
-      // gameData["defender"]= nameString;
-      console.log(userid)
       selectDefender_io(userid, gameData["gameid"])
-
     }
   }
 
   function changeHand() {
     //take card from loser
     //give card to winner
-    console.log("CHANGE HAND")
     allPlayers = gameData["players"];
     allPlayers2 = gameData["players"]
     winner = null;
@@ -376,37 +357,29 @@ function enterGame() {
     defender = null;
     for (var key in allPlayers) {
       if (allPlayers[key]["username"] == gameData.winner) {
-        console.log("FOUND WINNER")
         if (allPlayers[key]["username"] == gameData.attacker) {
-          console.log("Attacker won")
           // looking for defender as loser
           for (key2 in allPlayers2) {
             if (allPlayers2[key2]["username"] == gameData.defender) {
-              console.log("defender lost")
               // take card from loser
-              allPlayers2[key2]["hand"].pop(gameData.dfs_card); //wrong syntax??
+              allPlayers2[key2]["hand"].pop(gameData.dfs_card); 
               //add it to winner
-              allPlayers[key]["hand"].push(gameData.dfs_card); //wrong syntax??
+              allPlayers[key]["hand"].push(gameData.dfs_card); 
             }
           }
         } else {
           //looking for defender as winner
           for (key2 in allPlayers2) {
             if (allPlayers2[key2]["username"] == gameData.defender) {
-              console.log("attacker lost")
               // take card from loser
-              allPlayers2[key2]["hand"].pop(gameData.atk_card); //wrong syntax??
+              allPlayers2[key2]["hand"].pop(gameData.atk_card); 
               //add it to winner
-              allPlayers[key]["hand"].push(gameData.atk_card); //wrong syntax??
+              allPlayers[key]["hand"].push(gameData.atk_card);
             }
           }
         }
-
       }
-
-
     }
-
   }
 
   function newRound() {

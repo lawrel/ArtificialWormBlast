@@ -1,3 +1,10 @@
+"""
+AWB
+
+cards.py Handles all Query Calls to the database for cards 
+
+"""
+
 import sys
 import uuid
 from server.dao import cnxpool, execute
@@ -7,28 +14,10 @@ from datetime import date, datetime, timedelta
 from mysql.connector.errors import Error
 
 
-# class Error(Exception):
-#     """Base class for other exceptions"""
-#     pass
-
-
-class NoFileUploadedError(Error):
-    pass
-
-
-class EmptyFileError(Error):
-    pass
-
-
-class FileTooLargeError(Error):
-    pass
-
-
-class BadFileExtError(Error):
-    pass
-
-
-def getPlayerDeck(playerId):
+"""
+Function gets a player's deck based on their ID
+"""
+def get_player_deck(playerId):
     query = """
             select CardID, Name, Attributes from MonsterCards.UserCards
             inner join MonsterCards.Cards
@@ -47,7 +36,10 @@ def getPlayerDeck(playerId):
     return dict_cards
 
 
-def getSiteDeck():
+"""
+Function gets the site's deck
+"""
+def get_dite_deck():
     query = """
             select ID, Name, Attributes from MonsterCards.Cards
             where ID > 0 and ID <= 18;
@@ -64,13 +56,19 @@ def getSiteDeck():
     return dict_cards
 
 
-def addPlayerCard(playerId, cardId):
+"""
+Function adds a card to a player's deck
+"""
+def add_player_card(playerId, cardId):
     query = """
             INSERT INTO MonsterCards.UserCards (UserID, CardID) VALUES (%s, %s);
             """
     execute(query, (playerId, cardId))
 
 
+"""
+Function removes a card from a player's deck
+"""
 def remove_player_card(player_id, card_id):
     query = """
             delete from MonsterCards.UserCards
@@ -79,13 +77,19 @@ def remove_player_card(player_id, card_id):
     execute(query, (card_id, player_id))
 
 
-def convertToBinaryData(filename):
+"""
+Function converts a file to binary data for storage
+"""
+def convert_to_binary_data(filename):
     # Convert digital data to binary format
     with open(filename, 'rb') as file:
         binaryData = file.read()
     return binaryData
 
 
+"""
+Function creates a new card
+"""
 def new_card(pic_bin, attrs=None, name=None):
     insert_blob = """
                     INSERT INTO MonsterCards.Cards
@@ -96,6 +100,9 @@ def new_card(pic_bin, attrs=None, name=None):
     return card_id
 
 
+"""
+Function edits an existing card
+"""
 def edit_card(card_id, pic_bin, attrs=None, name=None):
     if (name is None):
         insert_blob = """
@@ -113,6 +120,9 @@ def edit_card(card_id, pic_bin, attrs=None, name=None):
         return card_id
 
 
+"""
+Function gets a card
+"""
 def get_card(card_id):
     query = """
             select ID, Name, ImgData, Attributes
