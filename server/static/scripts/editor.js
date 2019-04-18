@@ -1,29 +1,7 @@
-
-// Strip the parameters from the URL
-function getParams() {
-    // Get the params in an array
-    var url = window.location.href;
-    var params = url.split('?');
-
-    // Format into a dictionary/JSON object
-    var data = {};
-    for (var i = 1; i < params.length; i++) {
-        var keyVal = params[i].split('=');
-        var key = keyVal[0];
-        var val = keyVal[1];
-        data[key] = val;
-    }
-
-    return data;
-}
-
-$(document).ready(function () {
-    $("#waitingModal").modal({
-        backdrop: "static", //remove ability to close modal with click
-        keyboard: false, //remove option to close with keyboard
-        show: false //Display loader!
-    });
-});
+/**
+ *  Card editor 
+ *  Especially ajax
+ */
 
 var card_id = -1;
 var token = '';
@@ -32,6 +10,18 @@ var deck = [];
 var card_data;
 getDeck_ajax();
 
+
+// On ready call
+$(document).ready(function () {
+    $("#waitingModal").modal({
+        backdrop: "static", //remove ability to close modal with click
+        keyboard: false, //remove option to close with keyboard
+        show: false //Display loader!
+    });
+});
+
+
+// Initalizer
 function init() {
     params = getParams();
     if ("card_id" in params && params.card_id != '') {
@@ -58,6 +48,26 @@ function init() {
     }
 }
 
+
+// Strip the parameters from the URL
+function getParams() {
+    // Get the params in an array
+    var url = window.location.href;
+    var params = url.split('?');
+
+    // Format into a dictionary/JSON object
+    var data = {};
+    for (var i = 1; i < params.length; i++) {
+        var keyVal = params[i].split('=');
+        var key = keyVal[0];
+        var val = keyVal[1];
+        data[key] = val;
+    }
+    return data;
+}
+
+
+// Gets the deck
 function getDeck_ajax() {
     // ask for email
     var fd = new FormData();
@@ -81,12 +91,13 @@ function getDeck_ajax() {
 }
 
 
+// Function uploads
 function upload(name) {
     uploadImage_ajax(name);
 }
 
 
-
+// Gets new card
 function newCard_ajax() {
     var uploader = document.getElementById('uploader');
     var monsterName = document.getElementById('fname')
@@ -118,6 +129,7 @@ function newCard_ajax() {
 }
 
 
+// Edits card
 function editCard_ajax() {
     var uploader = document.getElementById('uploader');
     var fd = new FormData();
@@ -148,6 +160,8 @@ function editCard_ajax() {
     });
 }
 
+
+// Deletes card
 function deleteCard_ajax(){
     var uploader = document.getElementById('uploader');
     var fd = new FormData();
@@ -180,6 +194,7 @@ function deleteCard_ajax(){
 }
 
 
+// Function saves cards
 function save() {
     if (card_id == -1) {
         newCard_ajax();
@@ -189,6 +204,8 @@ function save() {
     //redirect to page that was on
 }
 
+
+// Function deletes cards
 function deleteCard()
 {
     if (card_id != -1){
@@ -196,5 +213,7 @@ function deleteCard()
     }
 }
 
+
+// Function reloads card
 function reload() {
 }

@@ -1,3 +1,7 @@
+/**
+ *  Game Logic
+ */
+
 var socket;
 var clientState = null;
 var gameState = null;
@@ -11,24 +15,22 @@ var defendVotes= 0;
 var stateUpdateEvent = new Event('game-update');
 var playerDataEvent = new Event('player-data');
 
+// Connect to game server
+socket = io.connect('ws://' + document.domain + ':' + location.port);
 
 
+// On ready call
 $( document ).ready(function() {
     // Connect to game server over socketio
     connectGameSocket();
 
     // Check if the player is logged in
-    
-    handleJoinGame();
-    
+    handleJoinGame(); 
 });
 
-// Connect to game server
-socket = io.connect('ws://' + document.domain + ':' + location.port);
 
+// Connects to game socket
 function connectGameSocket() {
-
-
     // Event handlers with callback functions
     socket.on("join-game", joinGame_res);
     socket.on("game-data", gameData_res)
@@ -54,6 +56,8 @@ function connectGameSocket() {
       })
 }
 
+
+// handling joining a game
 function handleJoinGame() {
     var params = getParams();
     if ("game_id" in params) {
@@ -70,10 +74,13 @@ function handleJoinGame() {
     }
 }
 
+
+// Gets player data
 function getPlayerData() {
     var seshData = retrieveSessionData();
     return seshData;
 }
+
 
 // Strip the parameters from the URL
 function getParams() {
@@ -145,6 +152,7 @@ function selectDefender_io(userid, gameid) {
 function attackCard_io(gameid, card) {
     socket.emit('atk-card-update', { gameid: gameid, card: card});
 }
+
 function attackCard_res(msg) {
     atkCard = msg;
     document.dispatchEvent(playerDataEvent);
@@ -153,6 +161,7 @@ function attackCard_res(msg) {
 function defendCard_io(gameid, card) {
     socket.emit('dfs-card-update', { gameid: gameid, card: card});
 }
+
 function defendCard_res(msg) {
     dfsCard = msg;
     document.dispatchEvent(playerDataEvent);
@@ -184,6 +193,7 @@ function attacker_res(msg) {
 function winner_io(gameid, userid) {
     socket.emit('round-winner', { gameid: gameid, userid: userid});
 }
+
 function winner_res(msg) {
     winner = msg;
     document.dispatchEvent(playerDataEvent);
@@ -192,6 +202,7 @@ function winner_res(msg) {
 function newRound_io(gameid) {
     socket.emit('new_Round', { gameid: gameid});
 }
+
 function nR_res(msg) {
     round = msg;
     document.dispatchEvent(playerDataEvent);
