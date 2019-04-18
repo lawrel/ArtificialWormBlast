@@ -15,7 +15,7 @@ WORKDIR /app
 RUN pipenv install --system --deploy --ignore-pipfile
 # RUN pipenv shell
 
-EXPOSE 80
+EXPOSE 8000
 
 ENTRYPOINT [ "python" ]
 
