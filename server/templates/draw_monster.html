@@ -104,7 +104,7 @@
             <button id="reset" onclick="document.getElementById('colorin').jscolor.hide()">
                 Hide Picker
             </button>
-            Color: <input id="colorin" class="jscolor {width:243, height:150, 
+            Color: <input id="colorin" class="jscolor {width:243, height:150,
     borderColor:'#FFF', insetColor:'#FFF', backgroundColor:'#666'}" onchange="update(this.jscolor)" value="ab2567">
         </div>
     </div>
@@ -200,5 +200,6 @@
 
     <script src=" {{ url_for('static', filename='script.js') }}"></script>
     <script type="text/javascript" src="/static/scripts/ColorWheelScript.js"></script>
+    <script type="text/javascript" src="/static/scripts/drawingapp.js"></script>
 </body>
 {% endblock %}
