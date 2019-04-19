@@ -3,6 +3,7 @@
  *  Especially ajax
  */
 
+
 var card_id = -1;
 var token = '';
 var img = new Image(450, 630);
