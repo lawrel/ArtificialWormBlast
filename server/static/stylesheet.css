@@ -9,7 +9,7 @@ body {
     color: #E8fcff;
 }
 @font-face {
-    font-family: Comic Sans Ms;
+    font-family: ComicSans;
     src: url(static/assets/ComicSansMS.ttf);
 }
 .nav {
@@ -166,4 +166,17 @@ body {
          max-width: 100%;
          flex: 0 0 100%;
      }
+}
+#show {
+    border-radius: 5px;
+    border: 1px dashed #01ACC1;
+    background: #181d23;
+    color: #01ACC1;
+    font-size: 2em;
+    text-shadow: 0 -15px 2.5px transparent, 0 15px 2.5px transparent;
+    -webkit-transition: all .3s linear 0s;
+    -moz-transition: all .3s linear 0s;
+    -ms-transition: all .3s linear 0s;
+    -o-transition: all .3s linear 0s;
+    transition: all .3s linear 0s;
 }
