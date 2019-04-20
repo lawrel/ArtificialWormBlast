@@ -6,7 +6,7 @@ login.py  Handles all Query Calls to the database for users
 """
 
 import uuid
-from server.dao import cnxpool, execute
+from . import cnxpool, execute
 from mysql.connector import MySQLConnection
 from mysql.connector.pooling import PooledMySQLConnection
 from datetime import date, datetime, timedelta

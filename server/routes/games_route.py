@@ -10,7 +10,7 @@ from flask import Flask, render_template, request, jsonify
 from server import app, socketio
 from validate_email import validate_email
 import urllib.parse
-from server.objects.email_helper import email_gamelink
+from objects.email_helper import email_gamelink
 
 """
 Route for a general game

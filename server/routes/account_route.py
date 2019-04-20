@@ -6,16 +6,16 @@ for accounts and account managements
 
 """
 
-from flask import Flask, render_template, request, jsonify, redirect, url_for
-import mysql.connector
-from mysql.connector import errorcode
+from flask import render_template, request, jsonify, url_for
 import uuid
-from datetime import date, datetime, timedelta
 from validate_email import validate_email
 import urllib.parse
-from server.objects.email_helper  import email_reset
 from server import app
-from server.dao.accounts import *
+
+
+import database.dao as dao
+import database.dao.accounts
+import database.dao.cards
 from server.exceptions import *
 
 
@@ -26,7 +26,7 @@ Route to logout
 def logout():
     if request.method == "POST":
         token = request.form["login-token"]
-        logout_user(token)
+        dao.accounts.logout_user(token)
         return jsonify({"msg": "user logout succesful."})
 
 
@@ -39,7 +39,7 @@ def session_data():
         token = request.form["login-token"]
         
         try:
-            sesh_data = get_session_data(token)
+            sesh_data = dao.accounts.get_session_data(token)
             return jsonify(sesh_data)
         except BadTokenError:
             return jsonify({"error": "BadTokenError"})
@@ -63,7 +63,7 @@ def login():
             return "Password is empty"
 
         try:
-            token = login_user(email, password)
+            token = dao.accounts.login_user(email, password)
             return jsonify({"login-token": token})
         except BadLoginError:
             return jsonify({"error": "BadLoginError"})
@@ -117,7 +117,7 @@ def forgotpassword():
     if (not validate_email(email)):
         return jsonify({"error":"BadEmailError"})
     else:
-        email_reset(email, link)
+        dao.accounts.email_reset(email, link)
         return jsonify({"success":""})
 
 
@@ -145,8 +145,8 @@ def changepass():
         return "Password is empty"
 
     try:
-        l.change_password(username, email, password)
-        if (not l.email_taken(email)):
+        dao.accounts.change_password(username, email, password)
+        if (not dao.accounts.email_taken(email)):
             raise Error
         else:
             return jsonify({"success":""})
@@ -175,11 +175,11 @@ def changesettings():
     try:
 
         if (username != old_u):
-            l.change_username(username, old_e)
+            dao.accounts.change_username(username, old_e)
         if (email != old_e):
-            l.change_email(username, email)
+            dao.accounts.change_email(username, email)
         if (password != "You should know."):
-            l.change_password(username, email, password)
+            dao.accounts.change_password(username, email, password)
 
 
         return jsonify({"success":""})
