@@ -4,7 +4,7 @@ from server import app, socketio
 
 
 @app.route('/game/')
-def sessions():
+def session3():
     return render_template('game.html')
 
 

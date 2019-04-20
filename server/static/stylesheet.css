@@ -8,6 +8,10 @@ body {
     background: #181d23;
     color: #E8fcff;
 }
+@font-face {
+    font-family: Comic Sans Ms;
+    src: url(static/assets/ComicSansMS.ttf);
+}
 .nav {
 	background-color: #383f47;
 	overflow: hidden;
