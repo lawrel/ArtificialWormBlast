@@ -42,7 +42,7 @@ function init() {
 
         if (incl_id) {
             console.log("Editing card: " + String(card_id));
-            img.src = 'http://localhost:8000/cards/preview/' + String(card_id);
+            img.src = '/cards/preview/' + String(card_id);
             $("#monster-name").val(card_data["name"]);
 
         } else {
