@@ -1,23 +1,19 @@
-"""
-AWB
-
+"""AWB
 cards.py Handles all Query Calls to the database for cards 
-
 """
 
 import sys
 import uuid
-from server.dao import cnxpool, execute
+from database.dao import cnxpool, execute
 from mysql.connector import MySQLConnection
 from mysql.connector.pooling import PooledMySQLConnection
 from datetime import date, datetime, timedelta
 from mysql.connector.errors import Error
 
 
-"""
-Function gets a player's deck based on their ID
-"""
 def get_player_deck(playerId):
+    """Function gets a player's deck based on their ID"""
+    
     query = """
             select CardID, Name, Attributes from MonsterCards.UserCards
             inner join MonsterCards.Cards
@@ -36,10 +32,9 @@ def get_player_deck(playerId):
     return dict_cards
 
 
-"""
-Function gets the site's deck
-"""
 def get_site_deck():
+    """Function gets the site's deck"""
+    
     query = """
             select ID, Name, Attributes from MonsterCards.Cards
             where ID > 0 and ID <= 18;
@@ -56,20 +51,18 @@ def get_site_deck():
     return dict_cards
 
 
-"""
-Function adds a card to a player's deck
-"""
 def add_player_card(playerId, cardId):
+    """Function adds a card to a player's deck"""
+    
     query = """
             INSERT INTO MonsterCards.UserCards (UserID, CardID) VALUES (%s, %s);
             """
     execute(query, (playerId, cardId))
 
 
-"""
-Function removes a card from a player's deck
-"""
 def remove_player_card(player_id, card_id):
+    """Function removes a card from a player's deck"""
+    
     query = """
             delete from MonsterCards.UserCards
             where CardID = %s and UserID = %s;
@@ -77,20 +70,18 @@ def remove_player_card(player_id, card_id):
     execute(query, (card_id, player_id))
 
 
-"""
-Function converts a file to binary data for storage
-"""
 def convert_to_binary_data(filename):
+    """Function converts a file to binary data for storage"""
+    
     # Convert digital data to binary format
     with open(filename, 'rb') as file:
         binaryData = file.read()
     return binaryData
 
 
-"""
-Function creates a new card
-"""
 def new_card(pic_bin, attrs=None, name=None):
+    """Function creates a new card"""
+    
     insert_blob = """
                     INSERT INTO MonsterCards.Cards
                         (Name, ImgData, Attributes)
@@ -100,10 +91,9 @@ def new_card(pic_bin, attrs=None, name=None):
     return card_id
 
 
-"""
-Function edits an existing card
-"""
 def edit_card(card_id, pic_bin, attrs=None, name=None):
+    """Function edits an existing card"""
+    
     if (name is None):
         insert_blob = """
                     update MonsterCards.Cards
@@ -120,10 +110,9 @@ def edit_card(card_id, pic_bin, attrs=None, name=None):
         return card_id
 
 
-"""
-Function gets a card
-"""
 def get_card(card_id):
+    """Function gets a card"""
+    
     query = """
             select ID, Name, ImgData, Attributes
             from MonsterCards.Cards

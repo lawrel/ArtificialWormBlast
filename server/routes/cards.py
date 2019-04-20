@@ -12,9 +12,9 @@ import uuid
 import io
 from datetime import date, datetime, timedelta
 from server import app
-import server.dao as dao
-import server.dao.accounts
-import server.dao.cards
+import database.dao as dao
+import database.dao.accounts
+import database.dao.cards
 from server.exceptions import *
 import base64
 from werkzeug.exceptions import BadRequestKeyError
