@@ -19,6 +19,13 @@ Route for a general game
 def sessions():
     return render_template('game.html', cardview=render_template("deck_view.html"))
 
+"""
+Route for a general game ending
+"""
+@app.route('/gameEnd/')
+def gameEnd():
+    return render_template('gameEnd.html')
+
 
 """
 Route for a private game
