@@ -1,8 +1,21 @@
 ﻿{%extends 'loggedinheader.html' %}
 {% block content %}
-<link rel="stylesheet" type="text/css" href="/static/stylesheet.css" />
 <style>
     @import url(https://fonts.googleapis.com/css?family=Open+Sans);
+    .buttonA {
+        border-radius: 5px;
+        border: 1px dashed #01ACC1;
+        background: #181d23;
+        color: #01ACC1;
+        font-size: 2em;
+        margin: 1px;
+        text-shadow: 0 -15px 2.5px transparent, 0 15px 2.5px transparent;
+        -webkit-transition: all .3s linear 0s;
+        -moz-transition: all .3s linear 0s;
+        -ms-transition: all .3s linear 0s;
+        -o-transition: all .3s linear 0s;
+        transition: all .3s linear 0s;
+    }
 </style>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
@@ -20,10 +33,10 @@
             </form>
             <label style="text-shadow: 0 0 8px #01Acc0; font-size: 1.5em;">Name your Monster: </label>
             <input id="monster-name" type="text">
-            <button id="buttonA" id="save" onclick="save()">Save</button>
+            <button class="buttonA"  onclick="save()">Save</button>
             
-            <button id="buttonA" id="delete" onclick="deleteCard()">Delete</button>
-            <button id="buttonA" onclick="reset()">Reset</button>
+            <button class="buttonA" onclick="deleteCard()">Delete</button>
+            <button class="buttonA" onclick="reset()">Reset</button>
         </td></tr></table>
     </div>
     <div class="drawpanel">
@@ -32,19 +45,19 @@
                 <img src="/static/assets/pencilicon.png"
                      alt="Pencil" style="width:60px; height:55px">
             </button>
-            <button id="buttonA" value="line" onclick="change(this.value)">
+            <button class="buttonA" value="line" onclick="change(this.value)">
                 <img src="/static/assets/linetool.png"
                      alt="Line" style="width:60px; height:55px">
             </button>
-            <button id="buttonA" value="rectangle" onclick="change(this.value)">
+            <button class="buttonA" value="rectangle" onclick="change(this.value)">
                 <img src="/static/assets/squaretool.png"
                      alt="Rectangle" style="width:60px; height:55px">
             </button>
-            <button id="buttonA" value="circle" onclick="change(this.value)">
+            <button class="buttonA" value="circle" onclick="change(this.value)">
                 <img src="/static/assets/circletool.png"
                      alt="Circle" style="width:60px; height:55px">
             </button>
-            <button id="buttonA" value="eraser" onclick="change(this.value)">
+            <button class="buttonA" value="eraser" onclick="change(this.value)">
                 <img src="/static/assets/erasertool.png"
                      alt="Eraser" style="width:60px; height:55px">
             </button>
@@ -61,12 +74,12 @@
             </tr>
             <tr>
                 <td>
-                    <button id="buttonA" onclick="document.getElementById('colorin').jscolor.show()">
+                    <button class="buttonA" onclick="document.getElementById('colorin').jscolor.show()">
                         Show Color Picker
                     </button>
                 </td>
                 <td>
-                    <button id="buttonA" onclick="document.getElementById('colorin').jscolor.hide()">
+                    <button class="buttonA" onclick="document.getElementById('colorin').jscolor.hide()">
                         Hide Color Picker
                     </button>
                 </td>
@@ -83,11 +96,11 @@
                 </td>
                 <td>
                     <label> Line Width: </label>
-                    <button id="buttonA" type="button" onclick="add_pixel()"
+                    <button class="buttonA" type="button" onclick="add_pixel()"
                             style="width: 50px; font-size:2em;">
                         +
                     </button>
-                    <button id="buttonA" type="button" onclick="reduce_pixel()"
+                    <button class="buttonA" type="button" onclick="reduce_pixel()"
                             style="width: 50px; font-size:2em;">
                         -
                     </button>

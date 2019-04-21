@@ -37,6 +37,7 @@ td {
     height: 70%;
     margin: 20px 20px 20px 20px;
     float: left;
+    display: inline-block;
 }
 
 .sidebar {
@@ -44,11 +45,13 @@ td {
     height: 70%;
     float: left;
     padding: 20px 20px 20px 20px;
+    display:inline-block;
 }
 
 .drawpanel {
     float: left;
     margin: auto;
+    display: inline-block;
 }
 
 .toolbox {
@@ -96,7 +99,7 @@ td {
 .header h1 {
    font-size: 50px;
 }
-#buttonA {
+.buttonA {
     border-radius: 5px;
     border: 1px dashed #01ACC1;
     background: #181d23;
@@ -123,13 +126,13 @@ h1 {
     background-color: #273238;
     text-shadow: 0 0 8px #01Acc0;
 }
-    #buttonA:hover {
+    .buttonA:hover {
         background: #255760;
         border: 1px solid #01Acc0;
         color: white;
     }
 
-    #buttonA:active {
+    .buttonA:active {
         background: #01Acc0;
         border: 1px solid #E8fcff;
         color: white;
