@@ -61,23 +61,19 @@
     <h1>Monster Editor</h1>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
     <div class="sidebar">
-        <table>
-            <tr>
-                <td>
-                    <form id="upload-img-form" enctype="multipart/form-data">
-                        <label style="text-shadow: 0 0 8px #01Acc0; font-size: 1.5em;">Upload Image: </label>
-                        <input type="file" id="monster-image" name="monster-image" accept="image/png, image/jpeg">
-                        <button type="button" class="buttonA" onclick="uploadImage_ajax()">Upload</button>
-                    </form>
-                    <label style="text-shadow: 0 0 8px #01Acc0; font-size: 1.5em;">Name your Monster: </label>
-                    <input id="monster-name" type="text">
-                    <button class="buttonA" onclick="save()">Save</button>
+        <table><tr><td>
+            <form id="upload-img-form" enctype="multipart/form-data">
+                <label style="text-shadow: 0 0 8px #01Acc0; font-size: 1.5em;">Upload Image: </label>
+                <input type="file" id="monster-image" name="monster-image" accept="image/png, image/jpeg">
+                <button type="button" class="buttonA" onclick="upload()">Upload</button>
+            </form>
+            <label style="text-shadow: 0 0 8px #01Acc0; font-size: 1.5em;">Name your Monster: </label>
+            <input id="monster-name" type="text">
+            <button class="buttonA"  onclick="save()">Save</button>
 
-                    <button class="buttonA" onclick="deleteCard()">Delete</button>
-                    <button class="buttonA" onclick="reset()">Reset</button>
-                </td>
-            </tr>
-        </table>
+            <button class="buttonA" onclick="deleteCard()">Delete</button>
+            <button class="buttonA" onclick="reset()">Reset</button>
+        </td></tr></table>
     </div>
     <div class="drawpanel">
         <div class="toolbox">
@@ -198,6 +194,5 @@
     <script type="text/javascript" src="/static/scripts/ColorWheelScript.js"></script>
     <script type="text/javascript" src="/static/scripts/editor.js"></script>
     <script type="text/javascript" src="/static/scripts/drawingapp.js"></script>
-    <script>; (function{ document.getElementById('colorin').jscolor.show(); }());</script>
 </body>
 {% endblock %}
