@@ -24,21 +24,8 @@
 <body onload="pencil()">
     <h1>Monster Editor</h1>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
-    <div class="sidebar">
-        <table><tr><td>
-            <form id="upload-img-form" enctype="multipart/form-data">
-                <label style="text-shadow: 0 0 8px #01Acc0; font-size: 1.5em;">Upload Image: </label>
-                <input type="file" id="monster-image" name="monster-image" accept="image/png, image/jpeg">
-                <button type="button" class="buttonA" onclick="upload()">Upload</button>
-            </form></td></tr><tr><td>
-            <label style="text-shadow: 0 0 8px #01Acc0; font-size: 1.5em;">Name your Monster: </label>
-            <input id="monster-name" class="form-control" type="text">
-            <button class="buttonA"  onclick="save()">Save</button>
-
-            <button class="buttonA" onclick="deleteCard()">Delete</button>
-            <button class="buttonA" onclick="reset()">Reset</button>
-        </td></tr></table>
-    </div>
+    
+ 
     <div class="drawpanel">
         <div class="toolbox">
             <button class="buttonA" style="margin-left:20px;" value="pencil" onclick="change(this.value)">
@@ -70,15 +57,20 @@
                 <td style="height:auto">
                     <input style="border:none; height:180px; width:70px; padding: 0px 0px 0px 5px;" id="colorin" class="jscolor {width:243, height:150, borderColor:'#FFF',
                    insetColor:'#FFF', backgroundColor:'#666', position:'right'}" onchange="update(this.jscolor)" value="ab2567">
-                </td>
+                </td><td>
+    <label style="text-shadow: 0 0 8px #01Acc0; font-size: 1.5em;">Name your Monster: </label>
+    <input id="monster-name" class="form-control" type="text">
+    <button class="buttonA" onclick="save()">Save</button>
+
+    <button class="buttonA" onclick="deleteCard()">Delete</button>
+    <button class="buttonA" onclick="reset()">Reset</button>
+</td>
             </tr>
             <tr>
                 <td>
                     <button class="buttonA" onclick="document.getElementById('colorin').jscolor.show()">
                         Show Color Picker
                     </button>
-                </td>
-                <td>
                     <button class="buttonA" onclick="document.getElementById('colorin').jscolor.hide()">
                         Hide Color Picker
                     </button>
@@ -133,7 +125,12 @@
                     <label>Horizontal Text Height: </label><input type="range" min="1" max="97" value="1" class="slider"
                                                                   id="myRange" oninput="changeHorzt(this.value)">
                 </td>
-            </tr>
+            </tr><tr><td>
+            <form id="upload-img-form" enctype="multipart/form-data">
+                <label style="text-shadow: 0 0 8px #01Acc0; font-size: 1.5em;">Upload Image: </label>
+                <input type="file" id="monster-image" name="monster-image" accept="image/png, image/jpeg">
+                <button type="button" class="buttonA" onclick="upload()">Upload</button>
+            </form></td></tr>
         </table>
     </div>
 

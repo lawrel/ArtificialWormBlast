@@ -35,7 +35,7 @@ td {
     background-color: #273238;
     width: 40%;
     height: 70%;
-    margin: 20px 20px 20px 20px;
+    margin: 7px 1px 20px 10px;
     float: left;
     display: inline-block;
 }
@@ -49,9 +49,10 @@ td {
 }
 
 .drawpanel {
-    float: left;
     margin: auto;
+    margin: 7px 30px 20px 40px;
     display: inline-block;
+    float:left;
 }
 div.polaroid {
     display: inline-block;
@@ -165,6 +166,7 @@ img:hover {
 
 .header {
         padding: 0px;
+        margin: 0px;
         text-align: center;
         background: white;
 }
@@ -183,7 +185,7 @@ img:hover {
     background: #181d23;
     color: #01ACC1;
     font-size: 2em;
-    margin: 1px;
+    margin: 5px;
     text-shadow: 0 -15px 2.5px transparent, 0 15px 2.5px transparent;
     -webkit-transition: all .3s linear 0s;
     -moz-transition: all .3s linear 0s;
@@ -319,7 +321,15 @@ h1 {
 .modal-text {
     color: black;
 }
+.tab {
 
+}
+.tabcontent {
+
+}
+.tabbutton {
+
+}
 /* @media only screen and (min-width: 576px) {
      .col-crush {
         display: inherit;
