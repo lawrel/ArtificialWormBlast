@@ -91,8 +91,8 @@ def signup():
             return "Password is empty"
 
         try:
-            l.signup(username, email, password)
-            if (not l.email_taken(email)):
+            dao.accounts.signup(username, email, password)
+            if (not dao.accounts.email_taken(email)):
                 raise Error
             else:
                 return jsonify({"success":""})
