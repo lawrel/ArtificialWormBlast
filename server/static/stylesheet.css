@@ -53,6 +53,78 @@ td {
     margin: auto;
     display: inline-block;
 }
+div.polaroid {
+    display: inline-block;
+    width: 200px;
+    height: 400px;
+    background-color: white;
+    box-shadow: 0 4px 8px 0 #255760, 0 6px 20px 0 #255760;
+    vertical-align: bottom;
+    margin: 5px;
+}
+
+.container {
+    text-align: center;
+    color: #E8fcff;
+    border: 2px solid #01Acc0;
+    border-radius: 20px;
+    background: #273238;
+    padding: 20px 20px;
+    align-content: center;
+}
+.spacer {
+    margin: 10px;
+}
+.modText {
+    text-align: center;
+    color: #777e8e;
+    border: 3px #255760;
+    padding: 20px 20px;
+    align-content: center;
+}
+
+.accountinfo {
+    background-color: #181d23;
+    padding: 20px;
+    border-radius: 25px
+}
+
+.buttonLG {
+    background-color: #255760; /* Blue */
+    color: white;
+    padding: 15px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+    margin: 4px 2px;
+    cursor: pointer;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    width: 40%;
+}
+
+    .buttonLG:hover {
+        background-color: #01ACC1;
+        color: #255760;
+        -webkit-transition-duration: 0.4s;
+        transition-duration: 0.4s;
+    }
+
+.button2:hover {
+    box-shadow: 0 10px 10px 0 white,0 10px 10px 0 white;
+}
+
+/*img {
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          padding: 5px;
+          width: 150px;
+        }*/
+
+img:hover {
+    box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+}
 .modal-content {
     background-color: #273238;
     color: #01Acc0;
@@ -119,6 +191,17 @@ td {
     -o-transition: all .3s linear 0s;
     transition: all .3s linear 0s;
 }
+    .buttonA:hover {
+        background: #255760;
+        border: 1px solid #01Acc0;
+        color: white;
+    }
+
+    .buttonA:active {
+        background: #01Acc0;
+        border: 1px solid #E8fcff;
+        color: white;
+    }
 .buttonSmall {
     border-radius: 5px;
     border: 1px dashed #01ACC1;
@@ -133,6 +216,18 @@ td {
     -o-transition: all .3s linear 0s;
     transition: all .3s linear 0s;
 }
+.buttonSmall:hover {
+    background: #255760;
+    border: 1px solid #01Acc0;
+    color: white;
+}
+
+.buttonSmall:active {
+    background: #01Acc0;
+    border: 1px solid #E8fcff;
+    color: white;
+}
+
 h1 {
     color: #DFDBEE;
     font-size: 2em;
@@ -146,17 +241,6 @@ h1 {
     background-color: #273238;
     text-shadow: 0 0 8px #01Acc0;
 }
-    .buttonA:hover {
-        background: #255760;
-        border: 1px solid #01Acc0;
-        color: white;
-    }
-
-    .buttonA:active {
-        background: #01Acc0;
-        border: 1px solid #E8fcff;
-        color: white;
-    }
 
 .account {
     border: 1px dashed #01ACC1;
