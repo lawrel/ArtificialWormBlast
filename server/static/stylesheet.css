@@ -5,9 +5,19 @@
 body {
 	font-family: Arial;
 	margin: 0;
+    padding: 0;
     background: #181d23;
     color: #E8fcff;
 }
+.footer {
+    position: sticky;
+    bottom: 0;
+    padding: 10px 10px 3px 10px;
+    background-color: #273238;
+    float: left;
+    width: 100%;
+}
+
 @font-face {
     font-family: ComicSans;
     src: url(static/assets/ComicSansMS.ttf);
@@ -15,7 +25,7 @@ body {
 .nav {
 	background-color: #383f47;
 	overflow: hidden;
-    height: 200px;
+    margin: 0px;
 }
 .nav a {
 	float: left;
@@ -23,6 +33,7 @@ body {
 	color: #E8fcff;
 	text-align: center;
 	text-decoration: none;
+    margin: 0px;
 }
 .nav a:hover {
 	background-color: #01Acc0;
@@ -47,12 +58,13 @@ body {
 .header h1 {
    font-size: 50px;
 }
-#reset {
+#buttonA {
     border-radius: 5px;
     border: 1px dashed #01ACC1;
     background: #181d23;
     color: #01ACC1;
     font-size: 2em;
+    margin: 1px;
     text-shadow: 0 -15px 2.5px transparent, 0 15px 2.5px transparent;
     -webkit-transition: all .3s linear 0s;
     -moz-transition: all .3s linear 0s;
@@ -61,13 +73,13 @@ body {
     transition: all .3s linear 0s;
 }
 
-    #reset:hover {
+    #buttonA:hover {
         background: #255760;
         border: 1px solid #01Acc0;
         color: white;
     }
 
-    #reset:active {
+    #buttonA:active {
         background: #01Acc0;
         border: 1px solid #E8fcff;
         color: white;

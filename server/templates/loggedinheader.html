@@ -6,7 +6,7 @@
     <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" type="text/css" href="/static/stylesheet.css" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="/static/stylesheet.css"/>
     <title>Monster's Ink</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.bundle.min.js"></script>
@@ -54,6 +54,14 @@
         .button2:hover {
             box-shadow: 0 10px 10px 0 white,0 10px 10px 0 white;
         }
+        .footer {
+            position: sticky;
+            bottom: 0;
+            padding: 10px 10px 3px 10px;
+            background-color: #273238;
+            float: left;
+            width: 100%;
+        }
 
         /*img {
           border: 1px solid #ddd;
@@ -82,9 +90,9 @@
             <a id="logout" href="{{url_for('myAccount')}}">Log Out</a>
         </div>
         {% block content %}{% endblock %}
-        <div class="footer">
-            <p align ="center"> &copy; Artificial Worm Blast - 2019 </p>
-        </div>
+        <footer class="footer">
+            <p align="center"> &copy; Artificial Worm Blast - 2019 </p>
+        </footer>
     </div>
 </body>
 
