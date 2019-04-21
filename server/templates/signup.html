@@ -25,7 +25,7 @@
                                     <label for="input-password2">Re-enter Password</label>
                                     <input type="password" class="form-control" id="input-password2" name="input-password2" placeholder="Password" pattern=".{8,16}" required title="8 to 16 characters">
                                 </div>
-                            <button type="button" class="btn btn-primary" onclick="makeAccount_ajax()">Submit</button>
+                            <button type="button" class="buttonSmall" onclick="makeAccount_ajax()">Submit</button>
                         </form>
                     </div>
                 </div>
@@ -37,9 +37,9 @@
 <div class="modal fade" id="badCreds" role="dialog">
         <div class="modal-dialog modal-sm vertical-align-center">
              <div class="card card-signin my-5">
-                <div class="card-body">
+                <div class="card-body" style="background-color:#181d23;">
                     <h5 class="card-title text-center">Incorrect Credentials</h5>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    <button type="button" class="buttonSmall" data-dismiss="modal">Close</button>
                     </div>
              </div>
           </div>

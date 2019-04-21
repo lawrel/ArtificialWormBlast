@@ -4,47 +4,11 @@
 <style>
     @import url(https://fonts.googleapis.com/css?family=Open+Sans);
 
-    #color-input {
-        display: none;
-    }
-
-    #color-label {
-        margin-left: 15px;
-        position: absolute;
-        height: 30px;
-        width: 50px;
-    }
-
-    #color-input:checked~#color-picker {
-        opacity: 1;
-    }
-
-    #color-picker {
-        position: absolute;
-        left: 70px;
-        background-color: white;
-        height: 150px;
-        width: 185px;
-        border: solid 1px #ccc;
-        opacity: 0;
-        padding: 5px;
-    }
-
-    #color-strip:hover {
-        cursor: crosshair;
-    }
-
     #paint {
         border: 5px solid #000000;
         margin: 10px 20px;
         display: inline-block;
         position: relative;
-    }
-
-    #panel {
-        border: 2px solid #E8fcff;
-        padding: 20px 20px 20px 20px;
-        background-color: #273238;
     }
 </style>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -66,9 +30,9 @@
                 <label style="text-shadow: 0 0 8px #01Acc0; font-size: 1.5em;">Upload Image: </label>
                 <input type="file" id="monster-image" name="monster-image" accept="image/png, image/jpeg">
                 <button type="button" class="buttonA" onclick="upload()">Upload</button>
-            </form>
+            </form></td></tr><tr><td>
             <label style="text-shadow: 0 0 8px #01Acc0; font-size: 1.5em;">Name your Monster: </label>
-            <input id="monster-name" type="text">
+            <input id="monster-name" class="form-control" type="text">
             <button class="buttonA"  onclick="save()">Save</button>
 
             <button class="buttonA" onclick="deleteCard()">Delete</button>
@@ -181,7 +145,7 @@
             <div class="modal-content">
                 <div class="modal-body text-center modal-text">
                     <div class="fa-3x"><i class="fas fa-circle-notch fa-spin"></i></div>
-                    <div id="waitingTag">
+                    <div id="waitingTag" style="color: #01Acc0;">
                         <p>Saving your card...<br>We think it's beautiful.</p>
 
                     </div>
