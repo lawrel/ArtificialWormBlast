@@ -53,19 +53,20 @@ td {
     margin: auto;
     display: inline-block;
 }
-#badCreds {
+.modal-content {
     background-color: #273238;
+    color: #01Acc0;
 }
-
+.textbox {
+    width: 75%;
+    margin: auto;
+    padding-bottom: 10px;
+}
 .toolbox {
     padding: 10px 10px 10px 10px;
     border: 1px solid #01Acc0;
     border-radius: 10px;
     background-color: #273238;
-}
-@font-face {
-    font-family: ComicSans;
-    src: url(static/assets/ComicSansMS.ttf);
 }
 .nav {
 	background-color: #383f47;
@@ -110,6 +111,20 @@ td {
     background: #181d23;
     color: #01ACC1;
     font-size: 2em;
+    margin: 1px;
+    text-shadow: 0 -15px 2.5px transparent, 0 15px 2.5px transparent;
+    -webkit-transition: all .3s linear 0s;
+    -moz-transition: all .3s linear 0s;
+    -ms-transition: all .3s linear 0s;
+    -o-transition: all .3s linear 0s;
+    transition: all .3s linear 0s;
+}
+.buttonSmall {
+    border-radius: 5px;
+    border: 1px dashed #01ACC1;
+    background: #181d23;
+    color: #01ACC1;
+    font-size: 1em;
     margin: 1px;
     text-shadow: 0 -15px 2.5px transparent, 0 15px 2.5px transparent;
     -webkit-transition: all .3s linear 0s;
