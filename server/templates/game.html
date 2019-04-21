@@ -13,7 +13,7 @@
                     </div>
                     <div class=  "modText" id="mtext">
                         <p> Select five monsters that you want to draft onto your team before the battle begins.</p>
-                        
+
                     </div>
 
                     {{ cardview|safe }}
@@ -334,8 +334,8 @@ function enterGame() {
       player_name = allPlayers[key]["username"];
       uid = allPlayers[key]["userid"]
       playerString = playerString +
-        `<div class="card" style="display: inline-block; max-width:200px; color:#255760";> 
-      <div class="card-body"> 
+        `<div class="card" style="display: inline-block; max-width:200px; color:#255760";>
+      <div class="card-body">
       <button onclick="handlePlayerClick('${player_name}', '${uid}')">${player_name}</button> </div> </div>`;
     }
     document.getElementById("opponents").innerHTML = playerString;
@@ -362,9 +362,9 @@ function enterGame() {
           for (key2 in allPlayers2) {
             if (allPlayers2[key2]["username"] == gameData.defender) {
               // take card from loser
-              allPlayers2[key2]["hand"].pop(gameData.dfs_card); 
+              allPlayers2[key2]["hand"].pop(gameData.dfs_card);
               //add it to winner
-              allPlayers[key]["hand"].push(gameData.dfs_card); 
+              allPlayers[key]["hand"].push(gameData.dfs_card);
             }
           }
         } else {
@@ -372,7 +372,7 @@ function enterGame() {
           for (key2 in allPlayers2) {
             if (allPlayers2[key2]["username"] == gameData.defender) {
               // take card from loser
-              allPlayers2[key2]["hand"].pop(gameData.atk_card); 
+              allPlayers2[key2]["hand"].pop(gameData.atk_card);
               //add it to winner
               allPlayers[key]["hand"].push(gameData.atk_card);
             }

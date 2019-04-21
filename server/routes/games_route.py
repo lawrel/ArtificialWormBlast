@@ -61,10 +61,4 @@ def invites():
                 return jsonify({"error":"BadEmailError"})
             else:
                 email_gamelink(email, link)
-                return jsonify({"success":""})
-
-
-
-
-
-
+    return jsonify({"success":""})
