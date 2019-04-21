@@ -11,9 +11,9 @@ import uuid
 from flask import render_template, request, jsonify
 from flask_socketio import join_room, leave_room, send, emit
 from server import app, socketio
-from server.routes.gameObject import Game
-from server.routes.playerObject import Player
-from server.routes.statesObject import GameState, WaitState, SelectHandState, NewRoundState, AttackState, DefendState, VoteState, WinnerState, EndState
+from objects.game import Game
+from objects.player import Player
+from objects.states import GameState, WaitState, SelectHandState, NewRoundState, AttackState, DefendState, VoteState, WinnerState, EndState
 
 # List of all active games
 gameLst = {}
@@ -47,6 +47,7 @@ Socket for checking games
 """
 @socketio.on('check-games')
 def checkGames(data):
+    print("=========================================================IN CHECK GAME")
     username = data['player']['username']
     email = data['player']['email']
     userid = data['player']['userid']

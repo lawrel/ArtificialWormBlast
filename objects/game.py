@@ -1,7 +1,7 @@
 """
 AWB
 
-game.py is the Game object which is 
+game.py is the Game object which is
 the basis of our project
 
 """
@@ -12,8 +12,8 @@ import uuid
 from flask import render_template, request, jsonify
 from flask_socketio import join_room, leave_room, send, emit
 from server import app, socketio
-from server.routes.playerObject import Player
-from server.routes.statesObject import GameState, WaitState, SelectHandState, NewRoundState, AttackState, DefendState, VoteState, WinnerState, EndState
+from objects.player import Player
+from objects.states import GameState, WaitState, SelectHandState, NewRoundState, AttackState, DefendState, VoteState, WinnerState, EndState
 
 ## Gloab States
 currState = None
@@ -50,7 +50,7 @@ class Game:
             return True
         else:
             return False
-    
+
 
     """
     Function gets itself

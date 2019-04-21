@@ -25,7 +25,7 @@ $( document ).ready(function() {
     connectGameSocket();
 
     // Check if the player is logged in
-    handleJoinGame(); 
+    handleJoinGame();
 });
 
 
@@ -87,7 +87,7 @@ function getParams() {
     // Get the params in an array
     var url = window.location.href;
     var params = url.split('?');
-    
+
     // Format into a dictionary/JSON object
     var data = {};
     for (var i = 1; i < params.length; i++) {
@@ -112,7 +112,7 @@ function joinGame_res(msg) {
             console.log("Game successfully joined: " + msg["gameid"]);
             window.history.replaceState({}, document.title, "?game_id=" + msg["gameid"]);
             gameData_io(msg["gameid"]);
-        } 
+        }
         else if (status == "failure") {
             console.log("Join game failed" + msg["reason"]);
         }
@@ -120,12 +120,13 @@ function joinGame_res(msg) {
 }
 
 function checkGames_io() {
-    console.log("ENTERED")
+    console.log("ENTERED");
     socket.emit('check-games', {player: getPlayerData()});
+    console.log("DENTERED");
 }
 
 function checkGames_res() {
-   
+
 }
 
 function createGame_io(towin, maxplayers) {
@@ -133,7 +134,7 @@ function createGame_io(towin, maxplayers) {
 }
 
 function createGame_res() {
-   
+
 }
 
 function playerData_io() {
