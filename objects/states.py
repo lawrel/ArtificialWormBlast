@@ -12,7 +12,7 @@ import uuid
 from flask import render_template, request, jsonify
 from flask_socketio import join_room, leave_room, send, emit
 from server import app, socketio
-from server.routes.playerObject import Player
+from objects.player import Player
 
 """
 Class is the abstract class for each state
@@ -107,7 +107,7 @@ class AttackState(GameState):
         ps = list(context.players)
         self.context.attacker = random.choice(ps)
         #self.context.update_clients()
-    
+
     def handle(self):
         if (self.context.defender is not None and self.context.atk_card is not None):
             self.next_state()
@@ -128,7 +128,7 @@ class DefendState(GameState):
     def __init__(self, context):
         print("Defender select a card.")
         self.context = context
-    
+
     def handle(self):
         if (self.context.dfs_card is not None):
             self.next_state()
@@ -137,7 +137,7 @@ class DefendState(GameState):
         self.context.set_state(VoteState(self.context))
 
     def __str__(self):
-        return "DefendState" 
+        return "DefendState"
 
 
 """
@@ -148,7 +148,7 @@ class VoteState(GameState):
     def __init__(self, context):
         print("Vote on the winner.")
         self.context = context
-    
+
     def handle(self):
         playerVoted = [player.vote for playerid, player in self.context.players.items()]
         if (False not in playerVoted):
@@ -162,14 +162,14 @@ class VoteState(GameState):
 
 
 """
-Class is the winning state, where the 
+Class is the winning state, where the
 winner is determined and card swaps occur
 """
 class WinnerState(GameState):
     def __init__(self, context):
         print("Announce the winner, give winner card, remove loser card.")
         self.context = context
-    
+
     def handle(self):
         votelist = [player.vote_card for playerid, player in self.context.players.items()]
         atk_cnt = 0
