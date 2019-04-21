@@ -80,10 +80,8 @@ class Game:
     def swap_card(self, card, loserid, winnerid):
         loser = self.players[loserid]
         winner = self.players[winnerid]
-        print(loser.hand)
-        l_card_name = loser.hand.pop(card)
-        self.players[winnerid].edit_card(l_card_name)
-        winner.hand[card] = l_card_name
+        card_data = loser.hand.pop(card)
+        winner.hand[card] = card_data
         self.update_clients()
 
 
