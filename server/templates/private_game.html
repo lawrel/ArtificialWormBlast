@@ -53,7 +53,7 @@
                                     </div>
 
 
-                            
+
                             <button type="button" class="btn btn-primary" onclick="sendEmails_ajax()">Submit</button>
                         </form>
                     </div>
@@ -64,13 +64,13 @@
 </body>
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
-<script src="/static/scripts/game_logic.js"></script>   
+<script src="/static/scripts/game_logic.js"></script>
 <script>
     function validateForm() {
         var input_username = $("#input-victory").val();
         var input_email = $("#input-players").val();
     }
-    
+
     function sendEmails_ajax() {
 
         // Get Settings
@@ -83,7 +83,7 @@
         var gameid = createGame_io($("#input-victory :selected").val(), $("#input-players :selected").val());
         fd.append( 'game-id', "/game/?game_id="+gameid.id);
 
-        console.log("/publicgame/?game_id="+gameid.id)
+        console.log("/game/?game_id="+gameid.id)
 
         // Get Friends Emails
         fd.append( 'send-email1', $("#send-email1").val());
@@ -96,8 +96,6 @@
         fd.append( 'send-email8', $("#send-email8").val());
         fd.append( 'send-email9', $("#send-email9").val());
 
-        console.log("FUCK")
-
         // Send invitations
         $.ajax({
             url: '/sendinvites',
@@ -106,11 +104,8 @@
             contentType: false,
             type: 'POST',
             success: function(data){
-                console.log("FUCK2")
-                console.log(data);
-                
                 // Go to the game
-                window.location.href = "/publicgame/?game_id="+gameid.id;
+                window.location.href = "/game/?game_id="+gameid.id;
             }
         });
 
