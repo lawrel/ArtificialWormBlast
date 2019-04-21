@@ -5,14 +5,65 @@
 body {
 	font-family: Arial;
 	margin: 0;
+    padding: 0;
     background: #181d23;
     color: #E8fcff;
 }
+.footer {
+    position: sticky;
+    bottom: 0;
+    padding: 10px 10px 3px 10px;
+    background-color: #273238;
+    float: left;
+    width: 100%;
+}
+#paint {
+    border: 5px solid #000000;
+    margin: 10px 20px;
+    display: inline-block;
+    position: relative;
+}
+
+td {
+    padding: 10px 10px 10px 10px;
+}
+
+#panel {
+    border: 1px solid #777e8e;
+    border-radius: 20px;
+    padding: 20px 20px 20px 20px;
+    background-color: #273238;
+    width: 40%;
+    height: 70%;
+    margin: 20px 20px 20px 20px;
+    float: left;
+}
+
+.sidebar {
+    width: 20%;
+    height: 70%;
+    float: left;
+    padding: 20px 20px 20px 20px;
+}
+
+.drawpanel {
+    float: left;
+    margin: auto;
+}
+
+.toolbox {
+    padding: 10px 10px 10px 10px;
+    border: 1px dashed #01Acc0;
+    border-radius: 10px;
+}
+@font-face {
+    font-family: ComicSans;
+    src: url(static/assets/ComicSansMS.ttf);
+}
 .nav {
 	background-color: #383f47;
-    overflow: hidden;
-    margin-bottom: 25px;
-    /* height: 200px; */
+	overflow: hidden;
+    margin: 0px;
 }
 .nav a {
 	float: left;
@@ -20,6 +71,7 @@ body {
 	color: #E8fcff;
 	text-align: center;
 	text-decoration: none;
+    margin: 0px;
 }
 .nav a:hover {
 	background-color: #01Acc0;
@@ -44,12 +96,13 @@ body {
 .header h1 {
    font-size: 50px;
 }
-#reset {
+#buttonA {
     border-radius: 5px;
     border: 1px dashed #01ACC1;
     background: #181d23;
     color: #01ACC1;
     font-size: 2em;
+    margin: 1px;
     text-shadow: 0 -15px 2.5px transparent, 0 15px 2.5px transparent;
     -webkit-transition: all .3s linear 0s;
     -moz-transition: all .3s linear 0s;
@@ -57,14 +110,26 @@ body {
     -o-transition: all .3s linear 0s;
     transition: all .3s linear 0s;
 }
-
-    #reset:hover {
+h1 {
+    color: #DFDBEE;
+    font-size: 2em;
+    text-align: center;
+    width: 50%;
+    margin: auto;
+    border: 1px dotted #777e8e;
+    border-radius: 20px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    background-color: #273238;
+    text-shadow: 0 0 8px #01Acc0;
+}
+    #buttonA:hover {
         background: #255760;
         border: 1px solid #01Acc0;
         color: white;
     }
 
-    #reset:active {
+    #buttonA:active {
         background: #01Acc0;
         border: 1px solid #E8fcff;
         color: white;
@@ -163,4 +228,17 @@ body {
          max-width: 100%;
          flex: 0 0 100%;
      }
+}
+#show {
+    border-radius: 5px;
+    border: 1px dashed #01ACC1;
+    background: #181d23;
+    color: #01ACC1;
+    font-size: 2em;
+    text-shadow: 0 -15px 2.5px transparent, 0 15px 2.5px transparent;
+    -webkit-transition: all .3s linear 0s;
+    -moz-transition: all .3s linear 0s;
+    -ms-transition: all .3s linear 0s;
+    -o-transition: all .3s linear 0s;
+    transition: all .3s linear 0s;
 }
