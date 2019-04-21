@@ -1,6 +1,6 @@
 # ArtificialWormBlast
 There's something special in the Monster.
-
+### New Note: before viewing Monster's Ink Page, in your browser go to settings>advanced>clear browsing history>clear cached data and then refresh the page
 ## Markdown Cheatsheet
 Markdown is quite useful for making quick documentation in GitHub. This is useful for You can find it [here](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
 
