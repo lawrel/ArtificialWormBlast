@@ -1,5 +1,5 @@
 /**
- *  Card editor 
+ *  Card editor
  *  Especially ajax
  */
 
@@ -99,7 +99,14 @@ function getDeck_ajax() {
 
 // Function uploads
 function upload(name) {
-    uploadImage_ajax(name);
+    console.log("CALLED UPLOAD");
+    var upImg = new Image(450, 630);
+    upImg.src = URL.createObjectURL(document.getElementById('monster-image').files[0]);
+    console.log(upImg);
+    upImg.onload = function () {
+        console.log("its")
+        ctx.drawImage(upImg, 0, 0);
+    }
 }
 
 
