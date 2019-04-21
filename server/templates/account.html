@@ -13,24 +13,25 @@
         <h1 id="welcome" aria-readonly="true">Welcome to your Account, [Name]</h1>
         <hr />
         <div class="accountinfo">
-        <h2 id="nameheading" aria-readonly="true"> Your Username:</h2>
-        <input type="text" id="name" readonly="readonly" value=[name]>
-        <hr />
-        <h2 id="emailheading" aria-readonly="true"> Your Email:</h2>
-        <input type="text" id="email" readonly="readonly" value=[email]>
-        <hr />
-        <h2 id="passwordheading" aria-readonly="true"> Your Password: </h2>
-        <input type="text" id="password" readonly="readonly" value="You should know.">
-        <hr />
-        <h2 id="friends" aria-readonly="true"> Your Friends: You have no friends (and neither do we).</h2>
-            </div>
+            <h2 id="nameheading" aria-readonly="true"> Your Username:</h2>
+            <input type="text" id="name" readonly="readonly" value=[name]>
+            <hr />
+            <h2 id="emailheading" aria-readonly="true"> Your Email:</h2>
+            <input type="text" id="email" readonly="readonly" value=[email]>
+            <hr />
+            <h2 id="passwordheading" aria-readonly="true"> Your Password: </h2>
+            <input type="text" id="password" readonly="readonly" value="You should know.">
+            <hr />
+            <h2 id="friends" aria-readonly="true"> Your Friends: You have no friends (and neither do we).</h2>
+        </div>
     </div>
+
+    <div style="text-align: center;">
+        <button class="buttonA" id="edit" style="font-size: 2em" type="button" onclick="show_edits()">Edit</button>
+        <button class="buttonA" id="save" style="font-size: 2em" type="button" onclick="save_edits()" hidden="hidden">Save</button>
+    </div>
+    <hr />
 </body>
-<div style="text-align: center;">
-    <button class="buttonA" id="edit" style="font-size: 2em" type="button" id="edit" class="btn btn-primary" onclick="show_edits()">Edit</button>
-    <button class="buttonA" id="save" style="font-size: 2em" type="button" id="save" class="btn btn-primary" onclick="save_edits()" hidden="hidden">Save</button>
-</div>
-<hr />
 </html>
 
 <div class="modal fade" id="badCreds" role="dialog">
@@ -38,7 +39,7 @@
         <div class="card card-signin my-5">
             <div class="card-body">
                 <h5 class="card-title text-center">Incorrect Credentials</h5>
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                <button type="button" class="buttonA" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

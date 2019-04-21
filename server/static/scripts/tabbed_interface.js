@@ -1,5 +1,5 @@
 /* JAVASCRIPT FOR A TABBED INTERFACE ON ONE WEBPAGE
- * [USAGE]: <button class="tabbutton" onclick(event, tab name)>
+ * [USAGE]: <button class="tabbutton" onclick="openTab(event, tab name)">
  * <div class="tabcontent" id="tab name"> </div>
  * Only content inside the "tabconntent" class is hidden
  * Add a separate button and corresponding div for each tab you desire

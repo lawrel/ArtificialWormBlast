@@ -53,11 +53,15 @@ td {
     margin: auto;
     display: inline-block;
 }
+#badCreds {
+    background-color: #273238;
+}
 
 .toolbox {
     padding: 10px 10px 10px 10px;
-    border: 1px dashed #01Acc0;
+    border: 1px solid #01Acc0;
     border-radius: 10px;
+    background-color: #273238;
 }
 @font-face {
     font-family: ComicSans;
@@ -67,6 +71,7 @@ td {
 	background-color: #383f47;
 	overflow: hidden;
     margin: 0px;
+    padding:0px;
 }
 .nav a {
 	float: left;
