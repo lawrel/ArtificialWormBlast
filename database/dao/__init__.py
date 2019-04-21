@@ -19,7 +19,7 @@ _used_cxns = []
 _config = {
     'user': 'MonsterCardsDev',
     'password': 'TSitMonsterCards',
-    'host': 'monstercards.cxyxzhduq0n4.us-east-2.rds.amazonaws.com',
+    'host': '25.86.80.235',
     'database': 'MonsterCards'
 }
 

@@ -10,7 +10,7 @@
 */
 
 
-create database if not exists MonsterCards;
+create database MonsterCards;
 use MonsterCards;
 
 create table Users(
