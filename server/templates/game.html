@@ -198,7 +198,13 @@ function enterGame() {
   }
 
   function updateAtkCard() {
-    document.getElementById("lc1").innerHTML = `<button onclick="handleVote('${gameData["atk_card"]}')"><img src="/cards/preview/${gameData["atk_card"]}"></button>` + "<br> Attacking Player: " + gameData.attacker;
+    allPlayers = gameData["players"]
+    for (var key in allPlayers) {
+      if (gameData.attacker == allPlayers[key]["userid"])
+      {
+        document.getElementById("lc1").innerHTML = `<button onclick="handleVote('${gameData["atk_card"]}')"><img src="/cards/preview/${gameData["atk_card"]}"></button>` + "<br> Attacking Player: " + allPlayers[key]["username"];
+      }
+    }
   }
 
   function disableDefCard() {
@@ -208,7 +214,13 @@ function enterGame() {
   function updateDfsCard() {
     index = names.indexOf(gameData["dfs_card"])
     pictureName = locations[index]
-    document.getElementById("lc2").innerHTML = `<button onclick="handleVote('${gameData["dfs_card"]}')"><img src="/cards/preview/${gameData["dfs_card"]}"></button>` + "<br> Defending Player: " + gameData.defender;
+    allPlayers = gameData["players"]
+    for (var key in allPlayers) {
+      if (gameData.defender == allPlayers[key]["userid"])
+      {
+        document.getElementById("lc2").innerHTML = `<button onclick="handleVote('${gameData["dfs_card"]}')"><img src="/cards/preview/${gameData["dfs_card"]}"></button>` + "<br> Defending Player: " + allPlayers[key]["username"];
+      }
+    }  
   }
 
   function defaultState() {
@@ -287,7 +299,13 @@ function enterGame() {
 
 
   function printAttacker() {
-    document.getElementById("lc1").innerHTML = gameData.attacker;
+    allPlayers = gameData["players"]
+    for (var key in allPlayers) {
+      if (gameData.attacker == allPlayers[key]["userid"])
+      {
+        document.getElementById("lc1").innerHTML = allPlayers[key]["username"];;
+      }
+    }
   }
 
   function printDefender() {
