@@ -106,6 +106,7 @@ div.polaroid {
     text-align: center;
     text-decoration: none;
     display: inline-block;
+    border: 1px solid #E8fcff;
     font-size: 20px;
     margin: 4px 2px;
     cursor: pointer;
