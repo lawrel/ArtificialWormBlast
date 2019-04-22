@@ -103,7 +103,7 @@
   </div>
 </div>
 
-<!-- Waiting for players modal -->
+<!-- TIME TO VOTE MODAL -->
 <div class="modal fade" id="voteModal" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
     <div class="modal-content">
@@ -112,6 +112,34 @@
         <div id="waitingTag">
           <p>Vote for a winner</p>
 
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--ATTACKING PLAYER MODAL -->
+<div class="modal fade" id="attackModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-body text-center modal-text">
+        <div class="fa-3x"><i class="fas fa-circle-notch fa-spin"></i></div>
+        <div id="AttackingTag">
+          <p>ATTACK TIME!</p>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--ATTACKING PLAYER MODAL -->
+<div class="modal fade" id="defendModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-body text-center modal-text">
+        <div class="fa-3x"><i class="fas fa-circle-notch fa-spin"></i></div>
+        <div id="AttackingTag">
+          <p>DEFEND TIME!</p>
+          
         </div>
       </div>
     </div>
@@ -174,17 +202,21 @@ function enterGame() {
         disableDefCard();
         attackState();
         updateAtkCard();
+        $('#attackModal').modal('show');
+        setTimeout(function () { $('#attackModal').modal('hide'); }, 2000);
         break;
       case "DefendState":
         updateAtkCard();
         defendState();
         updateDfsCard();
+        $('#defendModal').modal('show');
+        setTimeout(function () { $('#defendModal').modal('hide'); }, 2000);
         break;
       case "VoteState":
         updateDfsCard();
         voteState();
         $('#voteModal').modal('show');
-        setTimeout(function () { $('#voteModal').modal('hide'); }, 3000);
+        setTimeout(function () { $('#voteModal').modal('hide'); }, 2000);
         break;
       case "WinnerState":
         winState();
