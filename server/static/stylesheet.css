@@ -78,12 +78,21 @@ div.polaroid {
 }
 .modText {
     text-align: center;
-    color: #777e8e;
+    color: #01Acc0;
     border: 3px #255760;
     padding: 20px 20px;
     align-content: center;
 }
-
+.modal-text {
+    text-align: center;
+    color: #01Acc0;
+    border: 3px #255760;
+    padding: 20px 20px;
+    align-content: center;
+}
+#waitingTag {
+    color: #01Acc0;
+}
 .accountinfo {
     background-color: #181d23;
     padding: 20px;

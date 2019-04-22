@@ -3,23 +3,23 @@
 
 <body onload = "enterGame()">
     <!-- Modal For Selecting the Hand from Deck -->
-    <div class="modal fade" id="selectHandModal" tabindex="-1" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" style="overflow-y: initial; max-height: 80%">
+    <div class="modal fade" id="selectHandModal" style="overflow-y:auto; " tabindex="-1" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" style="overflow-y: initial; max-height: 70%">
             <div class="modal-content">
                 <div class="modText">
                     <h5 class="modal-title" id="exampleModalLongTitle">Welcome to the Monster Draft!</h5>
                 </div>
-                <div class="modal-body" id="" style="overflow-y: initial; max-height: 80%">
+                <div class="modal-body" id="" style="overflow-y: initial; max-height: 70%">
                     </div>
                     <div class=  "modText" id="mtext">
                         <p> Select five monsters that you want to draft onto your team before the battle begins.</p>
 
                     </div>
-
+                    
                     {{ cardview|safe }}
-
+                      
                 <div class="modal-footer">
-                    <button onclick="sendHand()" type="button" class="btn btn-primary" data-dismiss="modal" id="saveButton" disabled>Save Team</button>
+                    <button onclick="sendHand()" type="button" class="buttonA" data-dismiss="modal" id="saveButton" disabled>Save Team</button>
                 </div>
             </div>
         </div>
@@ -95,7 +95,7 @@
       <div class="modal-body text-center modal-text">
         <div class="fa-3x"><i class="fas fa-circle-notch fa-spin"></i></div>
         <div id="waitingTag">
-          <p>Waiting for players to join...<br> Currently, the following players are connected:</p>
+          <p style="color:#01Acc0;">Waiting for players to join...<br> Currently, the following players are connected:</p>
 
         </div>
       </div>
