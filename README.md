@@ -10,7 +10,7 @@ This project requires the following pieces to run:
 - MySQL database
 
 ### MySQL Database
-We can use MySQL, which is currently supported by Oracle, to handle our databasing needs. It supports most basic SQL syntax you may have seen, but also features it's own custom syntax for some specific operations.
+The team utilized MySQL, to handle our account and card storage. To deploy your own install of Monsters Ink you will need a to install your own MySQL database.
 
 1. Install mysql database.
 2. Deploy the initial database schema. Run `database/schema/MonsterCards_Db_Schema.sql` on your database. This creates the MonsterCards database and the database tables. On linux we used:
