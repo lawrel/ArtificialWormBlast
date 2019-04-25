@@ -1,9 +1,4 @@
-"""
-AWB
-
-login.py  Handles all Query Calls to the database for users
-
-"""
+"""login.py  Handles all Query Calls to the database for users"""
 
 import uuid
 from . import cnxpool, execute
@@ -11,7 +6,10 @@ from mysql.connector import MySQLConnection
 from mysql.connector.pooling import PooledMySQLConnection
 from datetime import date, datetime, timedelta
 from validate_email import validate_email
-from server.exceptions import *
+from server.exceptions import (UsernameInUseError, BadTokenError, Error,
+                               BadLoginError, EmailInUseError,
+                               ShortPasswordError, BadEmailError)
+
 
 # global min password length
 _min_pwd_len = 7
@@ -64,7 +62,7 @@ def change_email(username, email):
     elif (not validate_email(email)):
         raise BadEmailError
     else:
-        user_id = execute(query, (email, username))
+        execute(query, (email, username))
 
 
 def change_username(username, email):
@@ -79,13 +77,13 @@ def change_username(username, email):
     if (username_taken(email)):
         raise UsernameInUseError
     else:
-        user_id = execute(query, (username, email))
+        execute(query, (username, email))
 
 
 def get_session_data(token):
     """Function gets a users session data"""
 
-    curr_date = datetime.now().date()
+    # curr_date = datetime.now().date()
 
     query = """select AccountID
             from MonsterCards.UserLogins
@@ -112,18 +110,14 @@ def get_session_data(token):
 def logout_user(token):
     """Function logs a user out"""
 
-    curr_date = datetime.now().date()
+    # curr_date = datetime.now().date()
 
     query = ("""
                 DELETE FROM MonsterCards.UserLogins
                     WHERE AuthToken = %s;
             """)
-    # cursor handles execution sql transactions
-    cursor = db_context.cursor()
-    cursor.execute("BEGIN;")
-    cursor.execute(query, (token,))
-    cursor.execute("BEGIN;")
-    cursor.close()
+
+    execute(query, ())
 
 
 def login_user(email, password):
@@ -151,12 +145,12 @@ def login_user(email, password):
 def is_valid_token(token):
     """Function checks if login token is valid"""
 
-    curr_date = datetime.now().date()
+    # curr_date = datetime.now().date()
+
     query = """select count(*) from MonsterCards.UserLogins
                     WHERE AuthToken = %s;"""
 
     count = execute(query, (token,))[0][0]
-    print(count)
     return bool(count)
 
 

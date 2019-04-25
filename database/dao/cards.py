@@ -1,6 +1,5 @@
-"""AWB
-cards.py Handles all Query Calls to the database for cards
-"""
+"""cards.py Handles all Query Calls to the database for cards"""
+
 
 import sys
 import uuid
@@ -55,7 +54,8 @@ def add_player_card(playerId, cardId):
     """Function adds a card to a player's deck"""
 
     query = """
-            INSERT INTO MonsterCards.UserCards (UserID, CardID) VALUES (%s, %s);
+            INSERT INTO MonsterCards.UserCards (UserID, CardID)
+            VALUES (%s, %s);
             """
     execute(query, (playerId, cardId))
 
@@ -99,14 +99,16 @@ def edit_card(card_id, pic_bin, attrs=None, name=None):
                     update MonsterCards.Cards
                     set ImgData = %s, Attributes = %s
                     where ID = %s;"""
-        card_id = execute(insert_blob, (pic_bin, attrs, card_id), insert=True)[0][0]
+        card_id = execute(insert_blob, (pic_bin, attrs, card_id),
+                          insert=True)[0][0]
         return card_id
     else:
         insert_blob = """
                     update MonsterCards.Cards
                     set Name = %s, ImgData = %s, Attributes = %s
                     where ID = %s;"""
-        card_id = execute(insert_blob, (name, pic_bin, attrs, card_id), insert=True)[0][0]
+        card_id = execute(insert_blob, (name, pic_bin, attrs, card_id),
+                          insert=True)[0][0]
         return card_id
 
 

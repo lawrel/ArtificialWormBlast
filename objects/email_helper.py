@@ -1,26 +1,23 @@
-"""
-AWB
+"""email_helper.py creates and sends emails"""
 
-email_helper.py creates and sends emails
 
-"""
-
-import smtplib, ssl
+import smtplib
+import ssl
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import uuid
 
-"""
-Function checks the credentials of a user (login)
-"""
+
 def send_email(r_email, subjectline, body):
+    """Function checks the credentials of a user (login)"""
+
     # Create a secure SSL context
     context = ssl.create_default_context()
 
     with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
         # get emails to and from
         s_email = "artificialwormblast@gmail.com"
-        
+
         # Log into our account to send email
         server.login("artificialwormblast@gmail.com", "TSITMonsterCards")
 
@@ -36,10 +33,9 @@ def send_email(r_email, subjectline, body):
         server.sendmail(s_email, r_email, text)
 
 
-"""
-Function checks the credentials of a user (login)
-"""
 def email_reset(email, link):
+    """Function checks the credentials of a user (login)"""
+
     body = """
     Hi there!
 
@@ -54,10 +50,9 @@ def email_reset(email, link):
     send_email(email, "Monster's Ink Password Reset", body)
 
 
-"""
-Function checks the credentials of a user (login)
-"""
 def email_gamelink(email, link):
+    """Function checks the credentials of a user (login)"""
+
     body = """
     Hi there!
 

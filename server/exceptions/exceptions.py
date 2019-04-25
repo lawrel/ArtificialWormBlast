@@ -1,10 +1,4 @@
-"""
-AWB
-
-execptions.py holds all of the exceptions for 
-the program.
-
-"""
+"""Execptions.py holds all of the exceptions for the program."""
 
 
 class Error(Exception):

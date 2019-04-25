@@ -15,9 +15,12 @@ from server import app
 import database.dao as dao
 import database.dao.accounts
 import database.dao.cards
-from server.exceptions import *
+from server.exceptions import (BadEmailError, NoFileUploadedError,
+                               BadTokenError, BadFileExtError,
+                               SQLExecutionError)
 import base64
 from werkzeug.exceptions import BadRequestKeyError
+
 
 @app.route("/cards/new-card", methods=["POST"])
 @app.route("/editor/upload-img-b64", methods=["POST"])
@@ -53,12 +56,11 @@ def editor_edit_card():
     """Route to edit existing card"""
 
     try:
-        token = request.form["token"]
+        # token = request.form["token"]
         b64_file = request.form["img-data"]
         card_id = request.form["card-id"]
         card_name = request.form.get("card-name")
-
-        user_id = dao.accounts.get_session_data(token)["userid"]
+        # user_id = dao.accounts.get_session_data(token)["userid"]
 
         if b64_file == '':
             raise NoFileUploadedError
@@ -103,7 +105,7 @@ def get_card_image(card_id):
     """Route to preview card"""
 
     try:
-        card_id, card_name, img_bin, attrs = dao.cards.get_card(card_id)
+        card_id, _, img_bin, _ = dao.cards.get_card(card_id)
         return send_file(io.BytesIO(img_bin),
                          mimetype='image/png',
                          as_attachment=True,
@@ -112,11 +114,10 @@ def get_card_image(card_id):
         return jsonify({"error": "SQLExecutionError"})
 
 
-"""
-Route to get a player's hand
-"""
 @app.route("/cards/player_cards", methods=["POST"])
 def get_player_cards():
+    """Route to get a player's hand"""
+
     try:
         if ("token" not in request.form):
             return jsonify({"error": ""})
@@ -134,11 +135,10 @@ def get_player_cards():
         return jsonify({"error": "NoFileUploadedError"})
 
 
-"""
-Route to site deck
-"""
 @app.route("/cards/site_cards", methods=["POST"])
 def get_site_cards():
+    """Route to site deck"""
+
     try:
         cards = dao.cards.get_site_deck()
         return jsonify({"cards": cards})
@@ -150,11 +150,10 @@ def get_site_cards():
         return jsonify({"error": "NoFileUploadedError"})
 
 
-"""
-Route to add card
-"""
 @app.route("/cards/add-card", methods=["POST"])
 def add_site_cards():
+    """Route to add card"""
+
     try:
         if ("token" not in request.form):
             return jsonify({"error": ""})
@@ -165,8 +164,8 @@ def add_site_cards():
         print(user_id, card_id)
         if (card_id is None):
             return "No card to add"
-        card = dao.cards.add_player_card(user_id, card_id)
-        return jsonify({"cards": card})
+        dao.cards.add_player_card(user_id, card_id)
+        return jsonify({"cards": card_id})
     except BadTokenError:
         return jsonify({"error": "BadTokenError"})
     except NoFileUploadedError:

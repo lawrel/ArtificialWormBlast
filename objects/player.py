@@ -1,10 +1,5 @@
-"""
-AWB
+"""player.py is the Player object in which who plays a game"""
 
-player.py is the Player object in which
-who plays a game
-
-"""
 
 from threading import Timer
 import random
@@ -14,11 +9,9 @@ from flask_socketio import join_room, leave_room, send, emit
 from server import app, socketio
 
 
-"""
-Class is the player, which is the user 
-playing a game
-"""
 class Player:
+    """Class is the player, which is the user playing a game"""
+
     def __init__(self, userid, username, email):
         self.userid = userid
         self.username = username
@@ -28,16 +21,14 @@ class Player:
         self.numVotes = 0
         self.hand = []
 
-
-    """
-    Function serialized data
-    """
     def serialize(self):
+        """Function serialized data"""
+
         return {
-            "userid" : self.userid,
-            "username" : self.username,
-            "email" : self.email,
-            "hand" : self.hand,
-            "vote" : self.vote,
-            "numVotes" : self.numVotes
+            "userid": self.userid,
+            "username": self.username,
+            "email": self.email,
+            "hand": self.hand,
+            "vote": self.vote,
+            "numVotes": self.numVotes
         }

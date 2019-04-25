@@ -1,7 +1,7 @@
-from server import app, socketio
-from server import *
-from server.routes import *
 from flask import Flask
+from server import app, socketio
+from server.routes import (account_route, cards, draw_route, games_route,
+                           home_route)
 # from server.routes.chatRoute import *
 
 if __name__ == "__main__":

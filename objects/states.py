@@ -1,10 +1,7 @@
-"""
-AWB
-
-states.py holds all state objects
+"""states.py holds all state objects
 (from the abstract GameState to each indivdual state)
-
 """
+
 
 from threading import Timer
 import random
@@ -14,11 +11,12 @@ from flask_socketio import join_room, leave_room, send, emit
 from server import app, socketio
 from objects.player import Player
 
-"""
-Class is the abstract class for each state
-which is a specific part of the round of a game
-"""
+
 class GameState:
+    """Class is the abstract class for each state which is a specific part of the
+    round of a game.
+    """
+
     def __init__(self):
         pass
 
@@ -29,11 +27,9 @@ class GameState:
         pass
 
 
-"""
-Class is the wait state, waiting for player
-to connect to the game
-"""
 class WaitState(GameState):
+    """Class is the wait state, waiting for player to connect to the game"""
+
     def __init__(self, context):
         print("Waiting for players to connect...")
         self.context = context
@@ -58,17 +54,16 @@ class WaitState(GameState):
         return "WaitState"
 
 
-"""
-Class is the select hand state, where
-players select their hand
-"""
 class SelectHandState(GameState):
+    """Class is the select hand state, where players select their hand"""
+
     def __init__(self, context):
         print("Waiting for players to select hand...")
         self.context = context
 
     def handle(self):
-        playerReady = [len(player.hand) == 5 for playerid, player in self.context.players.items()]
+        playerReady = [len(player.hand) == 5 for playerid, player
+                       in self.context.players.items()]
         if (False not in playerReady):
             self.next_state()
 
@@ -79,11 +74,9 @@ class SelectHandState(GameState):
         return "SelectHandState"
 
 
-"""
-Class is the new round state, where a
-new round is initialized
-"""
 class NewRoundState(GameState):
+    """Class is the new round state, where a new round is initialized"""
+
     def __init__(self, context):
         print("Starting new round")
         self.context = context
@@ -96,20 +89,20 @@ class NewRoundState(GameState):
         self.context.set_state(AttackState(self.context))
 
 
-"""
-Class is the attact state, where an
-attacker chooses a target and a card
-"""
 class AttackState(GameState):
+    """Class is the attact state, where anattacker chooses a target and a
+    card
+    """
+
     def __init__(self, context):
         print("Attacker select an opponent and a card.")
         self.context = context
         ps = list(context.players)
         self.context.attacker = random.choice(ps)
-        #self.context.update_clients()
 
     def handle(self):
-        if (self.context.defender is not None and self.context.atk_card is not None):
+        if (self.context.defender is not None and
+                self.context.atk_card is not None):
             self.next_state()
 
     def next_state(self):
@@ -120,11 +113,11 @@ class AttackState(GameState):
         return "AttackState"
 
 
-"""
-Class is the defend state, where the defender
-chooses a card to fight back with
-"""
 class DefendState(GameState):
+    """Class is the defend state, where the defender chooses a card to fight
+    back with
+    """
+
     def __init__(self, context):
         print("Defender select a card.")
         self.context = context
@@ -140,17 +133,16 @@ class DefendState(GameState):
         return "DefendState"
 
 
-"""
-Class is the vote state, where players vote
-for the winning card
-"""
 class VoteState(GameState):
+    """Class is the vote state, where players vote for the winning card"""
+
     def __init__(self, context):
         print("Vote on the winner.")
         self.context = context
 
     def handle(self):
-        playerVoted = [player.vote for playerid, player in self.context.players.items()]
+        playerVoted = [player.vote for playerid, player
+                       in self.context.players.items()]
         if (False not in playerVoted):
             self.next_state()
 
@@ -161,17 +153,18 @@ class VoteState(GameState):
         return "VoteState"
 
 
-"""
-Class is the winning state, where the
-winner is determined and card swaps occur
-"""
 class WinnerState(GameState):
+    """Class is the winning state, where the winner is determined and card
+    swaps occur
+    """
+
     def __init__(self, context):
         print("Announce the winner, give winner card, remove loser card.")
         self.context = context
 
     def handle(self):
-        votelist = [player.vote_card for playerid, player in self.context.players.items()]
+        votelist = [player.vote_card for playerid, player
+                    in self.context.players.items()]
         atk_cnt = 0
         dfs_cnt = 0
         for v in votelist:
@@ -211,11 +204,9 @@ class WinnerState(GameState):
         return "WinnerState"
 
 
-"""
-Class is the end state, marking the end
-of the game
-"""
 class EndState(GameState):
+    """Class is the end state, marking the end of the game"""
+
     def __init__(self, context):
         print("Finish the game.")
         self.context = context
