@@ -5,36 +5,72 @@ There's something special in the Monster.
 Markdown is quite useful for making quick documentation in GitHub. This is useful for You can find it [here](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
 
 ## Setting Up Your Development Environment
-There are a few prereqs which you'll need to access 
-
-### LogMeIn Hamachi
-Download it [here](https://www.vpn.net/).
-
-This VPN service is free to download and use. You shouldn't need a password (at least for Linux users), though Windows users may be asked to login with their LogMeIn account before being used. We can find a workaround so we don't need LogMeIn accounts.
-
-Free users are granted:
-1. Unlimited networks
-2. Max of 5 connections per network
-
-#### New Connection to 'happy-box-2' Network
-For Mac/Windows GUI Users:
-1. Press the power/login button to come online. You should see your computer will try to connect to all networks you belong to.
-2. Either press the **Join New Network** button, or use the menubar and click **Networks**/**Join New Network**.
-3. Enter the networkid **'happy-box-2'** and the network password (ask Sean).
-
-For Linux Users:
-1. You can install a frontend GUI called **Haguichi** which provides a near-identical experience to the Mac/Windows clients.
-2. Or TBD
-
-Now you have network access to all computers logged in to the network. You can now see the IPv4/IPv6 addresses for each computer on the network, including 'happy-box'. Go ahead and `ping <IP for happy-box>` and make sure everything is working.
-
+This project requires the following pieces to run:
+- Python/Flask web-application
+- MySQL database
 
 ### MySQL Database
 We can use MySQL, which is currently supported by Oracle, to handle our databasing needs. It supports most basic SQL syntax you may have seen, but also features it's own custom syntax for some specific operations.
 
-Sean is currently running a MySQL database server on his home machine named 'happy-box'. He can set you up with an account and grant the neccessary access to the development database. 
+1. Install mysql database.
+2. Deploy the initial database schema. Run `database/schema/MonsterCards_Db_Schema.sql` on your database. This creates the MonsterCards database and the database tables. On linux we used:
+```
+mysql --user <admin> --host <ip-addr> -p < MonsterCards_Db_Schema.sql
+```
+3. Create the database-user accounts. Run `database/credentials/create_db_users.sql` on your database. This creates the MonsterCardsDev user. On linux we used:
+```
+mysql --user <admin> --host <ip-addr> -p < database/credentials/create_db_users.sql
+```
 
-**The development database is currently not setup and its schema is TBD.**
+### Python/Flask Web-Application
+Requirements:
+- Our [repo](https://github.com/lawrel/ArtificialWormBlast/)
+- Python3.7
+- Pip package manager(installed in your default python3.7 environment)
+
+We're using Pipenv to manage our dependencies. Setting up a new pipenv environment is easy.
+```
+# Install pipenv
+python -m pip install pipenv
+
+# Navagate to the project folder
+cd repos/ArtificialWormBlast/
+
+# Create env and install packages in pipfile
+pipenv install
+
+# Enter env
+pipenv shell
+
+# Run application
+python run.py
+```
+
+### Docker Container (Optional)
+Requirements:
+- Our [repo](https://github.com/lawrel/ArtificialWormBlast/)
+- Docker
+
+```
+# Navagate to the project folder
+cd repos/ArtificialWormBlast
+
+# Create a docker network
+docker network create mcnet
+
+# Build docker image
+docker build -t monstercards-dev:latest .
+
+# Run docker image
+docker run -d --net mcnet monstercards:latest
+
+# Get your container name
+docker ps
+
+# Find the ip of your container
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' container_name
+```
+Once you have the ip address, use a browser to test your connection (i.e. http://<ip-addr>:8000).
 
 #### What You'll Need
 1. [Logmein Hamachi](https://www.vpn.net/)
