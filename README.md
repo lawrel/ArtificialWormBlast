@@ -28,7 +28,7 @@ Requirements:
 - Python3.7
 - Pip package manager(installed in your default python3.7 environment)
 
-We're using Pipenv to manage our dependencies. Setting up a new pipenv environment is easy.
+We're using Pipenv to manage our dependencies. Setting up a new pipenv environment is easy through the terminal or Windows PowerShell.
 ```
 # Install pipenv
 python -m pip install pipenv
